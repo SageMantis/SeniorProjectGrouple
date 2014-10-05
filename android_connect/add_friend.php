@@ -2,16 +2,16 @@
 
 	include_once('/../includes/db_connect.inc.php');
 
-	$stmt = $mysqli->prepare("INSERT INTO users(email, password, first, last) VALUES (?, ?, ?, ?)");
+	$stmt = $mysqli->prepare("INSERT INTO friends(sender, receiver) VALUES (?, ?)");
 	if($stmt === false)
 	{
 		echo "error in sql";
 	}
-	$stmt->bind_param('ssss', $_POST['email'], $_POST['password'], $_POST['first'], $_POST['last']);
+	$stmt->bind_param('ss', $_POST['sender'], $_POST['receiver']);
 	if($stmt->execute())
 	{
 		$result["success"] = 1;
-		$result["message"] = "User added to database!";
+		$result["message"] = "Friend request added to database!";
 		echo json_encode ( $result );
 	}
 	else
@@ -20,8 +20,6 @@
 		$result["message"] = "Failed to write to database";
 		echo json_encode ( $result );
 	}		
-	
-
 	$mysqli->close();
 	
 ?>

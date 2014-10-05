@@ -2,7 +2,7 @@
 
 	include_once('/../includes/db_connect.inc.php');
 
-	$stmt = $mysqli->prepare("SELECT COUNT(*) FROM user WHERE email = ? AND password = ?");
+	$stmt = $mysqli->prepare("SELECT COUNT(*) FROM users WHERE email = ? AND password = ?");
 	$stmt->bind_param('ss', $_GET['email'], $_GET['password']);
 	$stmt->execute();
 	$result = $stmt->get_result();
