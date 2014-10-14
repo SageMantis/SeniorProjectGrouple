@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="cs460.grouple.grouple.RegisterActivity$PlaceholderFragment" >
+
+    <TextView
+        android:id="@+id/registerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:text="@string/registerTextView"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/emailEditTextRA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:ems="10"
+        android:hint="@string/emailEditText"
+        android:inputType="textEmailAddress" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/loginButtonRA"
+        android:layout_width="600dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+		
+        android:onClick="loginButton"
+        android:text="@string/loginButton" />
+
+    <EditText
+        android:id="@+id/passwordEditTextRA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/emailEditTextRA"
+        android:layout_alignRight="@+id/emailEditTextRA"
+        android:layout_below="@+id/emailEditTextRA"
+        android:ems="10"
+        android:hint="@string/passwordEditText"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/rePasswordEditTextRA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/passwordEditTextRA"
+        android:layout_alignRight="@+id/passwordEditTextRA"
+        android:layout_below="@+id/passwordEditTextRA"
+        android:ems="10"
+        android:hint="@string/rePasswordEditText"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/fNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/rePasswordEditTextRA"
+        android:layout_below="@+id/rePasswordEditTextRA"
+        android:ems="10"
+        android:hint="@string/fNameEditText"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/lNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fNameEditText"
+        android:layout_below="@+id/fNameEditText"
+        android:ems="10"
+        android:hint="@string/lNameEditText"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loginButtonRA"
+        android:layout_centerHorizontal="true"
+        android:text="Already have a Grouple account?"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/errorMessageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:text="Passwords must match!"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/registerButtonRA"
+        android:layout_width="600dp"
+        android:layout_height="70dp"
+        android:layout_alignLeft="@+id/lNameEditText"
+        android:layout_below="@+id/lNameEditText"
+        android:onClick="registerButton"
+        android:text="@string/registerButton" />
+
+</RelativeLayout>
