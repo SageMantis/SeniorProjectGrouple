@@ -1,6 +1,7 @@
 package cs460.grouple.grouple;
 
 import java.io.BufferedReader;
+import android.graphics.Color;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -172,6 +173,7 @@ public class AddFriendActivity extends Activity
 					emailEditText.setText("");
 					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
 					addFriendMessage.setText("User was invited!");
+					addFriendMessage.setTextColor(Color.GREEN);
 					addFriendMessage.setVisibility(0);
 					// startLoginActivity();
 				} else
@@ -179,7 +181,8 @@ public class AddFriendActivity extends Activity
 					// failed
 					System.out.println("fail!");
 					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("User not found.");
+					addFriendMessage.setText("User not invited, no user with that email.");
+					addFriendMessage.setTextColor(Color.RED);
 					addFriendMessage.setVisibility(0);
 				}
 			} catch (Exception e)
