@@ -51,6 +51,7 @@ public class RegisterActivity extends Activity
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		getActionBar().hide();
 	}
 
 	@Override

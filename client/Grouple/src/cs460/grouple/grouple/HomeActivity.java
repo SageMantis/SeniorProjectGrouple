@@ -1,9 +1,11 @@
 package cs460.grouple.grouple;
 
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+
 import android.support.v4.app.Fragment;
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,17 +35,19 @@ public class HomeActivity extends ActionBarActivity
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		ActionBar ab = getActionBar();
+		ab.setTitle("");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ab.setIcon(Color.TRANSPARENT);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home, menu);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.navigation_actions, menu);
 
-		return super.onCreateOptionsMenu(menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.navigation_actions, menu);
+		return true;
 	}
 
 	@Override
@@ -53,8 +57,13 @@ public class HomeActivity extends ActionBarActivity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings)
+		if (id == R.id.action_logout)
 		{
+			Global global = ((Global)getApplicationContext());
+			global.setAcceptEmail("");
+			global.setCurrentUser("");
+			global.setDeclineEmail("");
+			startLoginActivity(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -101,6 +110,11 @@ public class HomeActivity extends ActionBarActivity
 	public void startEventsActivity(View view)
 	{
 		Intent intent = new Intent(this, EventsActivity.class);
+		startActivity(intent);
+	}
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 	}
 
