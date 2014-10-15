@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -18,29 +17,25 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-
-
-import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.os.Build;
 
-public class FriendRequestsActivity extends Activity
+public class FriendRequestsActivity extends ActionBarActivity
 {
 
 	@Override
@@ -53,6 +48,11 @@ public class FriendRequestsActivity extends Activity
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		ActionBar ab = getActionBar();
+		ab.setTitle("");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ab.setIcon(Color.TRANSPARENT);
 		
 		
 		//display friend requests
@@ -73,8 +73,9 @@ public class FriendRequestsActivity extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.friend_requests, menu);
+		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
 	}
 
@@ -85,12 +86,18 @@ public class FriendRequestsActivity extends Activity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings)
+		if (id == R.id.action_logout)
 		{
+			Global global = ((Global)getApplicationContext());
+			global.setAcceptEmail("");
+			global.setCurrentUser("");
+			global.setDeclineEmail("");
+			startLoginActivity(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -178,10 +185,7 @@ public class FriendRequestsActivity extends Activity
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < senders.size(); i++)
 						{
-							RelativeLayout friendRequestsRL =  (RelativeLayout)findViewById(R.id.friendRequestsRelativeLayout);
-							String newIDStr = "friendRequestRelativeLayout_" +  i;
-						
-							
+							RelativeLayout friendRequestsRL =  (RelativeLayout)findViewById(R.id.friendRequestsRelativeLayout);					
 							li.inflate(R.layout.listitem_friend_request, friendRequestsRL);
 							GridLayout rowRL = (GridLayout)friendRequestsRL.findViewById(R.id.friendRequestGridLayout);
 							rowRL.setId(i);//(newIDStr);
@@ -255,7 +259,6 @@ public class FriendRequestsActivity extends Activity
 
 		protected void onPostExecute(String result)
 		{
-			Global global = ((Global)getApplicationContext());
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -283,7 +286,6 @@ public class FriendRequestsActivity extends Activity
 	public String readJSONFeedDecline(String URL)
 	{
 		// Get all the fields and store locally
-		TextView emailTextView = (TextView) findViewById(R.id.emailTextViewFRLI);
 		Global global = ((Global)getApplicationContext());
 		String receiver = global.getCurrentUser();
 		String sender = global.getDeclineEmail();
@@ -353,7 +355,6 @@ public class FriendRequestsActivity extends Activity
 
 		protected void onPostExecute(String result)
 		{
-			Global global = ((Global)getApplicationContext());
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -431,8 +432,29 @@ public class FriendRequestsActivity extends Activity
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
 		startActivity(intent);
 	}
-}
+	
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
+	public void startFriendsActivity(View view)
+	{
+		Intent intent = new Intent(this, FriendsActivity.class);
+		startActivity(intent);
+	}
 
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	        startFriendsActivity(null);
+	    }
+	    return false;
+	}
+}
 
 	
 	

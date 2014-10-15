@@ -20,6 +20,8 @@
     <string name="eventsTextView">Events</string>
     <string name="eventsButton">Events</string>
     <string name="groupsButton">Groups</string>
+    <string name="backButton">Back</string>
+    <string name="logoutButton">Logout</string>
     <string name="createGroupButton">Create Group</string>
     <string name="yourGroupsButton">Your Current Groups (8)</string>
     <string name="pendingGroupsButton">Pending Invites</string>

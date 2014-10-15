@@ -32,14 +32,23 @@
         <activity
             android:name=".UserActivity"
             android:label="@string/title_activity_user" >
+            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".GroupsActivity"
             android:label="@string/title_activity_groups" >
+            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".EventsActivity"
             android:label="@string/title_activity_events" >
+          	<meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -48,18 +57,30 @@
         <activity
             android:name=".FriendsActivity"
             android:label="@string/title_activity_friends" >
+      		<meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.UserActivity" />
         </activity>
         <activity
             android:name=".AddFriendActivity"
             android:label="@string/title_activity_add_friend" >
+      		<meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.FriendsActivity" />     		
         </activity>
         <activity
             android:name=".CurrentFriendsActivity"
             android:label="@string/title_activity_current_friends" >
+      		<meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
             android:name=".FriendRequestsActivity"
             android:label="@string/title_activity_friend_requests" >
+      		<meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="cs460.grouple.grouple.FriendsActivity" />      		
         </activity>
         <activity
             android:name=".Resources"

@@ -6,25 +6,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
-import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,9 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.os.Build;
 
-public class AddFriendActivity extends Activity
+public class AddFriendActivity extends ActionBarActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -46,13 +44,19 @@ public class AddFriendActivity extends Activity
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		ActionBar ab = getActionBar();
+		ab.setTitle("");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ab.setIcon(Color.TRANSPARENT);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_friend, menu);
+		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
 	}
 
@@ -63,8 +67,13 @@ public class AddFriendActivity extends Activity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings)
+		if (id == R.id.action_logout)
 		{
+			Global global = ((Global)getApplicationContext());
+			global.setAcceptEmail("");
+			global.setCurrentUser("");
+			global.setDeclineEmail("");
+			startLoginActivity(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -190,5 +199,47 @@ public class AddFriendActivity extends Activity
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
+	}
+	public void startUserActivity(View view)
+	{
+		Intent intent = new Intent(this, UserActivity.class);
+		startActivity(intent);
+	}
+	public void startHomeActivity(View view)
+	{
+		Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+	}
+	public void startEventsActivity(View view)
+	{
+		Intent intent = new Intent(this, EventsActivity.class);
+		startActivity(intent);
+	}
+	public void startGroupsActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsActivity.class);
+		startActivity(intent);
+	}
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
+	
+	public void startFriendsActivity(View view)
+	{
+		Intent intent = new Intent(this, FriendsActivity.class);
+		startActivity(intent);
+	}
+
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	        startFriendsActivity(null);
+	    }
+	    return false;
 	}
 }
