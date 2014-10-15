@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class CurrentFriendsActivity extends ActionBarActivity
@@ -171,8 +172,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 						for (int i = 0; i < friends.size(); i++)
 						{
 							RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsRelativeLayout);
-							
-						
 							
 							li.inflate(R.layout.listitem_friend, currentFriendsRL);
 							GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);

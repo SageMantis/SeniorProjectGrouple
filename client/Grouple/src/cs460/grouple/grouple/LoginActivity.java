@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+
 import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
@@ -175,6 +176,10 @@ public class LoginActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// successful
+					Global global = ((Global)getApplicationContext());
+					//check for current number of friend requests
+					global.doStuff();
+					Thread.sleep(500);
 					startHomeActivity();
 				} else
 				{
@@ -182,7 +187,6 @@ public class LoginActivity extends ActionBarActivity
 					System.out.println("failed");
 					TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
 					loginFail.setVisibility(0);
-					System.out.print("asdf");
 					//test
 				}
 			} catch (Exception e)
@@ -195,9 +199,11 @@ public class LoginActivity extends ActionBarActivity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
+		System.out.println("ARe we not yet there");
 	    if(keyCode == KeyEvent.KEYCODE_BACK)
 	    {
-	        System.exit(0);
+	    	System.out.println("ARe we here");
+	        System.exit(1);
 	    }
 	    return false;
 	}

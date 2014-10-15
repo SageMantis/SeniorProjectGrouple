@@ -7,12 +7,14 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.os.Build;
 
@@ -25,7 +27,7 @@ public class HomeActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		RelativeLayout homeRL = (RelativeLayout) findViewById(R.id.homeRelativeLayout);
+		View homeRL = findViewById(R.id.homeRelativeLayout);
 
 		//li = getLayoutInflater();
 		//li.inflate(R.layout.navigation_bar, homeRL);
@@ -39,6 +41,12 @@ public class HomeActivity extends ActionBarActivity
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
+		Global global = ((Global)getApplicationContext());
+		//Button b = (Button) homeRL.findViewById(R.id.userButtonH);
+		System.out.println("Friend Req: " + global.getNumFriendRequests());
+		//b.setText("3");
+		//b.setTextColor(Color.RED);
+		//b.setBackgroundColor(Color.RED);
 	}
 
 	@Override
@@ -118,4 +126,14 @@ public class HomeActivity extends ActionBarActivity
 		startActivity(intent);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	       
+	    }
+	    return false;
+	}
+	
 }

@@ -62,7 +62,7 @@
 	        android:onClick="startEventsActivity" />
 
 	    <Button
-	        android:id="@+id/userButton"
+	        android:id="@+id/userButtonH"
 	      	android:layout_width="80dp"
 	        android:layout_height="80dp"
 	        android:layout_column="1"

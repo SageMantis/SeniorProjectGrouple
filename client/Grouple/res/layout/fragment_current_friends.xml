@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true"
         android:text="Current Friends"
         android:textSize="24sp" />
-    
+
     <GridLayout
    		android:id="@+id/navigationBarGridLayout"
 	    android:layout_width="match_parent"

@@ -196,7 +196,6 @@ public class RegisterActivity extends Activity
 
 		protected void onPostExecute(String result)
 		{
-
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -215,9 +214,7 @@ public class RegisterActivity extends Activity
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
-
 		}
-
 	}
 
 	public void loginButton(View view)
