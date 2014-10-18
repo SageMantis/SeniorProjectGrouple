@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 //import cs460.grouple.grouple.LoginActivity.getLoginTask;
 
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -202,12 +203,15 @@ public class RegisterActivity extends Activity
 				System.out.println(jsonObject.getString("success"));
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					// successful
+					// account registered successfully
 					System.out.println("success!");
 					startLoginActivity();
 				} else
 				{
-					// failed
+					/*TO DO:
+					 * -add textview for a failed register attempt.
+					 * -set text of textview to display message from jsonObject.getString("message")
+					*/
 					System.out.println("fail!");
 				}
 			} catch (Exception e)

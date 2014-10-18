@@ -186,6 +186,7 @@ public class LoginActivity extends ActionBarActivity
 					// failed
 					System.out.println("failed");
 					TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
+					loginFail.setText(jsonObject.getString("message"));
 					loginFail.setVisibility(0);
 					//test
 				}
