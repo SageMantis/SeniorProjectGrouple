@@ -174,44 +174,24 @@ public class AddFriendActivity extends ActionBarActivity
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
 				
-				if (jsonObject.getString("success").toString().equals("1"))
+				EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
+				emailEditText.setText("");
+				TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
+				addFriendMessage.setText(jsonObject.getString("message"));
+				
+				if (jsonObject.getString("success").toString().equals("1") || jsonObject.getString("success").toString().equals("2"))
 				{
-					// successful
-					System.out.println("success!");
-					//Add popup
-					EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
-					emailEditText.setText("");
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("User was invited!");
+					// friend added or already friends (user's goal)
+					System.out.println("success!");			
 					addFriendMessage.setTextColor(Color.GREEN);
-					addFriendMessage.setVisibility(0);
-					// startLoginActivity();
 				} 
-				else if (jsonObject.getString("success").toString().equals("2"))
+				else
 				{
-					// failed
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("You are already friends with that user.");
-					addFriendMessage.setTextColor(Color.RED);
-					addFriendMessage.setVisibility(0);
-				}
-				else if (jsonObject.getString("success").toString().equals("3"))
-				{
-					// failed
+					// user does not exist, self request, or sql error
 					System.out.println("fail!");
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("Friend request is already pending with that user.");
 					addFriendMessage.setTextColor(Color.RED);
-					addFriendMessage.setVisibility(0);
 				}
-				else 
-				{
-					// failed
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("Error connecting to the server.");
-					addFriendMessage.setTextColor(Color.RED);
-					addFriendMessage.setVisibility(0);
-				}
+				addFriendMessage.setVisibility(0);
 
 			} catch (Exception e)
 			{
