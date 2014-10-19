@@ -34,13 +34,25 @@
 	header('Content-type: application/json');
 	if($row[0] == 0)
 	{
+
+		$password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+		if($password_hash == false)
+		{
+			$result["success"] = 0;
+			$result["message"] = "Internal server problem!  Please inform admin.";
+			echo json_encode ( $result );
+			exit();
+		}
 		$stmt = $mysqli->prepare("INSERT INTO users(email, password, first, last) VALUES (?, ?, ?, ?)");
 		if($stmt === false)
 		{
-			echo "error in sql";
+			$result["success"] = 0;
+			$result["message"] = "Internal server problem!  Please inform admin.";
+			echo json_encode ( $result );
+			exit();
 		}
 
-		$stmt->bind_param('ssss', $_POST['email'], $_POST['password'], $_POST['first'], $_POST['last']);
+		$stmt->bind_param('ssss', $_POST['email'], $password_hash, $_POST['first'], $_POST['last']);
 		if($stmt->execute())
 		{
 			$result["success"] = 1;
