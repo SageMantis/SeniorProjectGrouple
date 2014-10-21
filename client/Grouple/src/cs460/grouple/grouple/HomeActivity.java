@@ -4,9 +4,13 @@ import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
 import android.app.ActionBar;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +51,25 @@ public class HomeActivity extends ActionBarActivity
 		//b.setText("3");
 		//b.setTextColor(Color.RED);
 		//b.setBackgroundColor(Color.RED);
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() 
+		{
+		 @Override
+			public void onReceive(Context context, Intent intent) 
+			 {
+				// close activity
+				if(intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666","we killin the home");
+					//System.exit(1);
+					finish();
+				}	  
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+				//End Kill switch listener		
 	}
 
 	@Override
@@ -72,6 +95,8 @@ public class HomeActivity extends ActionBarActivity
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
 			startLoginActivity(null);
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -26,7 +26,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +56,23 @@ public class RegisterActivity extends Activity
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		getActionBar().hide();
+		
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    // close activity
+			  if(intent.getAction().equals("CLOSE_ALL"))
+			  {
+				  finish();
+			  }
+			  
+		  }
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
 	}
 
 	@Override
@@ -112,7 +132,12 @@ public class RegisterActivity extends Activity
 
 		} else
 		{
+			//Passwords did not match. Clear just the passwords, and display the error message.
+			passwordEditText.setText("");
+			rePasswordEditText.setText("");
+			errorMessageTextView.setText("Passwords must match!");
 			errorMessageTextView.setVisibility(0);
+			passwordEditText.requestFocus();
 		}
 	}
 
@@ -206,13 +231,47 @@ public class RegisterActivity extends Activity
 					// account registered successfully
 					System.out.println("success!");
 					startLoginActivity();
-				} else
+				} 
+				else
 				{
-					/*TO DO:
-					 * -add textview for a failed register attempt.
-					 * -set text of textview to display message from jsonObject.getString("message")
-					*/
-					System.out.println("fail!");
+					//Error Code
+					if(jsonObject.getString("success").toString().equals("2"))
+					{
+						TextView email = (TextView) findViewById(R.id.emailEditTextRA);
+						email.setText("");
+						email.requestFocus();					
+					}
+					//Error Code 3 = Not an email address
+					if(jsonObject.getString("success").toString().equals("3"))
+					{
+						TextView email = (TextView) findViewById(R.id.emailEditTextRA);
+						email.setText("");
+						email.requestFocus();
+					}
+					//Password is too short or too long
+					else if(jsonObject.getString("success").toString().equals("4"))
+					{
+						TextView password = (TextView) findViewById(R.id.passwordEditTextRA);
+						TextView repassword = (TextView) findViewById(R.id.rePasswordEditTextRA);
+						password.setText("");
+						repassword.setText("");
+						password.requestFocus();
+					}
+					//First and/or Last name are blank.
+					else if(jsonObject.getString("success").toString().equals("5"))
+					{
+						TextView fName = (TextView) findViewById(R.id.fNameEditText);
+						TextView lName = (TextView) findViewById(R.id.lNameEditText);
+						
+						fName.setText("");
+						lName.setText("");
+						
+						fName.requestFocus();
+					}
+					//Couldn't create account. Change error message to whatever the PHP error message is.					
+					TextView registerFail = (TextView) findViewById(R.id.errorMessageTextView);
+					registerFail.setText(jsonObject.getString("message"));
+					registerFail.setVisibility(0);
 				}
 			} catch (Exception e)
 			{

@@ -19,7 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -67,7 +70,24 @@ public class FriendRequestsActivity extends ActionBarActivity
 		new getFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 						+ receiver);
-
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    // close activity
+			  if(intent.getAction().equals("CLOSE_ALL"))
+			  {
+				  Log.d("app666","we killin the login it");
+				  //System.exit(1);
+				  finish();
+			  }
+			  
+		  }
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
 	}
 
 	@Override
@@ -93,6 +113,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
 			startLoginActivity(null);
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
