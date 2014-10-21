@@ -217,7 +217,25 @@ public class CurrentFriendsActivity extends ActionBarActivity
 					}
 					//successful
 					//startHomeActivity();
-				} else
+					
+				
+				}
+				//user has no friends
+				if (jsonObject.getString("success").toString().equals("2"))
+				{
+					RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsRelativeLayout);
+					
+					li.inflate(R.layout.listitem_friend, currentFriendsRL);
+					GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
+					rowRL.setId(0);//(newIDStr);
+					
+					String message = jsonObject.getString("message").toString();
+					((TextView)rowRL.findViewById(R.id.emailTextViewFLI)).setText(message);
+			
+					int y = 100*(0+1);
+					rowRL.setY(y);
+				}
+				else
 				{
 					// failed
 					//TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
