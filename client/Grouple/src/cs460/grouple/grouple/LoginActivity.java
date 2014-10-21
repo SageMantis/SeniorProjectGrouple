@@ -18,7 +18,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 
 import android.app.ActionBar;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,7 +54,28 @@ public class LoginActivity extends ActionBarActivity
 		ActionBar ab = getActionBar();
 		ab.hide();
 		ab.setTitle("");
-		//ab.setIcon()		
+		Log.d("app666","we created");
+				
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    // close activity
+			  if(intent.getAction().equals("CLOSE_ALL"))
+			  {
+				  Log.d("app666","we killin the login it");
+				  //System.exit(1);
+				  finish();
+			  }
+			  
+		  }
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
+		
+		//ab.setIcon()
 	}
 
 	@Override
@@ -186,6 +210,7 @@ public class LoginActivity extends ActionBarActivity
 					// failed
 					System.out.println("failed");
 					TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
+					loginFail.setText(jsonObject.getString("message"));
 					loginFail.setVisibility(0);
 					//test
 				}
@@ -202,8 +227,9 @@ public class LoginActivity extends ActionBarActivity
 		System.out.println("ARe we not yet there");
 	    if(keyCode == KeyEvent.KEYCODE_BACK)
 	    {
-	    	System.out.println("ARe we here");
-	        System.exit(1);
+	    	Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
+			System.exit(0);
 	    }
 	    return false;
 	}

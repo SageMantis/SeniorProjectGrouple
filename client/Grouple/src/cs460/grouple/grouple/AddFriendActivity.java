@@ -18,7 +18,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -49,6 +52,25 @@ public class AddFriendActivity extends ActionBarActivity
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
+		
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+		// close activity
+		if(intent.getAction().equals("CLOSE_ALL"))
+		{
+			Log.d("app666","we killin the login it");
+			//System.exit(1);
+			 finish();
+		}
+		  
+		}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
 	}
 
 	@Override
@@ -74,6 +96,8 @@ public class AddFriendActivity extends ActionBarActivity
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
 			startLoginActivity(null);
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -174,44 +198,24 @@ public class AddFriendActivity extends ActionBarActivity
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
 				
-				if (jsonObject.getString("success").toString().equals("1"))
+				EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
+				emailEditText.setText("");
+				TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
+				addFriendMessage.setText(jsonObject.getString("message"));
+				
+				if (jsonObject.getString("success").toString().equals("1") || jsonObject.getString("success").toString().equals("2"))
 				{
-					// successful
-					System.out.println("success!");
-					//Add popup
-					EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
-					emailEditText.setText("");
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("User was invited!");
+					// friend added or already friends (user's goal)
+					System.out.println("success!");			
 					addFriendMessage.setTextColor(Color.GREEN);
-					addFriendMessage.setVisibility(0);
-					// startLoginActivity();
 				} 
-				else if (jsonObject.getString("success").toString().equals("2"))
+				else
 				{
-					// failed
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("You are already friends with that user.");
-					addFriendMessage.setTextColor(Color.RED);
-					addFriendMessage.setVisibility(0);
-				}
-				else if (jsonObject.getString("success").toString().equals("3"))
-				{
-					// failed
+					// user does not exist, self request, or sql error
 					System.out.println("fail!");
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("Friend request is already pending with that user.");
 					addFriendMessage.setTextColor(Color.RED);
-					addFriendMessage.setVisibility(0);
 				}
-				else 
-				{
-					// failed
-					TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
-					addFriendMessage.setText("Error connecting to the server.");
-					addFriendMessage.setTextColor(Color.RED);
-					addFriendMessage.setVisibility(0);
-				}
+				addFriendMessage.setVisibility(0);
 
 			} catch (Exception e)
 			{
