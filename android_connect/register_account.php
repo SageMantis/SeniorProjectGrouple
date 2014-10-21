@@ -2,9 +2,12 @@
 
 	include_once('/../includes/db_connect.inc.php');
 
+	$email = $_POST['email'];
+	$first = $_POST['first'];
+	$last = $_POST['last'];
+
 	#Validate E-mail
 	#Source: http://www.w3schools.com/php/php_form_url_email.asp
-	$email = $_POST['email'];
 	if(!filter_var($email, FILTER_VALIDATE_EMAIL))
 	{
 		$result["success"] = 3;
@@ -18,8 +21,17 @@
 	$password = $_POST['password'];
 	if(strlen($password) < 4 || strlen($password) > 24)
 	{
-		$result["success"] = 3;
-		$result["message"] = "Invalid password length";
+		$result["success"] = 4;
+		$result["message"] = "Invalid password length.";
+		echo json_encode ( $result );
+		$mysqli->close();
+		exit();
+	}
+
+	if(empty($first) || empty($last))
+	{
+		$result["success"] = 5;
+		$result["message"] = "Please enter a first and last name.";
 		echo json_encode ( $result );
 		$mysqli->close();
 		exit();
@@ -62,7 +74,7 @@
 		else
 		{
 			$result["success"] = 0;
-			$result["message"] = "Unable to create account!";
+			$result["message"] = "Internal server problem! Please inform admin.";
 		echo json_encode ( $result );
 		}		
 	}

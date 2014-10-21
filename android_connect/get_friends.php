@@ -26,7 +26,7 @@ UNION SELECT receiver FROM friends WHERE sender = ? AND rec_date is not NULL");
 	else
 	{
 		$response["success"] = 0;
-		$response["message"] = "No friends found for that username!"; 
+		$response["message"] = "No friends found."; 
 	}
 
 	$stmt->close();
