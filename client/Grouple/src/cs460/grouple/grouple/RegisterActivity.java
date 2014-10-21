@@ -234,14 +234,14 @@ public class RegisterActivity extends Activity
 				} 
 				else
 				{
-					//Error Code
+					//Email already in system
 					if(jsonObject.getString("success").toString().equals("2"))
 					{
 						TextView email = (TextView) findViewById(R.id.emailEditTextRA);
 						email.setText("");
 						email.requestFocus();					
 					}
-					//Error Code 3 = Not an email address
+					//Not an email address
 					if(jsonObject.getString("success").toString().equals("3"))
 					{
 						TextView email = (TextView) findViewById(R.id.emailEditTextRA);
