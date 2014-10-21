@@ -56,7 +56,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		String email = global.getCurrentUser();
 		System.out.println("Email: " + email);
 		new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_friends.php?email="
+				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
 						+ email);
 		
 		//START KILL SWITCH LISTENER
@@ -178,19 +178,28 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					ArrayList<String> friends = new ArrayList<String>();
-					JSONArray jsonFriends = (JSONArray)jsonObject.getJSONArray("friends").getJSONArray(0);
+					JSONArray jsonFriends = (JSONArray)jsonObject.getJSONArray("friends");
 					
 					if (jsonFriends != null)
 					{
 						System.out.println(jsonFriends.toString() + "\n" + jsonFriends.length());
-		
 						//looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
-						{					
-							String raw = jsonFriends.get(i).toString().replace("\"","").replace("]", "").replace("[", "");
-							String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
+						{			
+							String firstraw = jsonFriends.getJSONObject(i).getString("first");
+							String lastraw = jsonFriends.getJSONObject(i).getString("last");
+							String row = firstraw.substring(0,1).toUpperCase() + firstraw.substring(1);
+							row = row + " ";
+							row = row + lastraw.substring(0,1).toUpperCase() + lastraw.substring(1);
+							
+							//Do not need to replace out double quotes or brackets
+							//String raw = jsonFriends.get(i).toString().replace("\"","").replace("]", "").replace("[", "");
+							
+							//String raw = jsonFriends.get(i).toString();
+							//String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
 							friends.add(row);
-							System.out.println("Row: " + row +"\nCount: " + i);
+							//System.out.println("Row: " + row +"\nCount: " + i);
+							
 						}
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < friends.size(); i++)
