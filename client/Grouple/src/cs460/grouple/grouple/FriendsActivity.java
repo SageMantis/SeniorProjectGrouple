@@ -92,7 +92,7 @@ public class FriendsActivity extends ActionBarActivity
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment
+	public class PlaceholderFragment extends Fragment
 	{
 
 		public PlaceholderFragment()
@@ -105,6 +105,8 @@ public class FriendsActivity extends ActionBarActivity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_friends,
 					container, false);
+			Global global = ((Global)getApplicationContext());
+			global.setNotifications(rootView);
 			return rootView;
 		}
 	}

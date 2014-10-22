@@ -93,7 +93,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
@@ -124,7 +123,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment
+	public class PlaceholderFragment extends Fragment
 	{
 
 		public PlaceholderFragment()
@@ -137,6 +136,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_friend_requests,
 					container, false);
+			Global global = ((Global)getApplicationContext());
+			global.setNotifications(rootView);
 			return rootView;
 		}
 	}
@@ -191,7 +192,9 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					ArrayList<String> senders = new ArrayList<String>();
 					JSONArray jsonSenders = (JSONArray)jsonObject.getJSONArray("senders").getJSONArray(0);
-					
+					Global global = ((Global)getApplicationContext());
+					global.setNumFriendRequests(senders.size());
+					global.setNotifications(null);
 					if (jsonSenders != null)
 					{
 						System.out.println(jsonSenders.toString() + "\n" + jsonSenders.length());
@@ -204,6 +207,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 							senders.add(row);
 							System.out.println("Row: " + row +"\nCount: " + i);
 						}
+				
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < senders.size(); i++)
 						{
@@ -211,19 +215,18 @@ public class FriendRequestsActivity extends ActionBarActivity
 							li.inflate(R.layout.listitem_friend_request, friendRequestsRL);
 							GridLayout rowRL = (GridLayout)friendRequestsRL.findViewById(R.id.friendRequestGridLayout);
 							rowRL.setId(i);//(newIDStr);
-							((TextView)rowRL.findViewById(R.id.emailTextViewFRLI)).setText(senders.get(i));
-					
+							//Setting text of each friend request to the email of the sender
+							((TextView)rowRL.findViewById(R.id.emailTextViewFRLI)).setText(senders.get(i));				
 							int y = 120*(i+1);
 							rowRL.setY(y);
 						}
 					}
-					//successful
-					//startHomeActivity();
-				} else
+				} 
+				else
 				{
-					// failed
-					//TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
-					//loginFail.setVisibility(0);
+					//If no friend requests are found, display no friends message
+					TextView noFriends = (TextView)findViewById(R.id.noFriendRequestsTextView);
+					noFriends.setVisibility(0);
 				}
 			} catch (Exception e)
 			{
@@ -463,6 +466,26 @@ public class FriendRequestsActivity extends ActionBarActivity
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);
+		startActivity(intent);
+	}
+	public void startUserActivity(View view)
+	{
+		Intent intent = new Intent(this, UserActivity.class);
+		startActivity(intent);
+	}
+	public void startHomeActivity(View view)
+	{
+		Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+	}
+	public void startEventsActivity(View view)
+	{
+		Intent intent = new Intent(this, EventsActivity.class);
+		startActivity(intent);
+	}
+	public void startGroupsActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
 	}
 

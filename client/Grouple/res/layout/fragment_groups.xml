@@ -3,31 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     tools:context="cs460.grouple.grouple.GroupsActivity$PlaceholderFragment" >
-
-    <Button
-        android:id="@+id/createGroupButton"
-        android:layout_width="600dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="80dp"
-        android:text="@string/createGroupButton" />
-
-     
-    <Button
-        android:id="@+id/yourGroupsButton"
-        android:layout_width="600dp"
-        android:layout_height="70dp"
-        android:layout_alignLeft="@+id/createGroupButton"
-        android:layout_below="@+id/createGroupButton"
-        android:text="@string/yourGroupsButton" />
-
-    <Button
-        android:id="@+id/pendingGroupsButton"
-        android:layout_width="600dp"
-        android:layout_height="70dp"
-        android:layout_alignLeft="@+id/yourGroupsButton"
-        android:layout_below="@+id/yourGroupsButton"
-        android:text="@string/pendingGroupsButton" />
 
     <TextView
         android:id="@+id/groupsTextView"
@@ -47,7 +25,7 @@
 	    android:layout_marginBottom="0dp"
 	    android:padding="0dp"
 	    android:columnCount="4"
-	    android:rowCount="1" >
+	    android:rowCount="2" >
 	    
      	<Button
 	        android:id="@+id/homeButton"
@@ -96,6 +74,45 @@
 	        android:background="@drawable/user_icon"
 	        android:padding="0dp"
 	        android:onClick="startUserActivity" />
-	    
+
+      	    <TextView
+      	        android:id="@+id/userNotificationTextView"
+      	        android:layout_width="16dp"
+      	        android:layout_height="16dp"
+      	        android:layout_column="1"
+      	        android:layout_gravity="center_horizontal|top"
+      	        android:layout_row="1"
+      	        android:background="@drawable/notification_icon"
+      	        android:gravity="center"
+      	        android:textAppearance="?android:attr/textAppearanceSmall"
+      	        android:textColor="#FFFFFF"
+      	        android:visibility="invisible" />
+      	    
 	</GridLayout>
+
+   	<Button
+   	    android:id="@+id/pendingGroupsButton"
+   	    android:layout_width="600dp"
+   	    android:layout_height="70dp"
+   	    android:layout_alignParentLeft="true"
+   	    android:layout_below="@+id/yourGroupsButton"
+   	    android:text="@string/pendingGroupsButton" />
+
+   	<Button
+   	    android:id="@+id/yourGroupsButton"
+   	    android:layout_width="600dp"
+   	    android:layout_height="70dp"
+   	    android:layout_alignParentLeft="true"
+   	    android:layout_below="@+id/createGroupButton"
+   	    android:text="@string/yourGroupsButton" />
+
+   	<Button
+   	    android:id="@+id/createGroupButton"
+   	    android:layout_width="600dp"
+   	    android:layout_height="70dp"
+   	    android:layout_alignParentLeft="true"
+   	    android:layout_below="@+id/groupsTextView"
+   	    android:layout_marginTop="70dp"
+   	    android:text="@string/createGroupButton" />
+
 </RelativeLayout>

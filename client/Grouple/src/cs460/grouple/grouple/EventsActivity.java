@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 
 public class EventsActivity extends ActionBarActivity
 {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -57,7 +56,6 @@ public class EventsActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
@@ -87,7 +85,7 @@ public class EventsActivity extends ActionBarActivity
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment
+	public class PlaceholderFragment extends Fragment
 	{
 
 		public PlaceholderFragment()
@@ -100,6 +98,8 @@ public class EventsActivity extends ActionBarActivity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_events,
 					container, false);
+			Global global = ((Global)getApplicationContext());
+			global.setNotifications(rootView);
 			return rootView;
 		}
 	}

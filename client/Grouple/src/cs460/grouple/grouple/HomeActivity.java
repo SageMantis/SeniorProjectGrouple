@@ -1,5 +1,6 @@
 package cs460.grouple.grouple;
 
+
 import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
@@ -14,13 +15,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.os.Build;
+
+import android.widget.GridLayout;
+import android.widget.TextView;
+
 
 public class HomeActivity extends ActionBarActivity
 {
@@ -31,11 +33,7 @@ public class HomeActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		View homeRL = findViewById(R.id.homeRelativeLayout);
 
-		//li = getLayoutInflater();
-		//li.inflate(R.layout.navigation_bar, homeRL);
-		//homeRL.addView(nav);
 		if (savedInstanceState == null)
 		{
 			getSupportFragmentManager().beginTransaction()
@@ -45,12 +43,10 @@ public class HomeActivity extends ActionBarActivity
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
-		Global global = ((Global)getApplicationContext());
-		//Button b = (Button) homeRL.findViewById(R.id.userButtonH);
-		System.out.println("Friend Req: " + global.getNumFriendRequests());
-		//b.setText("3");
-		//b.setTextColor(Color.RED);
-		//b.setBackgroundColor(Color.RED);
+		//Global global = ((Global)getApplicationContext());
+		//setNotifications();
+	
+		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -69,7 +65,9 @@ public class HomeActivity extends ActionBarActivity
 			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
-				//End Kill switch listener		
+				//End Kill switch listener	
+		
+	
 	}
 
 	@Override
@@ -94,6 +92,7 @@ public class HomeActivity extends ActionBarActivity
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
+			global.setNumFriendRequests(0);
 			startLoginActivity(null);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
@@ -105,11 +104,12 @@ public class HomeActivity extends ActionBarActivity
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment
+	public class PlaceholderFragment extends Fragment
 	{
 
 		public PlaceholderFragment()
 		{
+			
 		}
 
 		@Override
@@ -118,6 +118,8 @@ public class HomeActivity extends ActionBarActivity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_home, container,
 					false);
+			Global global = ((Global)getApplicationContext());
+			global.setNotifications(rootView);
 			return rootView;
 		}
 	}
@@ -160,5 +162,4 @@ public class HomeActivity extends ActionBarActivity
 	    }
 	    return false;
 	}
-	
 }

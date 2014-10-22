@@ -18,6 +18,8 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,22 +29,26 @@ public class Global extends Application
 	private String currentUser;
 	private String acceptEmail;
 	private String declineEmail;
-	private String numFriendRequests = "";
+	private int numFriendRequests = 0;
 	
 	public String getCurrentUser()
 	{
 		return currentUser;
 	}
+	
 	public void setCurrentUser(String email)
 	{
 		currentUser = email;
 	}
-	public void setNumFriendRequests(String num)
+	
+	public void setNumFriendRequests(int num)
 	{
 		numFriendRequests = num;
+		System.out.println("Friend requests: " + num);
+		//Setting that userNotification
 	}
 	
-	public String getNumFriendRequests()
+	public int getNumFriendRequests()
 	{
 		return numFriendRequests;
 	}
@@ -57,6 +63,7 @@ public class Global extends Application
 	{
 		return declineEmail;
 	}
+	
 	public void setAcceptEmail(String email)
 	{
 		acceptEmail = email;
@@ -67,13 +74,40 @@ public class Global extends Application
 		return acceptEmail;
 	}
 	
-	public void doStuff()
+	public int getUserNotificationNum()
+	{
+		System.out.println("In the get:" +numFriendRequests);
+		return numFriendRequests; //+ new messages num ... (when implemented)
+	}
+	
+	public void setNotifications(View view)
+	{
+		//View homeRL = findViewById(R.id.homeRelativeLayout);
+		Global global = ((Global)getApplicationContext());
+		int userNotificationNum = global.getUserNotificationNum();
+		
+		if (userNotificationNum > 0) //= for testing cause no one likes me
+		{
+			TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
+			userNotification.setText(Integer.toString(userNotificationNum));
+			userNotification.setVisibility(0);
+		}
+		if (numFriendRequests > 0 && (view.findViewById(R.id.friendRequestsButtonFA) != null))
+		{
+			Button friendRequestsButton = (Button)view.findViewById(R.id.friendRequestsButtonFA);
+			friendRequestsButton.setText("Friend Requests (" + Integer.toString(numFriendRequests) + ")");
+		}
+		//else do nothing, keep that invisible
+	}	
+	
+	public void fetchNumFriendRequests()
 	{
 		new getFriendRequestsTask()
 		.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 				+ getCurrentUser());
 	}
-	public String readJSONFeed(String URL)
+	
+	public String readFriendRequestsJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
@@ -106,42 +140,38 @@ public class Global extends Application
 		}
 		return stringBuilder.toString();
 	}
+	
 	private class getFriendRequestsTask extends AsyncTask<String, Void, String>
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readJSONFeed(urls[0]);
+			return readFriendRequestsJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result)
 		{
-			
 			try
 			{
-			
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					ArrayList<String> senders = new ArrayList<String>();
 					JSONArray jsonSenders = (JSONArray)jsonObject.getJSONArray("senders").getJSONArray(0);
-					System.out.println("Fox in the fence");
 					if (jsonSenders != null)
 					{
-						System.out.println("Fox in the IF json != null " + jsonSenders.length());
-						setNumFriendRequests(Integer.toString(jsonSenders.length()));
+						setNumFriendRequests(jsonSenders.length());
 					}
 					else
 					{
-						System.out.println("jsonSenders = null");
-						setNumFriendRequests("");
+						setNumFriendRequests(0);
 					}
-					//successful
-					
-				} else
+					//successful		
+				} 
+				else
 				{
-					setNumFriendRequests("");
+					setNumFriendRequests(0);
 				}
-			} catch (Exception e)
+			} 
+			catch (Exception e)
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}

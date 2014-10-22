@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     tools:context="cs460.grouple.grouple.LoginActivity$PlaceholderFragment" >
 
     <EditText
@@ -27,16 +29,6 @@
         android:inputType="textEmailAddress" >
        	<requestFocus />
    	</EditText>
-
-    <TextView
-        android:id="@+id/loginTextViewLA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/emailEditTextLA"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="38dp"
-        android:text="@string/loginTextView"
-        android:textSize="30sp" />
 
     <Button
         android:id="@+id/loginButtonLA"
@@ -67,11 +59,21 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
+        android:id="@+id/loginTextViewLA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/loginTextView"
+        android:textSize="24sp" />
+
+    <TextView
         android:id="@+id/loginFailTextViewLA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/addFriendMessageTextViewAFA"
         android:layout_below="@+id/loginButtonLA"
+        android:layout_centerHorizontal="true"
         android:text="@string/loginFailString"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="invisible" />
