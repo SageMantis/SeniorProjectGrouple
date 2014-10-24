@@ -192,9 +192,9 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					ArrayList<String> senders = new ArrayList<String>();
 					JSONArray jsonSenders = (JSONArray)jsonObject.getJSONArray("senders").getJSONArray(0);
-					Global global = ((Global)getApplicationContext());
-					global.setNumFriendRequests(senders.size());
-					global.setNotifications(null);
+					//Global global = ((Global)getApplicationContext());
+					//global.setNumFriendRequests(senders.size());
+					//global.setNotifications(findViewById(R.id.friendRequestsRelativeLayout));
 					if (jsonSenders != null)
 					{
 						System.out.println(jsonSenders.toString() + "\n" + jsonSenders.length());
