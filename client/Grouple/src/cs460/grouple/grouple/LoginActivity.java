@@ -50,6 +50,7 @@ public class LoginActivity extends ActionBarActivity
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
 		ActionBar ab = getActionBar();
 		ab.hide();
 		ab.setTitle("");
