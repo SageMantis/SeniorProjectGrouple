@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,12 +15,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
-//import cs460.grouple.grouple.LoginActivity.getLoginTask;
-
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +45,24 @@ public class RegisterActivity extends Activity
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		getActionBar().hide();
+		
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    // close activity
+			  if(intent.getAction().equals("CLOSE_ALL"))
+			  {
+				  finish();
+			  }
+			  
+		  }
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
 	}
 
 	@Override
@@ -105,7 +122,12 @@ public class RegisterActivity extends Activity
 
 		} else
 		{
+			//Passwords did not match. Clear just the passwords, and display the error message.
+			passwordEditText.setText("");
+			rePasswordEditText.setText("");
+			errorMessageTextView.setText("Passwords must match!");
 			errorMessageTextView.setVisibility(0);
+			passwordEditText.requestFocus();
 		}
 	}
 
@@ -190,28 +212,62 @@ public class RegisterActivity extends Activity
 
 		protected void onPostExecute(String result)
 		{
-
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					// successful
+					// account registered successfully
 					System.out.println("success!");
 					startLoginActivity();
-				} else
+				} 
+				else
 				{
-					// failed
-					System.out.println("fail!");
+					//Email already in system
+					if(jsonObject.getString("success").toString().equals("2"))
+					{
+						TextView email = (TextView) findViewById(R.id.emailEditTextRA);
+						email.setText("");
+						email.requestFocus();					
+					}
+					//Not an email address
+					if(jsonObject.getString("success").toString().equals("3"))
+					{
+						TextView email = (TextView) findViewById(R.id.emailEditTextRA);
+						email.setText("");
+						email.requestFocus();
+					}
+					//Password is too short or too long
+					else if(jsonObject.getString("success").toString().equals("4"))
+					{
+						TextView password = (TextView) findViewById(R.id.passwordEditTextRA);
+						TextView repassword = (TextView) findViewById(R.id.rePasswordEditTextRA);
+						password.setText("");
+						repassword.setText("");
+						password.requestFocus();
+					}
+					//First and/or Last name are blank.
+					else if(jsonObject.getString("success").toString().equals("5"))
+					{
+						TextView fName = (TextView) findViewById(R.id.fNameEditText);
+						TextView lName = (TextView) findViewById(R.id.lNameEditText);
+						
+						fName.setText("");
+						lName.setText("");
+						
+						fName.requestFocus();
+					}
+					//Couldn't create account. Change error message to whatever the PHP error message is.					
+					TextView registerFail = (TextView) findViewById(R.id.errorMessageTextView);
+					registerFail.setText(jsonObject.getString("message"));
+					registerFail.setVisibility(0);
 				}
 			} catch (Exception e)
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
-
 		}
-
 	}
 
 	public void loginButton(View view)

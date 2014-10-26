@@ -16,11 +16,17 @@ import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
 
+import android.app.ActionBar;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +38,7 @@ import android.widget.TextView;
 public class LoginActivity extends ActionBarActivity
 {
 	Button loginButton;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -44,6 +50,31 @@ public class LoginActivity extends ActionBarActivity
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		ActionBar ab = getActionBar();
+		ab.hide();
+		ab.setTitle("");
+		Log.d("app666", "we created");
+
+		// START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666", "we killin the login it");
+					//System.exit(1);
+					finish();
+				}
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 
 	@Override
@@ -98,7 +129,7 @@ public class LoginActivity extends ActionBarActivity
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 	}
-	
+
 	public String readJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
@@ -121,13 +152,11 @@ public class LoginActivity extends ActionBarActivity
 					stringBuilder.append(line);
 				}
 				inputStream.close();
-			} 
-			else
+			} else
 			{
 				Log.d("JSON", "Failed to download file");
 			}
-		} 
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
 		}
@@ -143,14 +172,14 @@ public class LoginActivity extends ActionBarActivity
 		String email = emailEditText.getText().toString();
 		String password = passwordEditText.getText().toString();
 
-		Global global = ((Global)getApplicationContext());
+		Global global = ((Global) getApplicationContext());
 
 		global.setCurrentUser(email);
-		
+
 		new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
 						+ email + "&password=" + password);
-						
+
 	}
 
 	private class getLoginTask extends AsyncTask<String, Void, String>
@@ -168,23 +197,38 @@ public class LoginActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// successful
+					Global global = ((Global) getApplicationContext());
+					// check for current number of friend requests
+					global.fetchNumFriendRequests();
+					Thread.sleep(500); //Sleeping to let home activity start up
 					startHomeActivity();
-				} else
+				} 
+				else
 				{
 					// failed
 					System.out.println("failed");
 					TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
+					loginFail.setText(jsonObject.getString("message"));
 					loginFail.setVisibility(0);
-					System.out.print("asdf");
-					//test
 				}
-			} catch (Exception e)
+			} 
+			catch (Exception e)
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
-
 		}
-
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		System.out.println("ARe we not yet there");
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
+			System.exit(0);
+		}
+		return false;
+	}
 }

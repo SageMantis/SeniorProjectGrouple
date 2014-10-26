@@ -20,6 +20,8 @@
     <string name="eventsTextView">Events</string>
     <string name="eventsButton">Events</string>
     <string name="groupsButton">Groups</string>
+    <string name="backButton">Back</string>
+    <string name="logoutButton">Logout</string>
     <string name="createGroupButton">Create Group</string>
     <string name="yourGroupsButton">Your Current Groups (8)</string>
     <string name="pendingGroupsButton">Pending Invites</string>
@@ -28,6 +30,7 @@
     <string name="upcomingEventsButton">Upcoming Events (3)</string>
     <string name="pastEventsButton">Past Events (22)</string>
     <string name="userButton">User</string>
+    <string name="noFriendRequestsTextView">No friend requests to display!</string>
     <string name="homeButton">Home</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="title_activity_groups">GroupsActivity</string>

@@ -1,14 +1,23 @@
 package cs460.grouple.grouple;
 
 import android.support.v7.app.ActionBarActivity;
+
 import android.support.v4.app.Fragment;
+import android.app.ActionBar;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 public class GroupsActivity extends ActionBarActivity
 {
@@ -24,6 +33,30 @@ public class GroupsActivity extends ActionBarActivity
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		ActionBar ab = getActionBar();
+		ab.setTitle("");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ab.setIcon(Color.TRANSPARENT);
+		
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    // close activity
+			  if(intent.getAction().equals("CLOSE_ALL"))
+			  {
+				  Log.d("app666","we killin the login it");
+				  //System.exit(1);
+				  finish();
+			  }
+			  
+		  }
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
 	}
 
 	@Override
@@ -31,7 +64,7 @@ public class GroupsActivity extends ActionBarActivity
 	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.groups, menu);
+		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
 	}
 
@@ -42,17 +75,23 @@ public class GroupsActivity extends ActionBarActivity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings)
+		if (id == R.id.action_logout)
 		{
+			Global global = ((Global)getApplicationContext());
+			global.setAcceptEmail("");
+			global.setCurrentUser("");
+			global.setDeclineEmail("");
+			startLoginActivity(null);
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment
+	public class PlaceholderFragment extends Fragment
 	{
 
 		public PlaceholderFragment()
@@ -65,6 +104,8 @@ public class GroupsActivity extends ActionBarActivity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_groups,
 					container, false);
+			Global global = ((Global)getApplicationContext());
+			global.setNotifications(rootView);
 			return rootView;
 		}
 	}
@@ -91,6 +132,22 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, EventsActivity.class);
 		startActivity(intent);
+	}
+	
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	        startHomeActivity(null);
+	    }
+	    return false;
 	}
 
 }

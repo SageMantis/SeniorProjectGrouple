@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/action_home"
-        android:icon="@drawable/home_icon"
-        android:title="@string/homeButton"
+    <item android:id="@+id/action_logout"
+        android:title="@string/logoutButton"
    	/>
 
 </menu>

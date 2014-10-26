@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -13,11 +12,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import android.app.Activity;
+import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,9 +30,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class CurrentFriendsActivity extends Activity
+public class CurrentFriendsActivity extends ActionBarActivity
 {
 
 	@Override
@@ -42,19 +47,44 @@ public class CurrentFriendsActivity extends Activity
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
+		ActionBar ab = getActionBar();
+		ab.setTitle("");
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ab.setIcon(Color.TRANSPARENT);
+		
 		Global global = ((Global)getApplicationContext());
 		String email = global.getCurrentUser();
 		System.out.println("Email: " + email);
 		new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_friends.php?email="
+				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
 						+ email);
+		
+		//START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    // close activity
+			  if(intent.getAction().equals("CLOSE_ALL"))
+			  {
+				  Log.d("app666","we killin the login it");
+				  //System.exit(1);
+				  finish();
+			  }
+			  
+		  }
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		//End Kill switch listener
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.current_friends, menu);
+		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
 	}
 
@@ -65,8 +95,15 @@ public class CurrentFriendsActivity extends Activity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings)
+		if (id == R.id.action_logout)
 		{
+			Global global = ((Global)getApplicationContext());
+			global.setAcceptEmail("");
+			global.setCurrentUser("");
+			global.setDeclineEmail("");
+			startLoginActivity(null);
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -75,7 +112,7 @@ public class CurrentFriendsActivity extends Activity
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment
+	public class PlaceholderFragment extends Fragment
 	{
 
 		public PlaceholderFragment()
@@ -88,6 +125,8 @@ public class CurrentFriendsActivity extends Activity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_current_friends,
 					container, false);
+			Global global = ((Global)getApplicationContext());
+			global.setNotifications(rootView);
 			return rootView;
 		}
 	}
@@ -141,26 +180,33 @@ public class CurrentFriendsActivity extends Activity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					ArrayList<String> friends = new ArrayList<String>();
-					JSONArray jsonFriends = (JSONArray)jsonObject.getJSONArray("friends").getJSONArray(0);
+					JSONArray jsonFriends = (JSONArray)jsonObject.getJSONArray("friends");
 					
 					if (jsonFriends != null)
 					{
 						System.out.println(jsonFriends.toString() + "\n" + jsonFriends.length());
-		
 						//looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
-						{					
-							String raw = jsonFriends.get(i).toString().replace("\"","").replace("]", "").replace("[", "");
-							String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
+						{			
+							String firstraw = jsonFriends.getJSONObject(i).getString("first");
+							String lastraw = jsonFriends.getJSONObject(i).getString("last");
+							String row = firstraw.substring(0,1).toUpperCase() + firstraw.substring(1);
+							row = row + " ";
+							row = row + lastraw.substring(0,1).toUpperCase() + lastraw.substring(1);
+							
+							//Do not need to replace out double quotes or brackets
+							//String raw = jsonFriends.get(i).toString().replace("\"","").replace("]", "").replace("[", "");
+							
+							//String raw = jsonFriends.get(i).toString();
+							//String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
 							friends.add(row);
-							System.out.println("Row: " + row +"\nCount: " + i);
+							//System.out.println("Row: " + row +"\nCount: " + i);
+							
 						}
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < friends.size(); i++)
 						{
 							RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsRelativeLayout);
-							
-						
 							
 							li.inflate(R.layout.listitem_friend, currentFriendsRL);
 							GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
@@ -173,7 +219,25 @@ public class CurrentFriendsActivity extends Activity
 					}
 					//successful
 					//startHomeActivity();
-				} else
+					
+				
+				}
+				//user has no friends
+				if (jsonObject.getString("success").toString().equals("2"))
+				{
+					RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsRelativeLayout);
+					
+					li.inflate(R.layout.listitem_friend, currentFriendsRL);
+					GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
+					rowRL.setId(0);//(newIDStr);
+					
+					String message = jsonObject.getString("message").toString();
+					((TextView)rowRL.findViewById(R.id.emailTextViewFLI)).setText(message);
+			
+					int y = 100*(0+1);
+					rowRL.setY(y);
+				}
+				else
 				{
 					// failed
 					//TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
@@ -184,5 +248,30 @@ public class CurrentFriendsActivity extends Activity
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
+	}
+	public void startUserActivity(View view)
+	{
+		Intent intent = new Intent(this, UserActivity.class);
+		startActivity(intent);
+	}
+	public void startHomeActivity(View view)
+	{
+		Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+	}
+	public void startEventsActivity(View view)
+	{
+		Intent intent = new Intent(this, EventsActivity.class);
+		startActivity(intent);
+	}
+	public void startGroupsActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsActivity.class);
+		startActivity(intent);
+	}
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
 	}
 }
