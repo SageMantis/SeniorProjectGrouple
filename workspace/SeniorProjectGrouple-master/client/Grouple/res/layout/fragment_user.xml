@@ -94,27 +94,44 @@
   	<Button
   	    android:id="@+id/messagesButtonUA"
   	    android:layout_width="match_parent"
-  	    android:layout_height="70dp"
+  	    android:layout_height="40dp"
   	    android:layout_alignParentLeft="true"
   	    android:layout_below="@+id/friendsButtonUA"
   	    android:text="Messages" />
 
   	<Button
-  	    android:id="@+id/groupsButtonUA"
-  	    android:layout_width="match_parent"
-  	    android:layout_height="70dp"
-  	    android:layout_alignParentLeft="true"
-  	    android:layout_below="@+id/addFriendTextViewAFA"
-  	    android:layout_marginTop="62dp"
-  	    android:text="Groups" />
-
-  	<Button
   	    android:id="@+id/friendsButtonUA"
   	    android:layout_width="match_parent"
-  	    android:layout_height="70dp"
+  	    android:layout_height="40dp"
   	    android:layout_alignParentLeft="true"
   	    android:layout_below="@+id/groupsButtonUA"
   	    android:onClick="startFriendsActivity"
   	    android:text="Friends" />
+
+  	<ImageView
+  	    android:id="@+id/profilePhoto"
+  	    android:layout_width="150dp"
+  	    android:layout_height="150dp"
+  	    android:layout_below="@+id/addFriendTextViewAFA"
+  	    android:layout_centerHorizontal="true"
+  	    android:layout_marginTop="10dp"
+  	    android:src="@drawable/abc_ab_bottom_solid_light_holo" />
+
+  	<Button
+  	    android:id="@+id/groupsButtonUA"
+  	    android:layout_width="match_parent"
+  	    android:layout_height="40dp"
+  	    android:layout_alignParentLeft="true"
+  	    android:layout_below="@+id/profilePhoto"
+  	    android:layout_marginTop="58dp"
+  	    android:text="Groups" />
+
+  	<Button
+  	    android:id="@+id/editProfilePhotoButton"
+  	    android:layout_width="wrap_content"
+  	    android:layout_height="wrap_content"
+  	    android:layout_below="@+id/profilePhoto"
+  	    android:layout_centerHorizontal="true"
+  	    android:text="@string/editProfilePhotoButton" />
 
 </RelativeLayout>

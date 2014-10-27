@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 public class AddFriendActivity extends ActionBarActivity
 {
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

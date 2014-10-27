@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +19,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
-public class UserActivity extends ActionBarActivity
+public class UserActivity extends ActionBarActivity implements View.OnClickListener
 {
 
+	private Button b;
+	private ImageView iv;
+	private final static int CAMERA_DATA = 0;
+	private Bitmap bmp;
+	private Intent i;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -38,6 +49,9 @@ public class UserActivity extends ActionBarActivity
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
+		
+		
+		System.out.println("What the heck is going on now?");
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -65,6 +79,13 @@ public class UserActivity extends ActionBarActivity
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
+		
+		//Set up the edit button and image view
+		b = (Button) findViewById(R.id.editProfilePhotoButton);
+		iv = (ImageView) findViewById(R.id.profilePhoto);
+		b.setOnClickListener(this);
+		iv.setOnClickListener(this);
+		
 		return true;
 	}
 
@@ -157,4 +178,27 @@ public class UserActivity extends ActionBarActivity
         return false;
     }
 
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch(v.getId()){
+		case R.id.editProfilePhotoButton:
+			i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			startActivityForResult(i, CAMERA_DATA);
+			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int reqCode, int resCode, Intent d) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(reqCode, resCode, d);
+		if(resCode == RESULT_OK){
+			Bundle extras = d.getExtras();
+			bmp = (Bitmap) extras.get("data");
+			iv.setImageBitmap(bmp);
+		}
+	}
+
+	
 }
