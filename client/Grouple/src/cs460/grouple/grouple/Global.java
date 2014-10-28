@@ -24,13 +24,16 @@ import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+
+
 public class Global extends Application
 {
 	private String currentUser;
 	private String acceptEmail;
 	private String declineEmail;
-	private String name;
 	private int numFriendRequests = 0;
+	private ArrayList<View> views; //All of our views
 	
 	public String getCurrentUser()
 	{
@@ -77,37 +80,46 @@ public class Global extends Application
 	
 	public int getUserNotificationNum()
 	{
-		System.out.println("In the get:" +numFriendRequests);
+		System.out.println("In the get:" + numFriendRequests);
 		return numFriendRequests; //+ new messages num ... (when implemented)
 	}
 	
 	public void setNotifications(View view)
 	{
+		int userNotificationNum = getUserNotificationNum();
 		//View homeRL = findViewById(R.id.homeRelativeLayout);
-		Global global = ((Global)getApplicationContext());
-		int userNotificationNum = global.getUserNotificationNum();
-		
-		if (userNotificationNum > 0) //= for testing cause no one likes me
+	
+		if (userNotificationNum > 0) //user has notifications in their profile
 		{
 			TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
 			userNotification.setText(Integer.toString(userNotificationNum));
 			userNotification.setVisibility(0);
 		}
-		if (numFriendRequests > 0 && (view.findViewById(R.id.friendRequestsButtonFA) != null))
+		if (view.findViewById(R.id.friendRequestsButtonFA) != null)
 		{
 			Button friendRequestsButton = (Button)view.findViewById(R.id.friendRequestsButtonFA);
 			friendRequestsButton.setText("Friend Requests (" + Integer.toString(numFriendRequests) + ")");
 		}
+		else if (userNotificationNum == 0)
+		{
+			TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
+			userNotification.setText("0");
+			userNotification.setVisibility(1);
+		}
+
+
 		//else do nothing, keep that invisible
 	}	
 	
-	public String getName() {
-		return name;
+	//for the attempted implementation of an all in one notification setting
+	public void setViews(ArrayList<View> views)
+	{
+		for (View v : views)
+		{
+			this.views.add(v);
+		}
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 	public void fetchNumFriendRequests()
 	{
 		new getFriendRequestsTask()
@@ -185,77 +197,4 @@ public class Global extends Application
 			}
 		}
 	}
-	//Get name
-	public void fetchName()
-	{
-		//new getNameTask()
-		//.execute("http://98.213.107.172/android_connect/get_friend_requests.php?email="
-		//		+ getCurrentUser());
-	}
-	
-	
-	public String readNamesJSONFeed(String URL)
-	{
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL);
-		try
-		{
-			HttpResponse response = httpClient.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					System.out.println("New line: " + line);
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
-
-	private class getNameTask extends AsyncTask<String, Void, String>
-	{
-		protected String doInBackground(String... urls)
-		{
-			return readNamesJSONFeed(urls[0]);
-		}
-
-		protected void onPostExecute(String result)
-		{
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					// successful
-					//name = ???
-				} 
-				else
-				{
-					// failed
-					
-				}
-			} 
-			catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
-		}
-	}
-	
 }

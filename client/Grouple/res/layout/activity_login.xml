@@ -1,7 +1,80 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cs460.grouple.grouple.LoginActivity"
-    tools:ignore="MergeRootFrame" />
+    android:padding="0dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp" >
+
+    <EditText
+        android:id="@+id/passwordEditTextLA"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="@string/passwordEditText"
+        android:inputType="textPassword" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/emailEditTextLA"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/passwordEditTextLA"
+        android:layout_alignLeft="@+id/passwordEditTextLA"
+        android:ems="10"
+        android:hint="@string/emailEditText"
+        android:inputType="textEmailAddress" >
+       	<requestFocus />
+   	</EditText>
+
+    <Button
+        android:id="@+id/loginButtonLA"
+        android:layout_width="600dp"
+        android:layout_height="70dp"
+        android:layout_alignLeft="@+id/passwordEditTextLA"
+        android:layout_below="@+id/passwordEditTextLA"
+        android:onClick="loginButton"
+        android:text="@string/loginButton" />
+
+    <Button
+        android:id="@+id/registerButtonLA"
+        android:layout_width="600dp"
+        android:layout_height="70dp"
+        android:layout_alignLeft="@+id/loginButtonLA"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="14dp"
+        android:onClick="startRegisterActivity"
+        android:text="@string/registerButton" />
+
+    <TextView
+        android:id="@+id/addFriendMessageTextViewAFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/registerButtonLA"
+        android:layout_centerHorizontal="true"
+        android:text="Don&apos;t have a Grouple account?"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/loginTextViewLA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/loginTextView"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/loginFailTextViewLA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButtonLA"
+        android:layout_centerHorizontal="true"
+        android:text="@string/loginFailString"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible" />
+
+</RelativeLayout>

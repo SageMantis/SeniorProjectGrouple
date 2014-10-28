@@ -24,14 +24,12 @@ public class EventsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
-		if (savedInstanceState == null)
-		{
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		Global global = ((Global)getApplicationContext());
+		View events = findViewById(R.id.eventsLayout);
+		global.setNotifications(events);
 
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -45,8 +43,7 @@ public class EventsActivity extends ActionBarActivity
 				  Log.d("app666","we killin the login it");
 				  //System.exit(1);
 				  finish();
-			  }
-			  
+			  }	
 		  }
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
@@ -80,28 +77,6 @@ public class EventsActivity extends ActionBarActivity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_events,
-					container, false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-			return rootView;
-		}
 	}
 
 	public void startHomeActivity(View view)

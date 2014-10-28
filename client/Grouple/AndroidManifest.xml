@@ -18,7 +18,9 @@
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,67 +29,87 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_home" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".UserActivity"
-            android:label="@string/title_activity_user" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_user"
+            android:screenOrientation="portrait" >
             <meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.HomeActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".GroupsActivity"
-            android:label="@string/title_activity_groups" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_groups"
+            android:screenOrientation="portrait" >
             <meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.HomeActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".EventsActivity"
-            android:label="@string/title_activity_events" >
-          	<meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.HomeActivity" />
+            android:configChanges="orientation"
+            android:label="@string/title_activity_events"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/title_activity_register" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".FriendsActivity"
-            android:label="@string/title_activity_friends" >
-      		<meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.UserActivity" />
+            android:configChanges="orientation"
+            android:label="@string/title_activity_friends"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.UserActivity" />
         </activity>
         <activity
             android:name=".AddFriendActivity"
-            android:label="@string/title_activity_add_friend" >
-      		<meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.FriendsActivity" />     		
+            android:configChanges="orientation"
+            android:label="@string/title_activity_add_friend"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
             android:name=".CurrentFriendsActivity"
-            android:label="@string/title_activity_current_friends" >
-      		<meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.FriendsActivity" />
+            android:configChanges="orientation"
+            android:label="@string/title_activity_current_friends"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
             android:name=".FriendRequestsActivity"
-            android:label="@string/title_activity_friend_requests" >
-      		<meta-data
-	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="cs460.grouple.grouple.FriendsActivity" />      		
+            android:configChanges="orientation"
+            android:label="@string/title_activity_friend_requests"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
             android:name=".Resources"
             android:label="@string/title_activity_resources" >
         </activity>
-
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
- 
 
 </manifest>

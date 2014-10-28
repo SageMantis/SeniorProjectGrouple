@@ -44,5 +44,7 @@
     <string name="title_activity_friend_requests">FriendRequestsActivity</string>
     <string name="title_activity_resources">Resources</string>
     <string name="title_activity_global">Global</string>
+    <string name="editProfilePhotoButton">Edit Photo</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

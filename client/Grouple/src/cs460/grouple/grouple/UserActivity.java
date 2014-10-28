@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,29 +19,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class UserActivity extends ActionBarActivity
+public class UserActivity extends ActionBarActivity implements View.OnClickListener
 {
 
+	private Button b;
+	private ImageView iv;
+	private final static int CAMERA_DATA = 0;
+	private Bitmap bmp;
+	private Intent i;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.activity_user);
 
-		
-		if (savedInstanceState == null)
-		{
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
+		Global global = ((Global)getApplicationContext());
+		View user = findViewById(R.id.userLayout);
+		global.setNotifications(user);
+		
+		System.out.println("What the heck is going on now?");
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -60,8 +68,6 @@ public class UserActivity extends ActionBarActivity
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
 		//End Kill switch listener
-		
-		
 	}
 
 	@Override
@@ -71,13 +77,12 @@ public class UserActivity extends ActionBarActivity
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		
-		Global global = ((Global)getApplicationContext());
-				
-		//the layout is finally fucking non null.
-		TextView tv = (TextView) findViewById(R.id.addFriendTextViewAFA);
-		String name = global.getName();
+		//Set up the edit button and image view
+		b = (Button) findViewById(R.id.editProfilePhotoButton);
+		iv = (ImageView) findViewById(R.id.profilePhoto);
+		b.setOnClickListener(this);
+		iv.setOnClickListener(this);
 		
-		tv.setText("Welcome, "+name);
 		return true;
 	}
 
@@ -100,29 +105,6 @@ public class UserActivity extends ActionBarActivity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_user, container,
-					false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-		
-			return rootView;
-		}
 	}
 
 	public void startFriendsActivity(View view)
@@ -170,5 +152,28 @@ public class UserActivity extends ActionBarActivity
         }
         return false;
     }
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch(v.getId()){
+		case R.id.editProfilePhotoButton:
+			i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			startActivityForResult(i, CAMERA_DATA);
+			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int reqCode, int resCode, Intent d) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(reqCode, resCode, d);
+		if(resCode == RESULT_OK){
+			Bundle extras = d.getExtras();
+			bmp = (Bitmap) extras.get("data");
+			iv.setImageBitmap(bmp);
+		}
+	}
+
 	
 }

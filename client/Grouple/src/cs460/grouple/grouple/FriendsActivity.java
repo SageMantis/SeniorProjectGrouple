@@ -27,16 +27,15 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
-		if (savedInstanceState == null)
-		{
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
+		
+		Global global = ((Global)getApplicationContext());
+		View friends = findViewById(R.id.friendsLayout);
+		global.setNotifications(friends);
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -88,29 +87,6 @@ public class FriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_friends,
-					container, false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-			return rootView;
-		}
-	}
-	
 	public void startAddFriendActivity(View view)
 	{
 		Intent intent = new Intent(this, AddFriendActivity.class);

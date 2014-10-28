@@ -27,18 +27,14 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
-
-		if (savedInstanceState == null)
-		{
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
-		
+		Global global = ((Global)getApplicationContext());
+		View groups = findViewById(R.id.groupsLayout);
+		global.setNotifications(groups);
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -87,27 +83,6 @@ public class GroupsActivity extends ActionBarActivity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_groups,
-					container, false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-			return rootView;
-		}
 	}
 
 	public void startHomeActivity(View view)

@@ -3,6 +3,7 @@ package cs460.grouple.grouple;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,16 +46,32 @@ public class LoginActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		if (savedInstanceState == null)
-		{
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		
 		ActionBar ab = getActionBar();
 		ab.hide();
 		ab.setTitle("");
 		Log.d("app666", "we created");
+		
+		//populating views in global (for access from global)
+		/*ArrayList<View> views = new ArrayList<View>();
+		View homeLayout = (View)findViewById(R.id.homeLayout);
+		View userLayout = (View)findViewById(R.id.userLayout);
+		View groupsLayout = (View)findViewById(R.id.groupsLayout);
+		View eventsLayout = (View)findViewById(R.id.eventsLayout);
+		View friendsLayout = (View)findViewById(R.id.friendsLayout);
+		View friendRequestsLayout = (View)findViewById(R.id.friendRequestsLayout);
+		View addFriendLayout = (View)findViewById(R.id.addFriendLayout);
+		View currentFriendsLayout = (View)findViewById(R.id.currentFriendsLayout);
+		views.add(homeLayout);
+		views.add(userLayout);
+		views.add(groupsLayout);
+		views.add(eventsLayout);
+		views.add(friendsLayout);
+		views.add(friendRequestsLayout);
+		views.add(addFriendLayout);
+		views.add(currentFriendsLayout);
+		Global global = ((Global) getApplicationContext());
+		//global.setViews(views);*/
 
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -97,25 +114,6 @@ public class LoginActivity extends ActionBarActivity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment
-	{
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_login,
-					container, false);
-			return rootView;
-		}
 	}
 
 	public void startRegisterActivity(View view)
@@ -176,10 +174,10 @@ public class LoginActivity extends ActionBarActivity
 
 		global.setCurrentUser(email);
 
-		new getLoginTask() 
+		new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
 						+ email + "&password=" + password);
-		
+
 	}
 
 	private class getLoginTask extends AsyncTask<String, Void, String>
@@ -200,8 +198,6 @@ public class LoginActivity extends ActionBarActivity
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
 					global.fetchNumFriendRequests();
-					//set the users real name for future access.
-					global.fetchName();
 					Thread.sleep(500); //Sleeping to let home activity start up
 					startHomeActivity();
 				} 
@@ -220,8 +216,7 @@ public class LoginActivity extends ActionBarActivity
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
