@@ -13,13 +13,11 @@
     <application
         android:name=".Global"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +34,7 @@
         <activity
             android:name=".UserActivity"
             android:configChanges="orientation"
-            android:label="@string/title_activity_user"
+          	android:label="@string/title_activity_user"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -45,7 +43,7 @@
         <activity
             android:name=".GroupsActivity"
             android:configChanges="orientation"
-            android:label="@string/title_activity_groups"
+         	android:label="@string/title_activity_groups"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -54,7 +52,7 @@
         <activity
             android:name=".EventsActivity"
             android:configChanges="orientation"
-            android:label="@string/title_activity_events"
+        	android:label="@string/title_activity_events"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -63,13 +61,12 @@
         <activity
             android:name=".RegisterActivity"
             android:configChanges="orientation"
-            android:label="@string/title_activity_register"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".FriendsActivity"
             android:configChanges="orientation"
-            android:label="@string/title_activity_friends"
+          	android:label="@string/title_activity_friends"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -86,8 +83,8 @@
         </activity>
         <activity
             android:name=".CurrentFriendsActivity"
-            android:configChanges="orientation"
             android:label="@string/title_activity_current_friends"
+            android:configChanges="orientation"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -105,10 +102,6 @@
         <activity
             android:name=".Resources"
             android:label="@string/title_activity_resources" >
-        </activity>
-        <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_test" >
         </activity>
     </application>
 

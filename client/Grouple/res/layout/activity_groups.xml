@@ -7,16 +7,6 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp" >
 
-    <TextView
-        android:id="@+id/groupsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp"
-        android:text="@string/groupsTextView"
-        android:textSize="24sp" />
-
    	<GridLayout
    	    android:id="@+id/navigationBarGridLayout"
    	    android:layout_width="wrap_content"
@@ -104,16 +94,17 @@
    	    android:layout_width="600dp"
    	    android:layout_height="70dp"
    	    android:layout_alignParentLeft="true"
-   	    android:layout_below="@+id/createGroupButton"
+   	    android:layout_alignParentTop="true"
+   	    android:layout_marginTop="174dp"
    	    android:text="@string/yourGroupsButton" />
 
    	<Button
    	    android:id="@+id/createGroupButton"
    	    android:layout_width="600dp"
    	    android:layout_height="70dp"
+   	    android:layout_alignBottom="@+id/yourGroupsButton"
    	    android:layout_alignParentLeft="true"
-   	    android:layout_below="@+id/groupsTextView"
-   	    android:layout_marginTop="70dp"
+   	    android:layout_marginBottom="70dp"
    	    android:text="@string/createGroupButton" />
 
 </RelativeLayout>

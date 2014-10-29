@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,10 +41,12 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
 
-		ActionBar ab = getActionBar();
-		ab.setTitle("");
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		ab.setIcon(Color.TRANSPARENT);
+		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText("Brett's Profile");
+		
 		Global global = ((Global)getApplicationContext());
 		View user = findViewById(R.id.userLayout);
 		

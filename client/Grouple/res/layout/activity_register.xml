@@ -6,16 +6,6 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp" >
 
-    <TextView
-        android:id="@+id/registerTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:text="@string/registerTextView"
-        android:textSize="30sp" />
-
     <EditText
         android:id="@+id/emailEditTextRA"
         android:layout_width="match_parent"
@@ -108,5 +98,15 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/registerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/errorMessageTextView"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="14dp"
+        android:text="@string/registerTextView"
+        android:textSize="40sp" />
 
 </RelativeLayout>

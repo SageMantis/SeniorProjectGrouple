@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 public class GroupsActivity extends ActionBarActivity
@@ -28,10 +31,20 @@ public class GroupsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
 		
-		ActionBar ab = getActionBar();
-		ab.setTitle("");
+		//Action bar setup
+		//ActionBar ab = getActionBar();
+
+		//ab.setIcon(
+				 //  new ColorDrawable(getResources().getColor(android.R.color.transparent)));  
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		ab.setIcon(Color.TRANSPARENT);
+		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText("Groups");
+		//ImageView view = (ImageView)findViewById(android.R.id.home);
+		//view.setPadding(15, 20, 5, 40);
+		
+		
 		Global global = ((Global)getApplicationContext());
 		View groups = findViewById(R.id.groupsLayout);
 		try {

@@ -7,16 +7,6 @@
     android:layout_marginRight="5dp"
     android:padding="0dp" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="@string/eventsTextView"
-        android:textSize="24sp" />
-
     <Button
         android:id="@+id/pastEventsButton"
         android:layout_width="match_parent"
@@ -46,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
         android:layout_marginTop="46dp"
         android:text="@string/createEventButton" />
 
