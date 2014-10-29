@@ -50,6 +50,12 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		Global global = ((Global)getApplicationContext());
 		//Grab view
 		View currentFriends = findViewById(R.id.currentFriendsLayout);
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		global.setNotifications(currentFriends); //PANDA TEST
 		String email = global.getCurrentUser();
 		System.out.println("Email: " + email);

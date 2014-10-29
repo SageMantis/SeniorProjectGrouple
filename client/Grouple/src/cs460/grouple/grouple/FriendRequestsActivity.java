@@ -60,8 +60,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		Global global = ((Global)getApplicationContext());
 		String receiver = global.getCurrentUser();
 		View friendRequests = findViewById(R.id.friendRequestsLayout);
-		global.setNotifications(friendRequests); //PANDA
-		System.out.println("Receiver: " + receiver);
+		//global.setNotifications(friendRequests); //PANDA
 		new getFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 						+ receiver);
@@ -162,6 +161,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
+					System.out.println("We are in the success");
 					ArrayList<String> senders = new ArrayList<String>();
 					JSONArray jsonSenders = (JSONArray)jsonObject.getJSONArray("senders").getJSONArray(0);
 					Global global = ((Global)getApplicationContext());
@@ -202,8 +202,9 @@ public class FriendRequestsActivity extends ActionBarActivity
 				} 
 				else
 				{
+					System.out.println("No friends found");
 					//If no friend requests are found, display no friends message
-					TextView noFriends = (TextView)findViewById(R.id.noFriendRequestsTextView);
+					TextView noFriends = (TextView)findViewById(R.id.noFriendRequestsTextViewFRA);
 					noFriends.setVisibility(0);
 				}
 			} catch (Exception e)
@@ -236,16 +237,12 @@ public class FriendRequestsActivity extends ActionBarActivity
 			View parent = (View) view.getParent();
 			TextView declineEmail = (TextView)parent.findViewById(R.id.emailTextViewFRLI);
 			global.setDeclineEmail(declineEmail.getText().toString());
-			System.out.println(declineEmail.getText().toString());
-			System.out.println("decline pressed\nsender:" + declineEmail.getText().toString() + "\nreceiver:" + global.getCurrentUser());
-		
 			new getDeclineFriendTask()
 			.execute("http://98.213.107.172/android_connect/decline_friend_request.php");
 			break;
 		case R.id.acceptFriendRequestButtonFRLI:
 			View parent2 = (View) view.getParent();
 			TextView acceptEmail = (TextView)parent2.findViewById(R.id.emailTextViewFRLI);
-			System.out.println("accept pressed");
 			global.setAcceptEmail(acceptEmail.getText().toString());
 			new getAcceptFriendTask()
 			.execute("http://98.213.107.172/android_connect/accept_friend_request.php");
@@ -302,7 +299,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 		try
 		{
 			// Add your data
-			System.out.println("Receiver Email: " + receiver + "Sender Email: " + sender);
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
@@ -361,7 +357,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
-				System.out.println(jsonObject.getString("success"));
+				System.out.println(jsonObject.getString("success")); 
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// successful
@@ -383,22 +379,15 @@ public class FriendRequestsActivity extends ActionBarActivity
 	
 	public String readJSONFeedAccept(String URL)
 	{
-		Global global = ((Global)getApplicationContext());
-	
-		
+		Global global = ((Global)getApplicationContext());	
 		String receiver = global.getCurrentUser();
 		String sender = global.getAcceptEmail();
-		System.out.println("Send: " + sender + "\nRec: " + receiver);
-
-	
-
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(URL);
 		try
 		{
 			// Add your data
-			System.out.println("Receiver Email: " + receiver + "Sender Email: " + sender);
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));

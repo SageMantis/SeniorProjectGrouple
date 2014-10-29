@@ -34,6 +34,12 @@ public class GroupsActivity extends ActionBarActivity
 		ab.setIcon(Color.TRANSPARENT);
 		Global global = ((Global)getApplicationContext());
 		View groups = findViewById(R.id.groupsLayout);
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		global.setNotifications(groups);
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
