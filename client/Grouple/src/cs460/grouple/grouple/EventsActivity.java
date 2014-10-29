@@ -29,6 +29,12 @@ public class EventsActivity extends ActionBarActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		Global global = ((Global)getApplicationContext());
 		View events = findViewById(R.id.eventsLayout);
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		global.setNotifications(events);
 
 		//START KILL SWITCH LISTENER

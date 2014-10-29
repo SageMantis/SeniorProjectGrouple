@@ -46,6 +46,14 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		ab.setIcon(Color.TRANSPARENT);
 		Global global = ((Global)getApplicationContext());
 		View user = findViewById(R.id.userLayout);
+		
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		global.setNotifications(user);
 		
 		System.out.println("What the heck is going on now?");

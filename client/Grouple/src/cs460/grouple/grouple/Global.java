@@ -17,11 +17,8 @@ import org.json.JSONObject;
 import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -48,7 +45,7 @@ public class Global extends Application
 	public void setNumFriendRequests(int num)
 	{
 		numFriendRequests = num;
-		System.out.println("Friend requests: " + num);
+		//System.out.println("Friend requests: " + num);
 		//Setting that userNotification
 	}
 	
@@ -80,13 +77,14 @@ public class Global extends Application
 	
 	public int getUserNotificationNum()
 	{
-		System.out.println("In the get:" + numFriendRequests);
+		//System.out.println("In the get:" + numFriendRequests);
 		return numFriendRequests; //+ new messages num ... (when implemented)
 	}
 	
 	public void setNotifications(View view)
 	{
 		int userNotificationNum = getUserNotificationNum();
+		System.out.println("Notification num: " + userNotificationNum);
 		//View homeRL = findViewById(R.id.homeRelativeLayout);
 	
 		if (userNotificationNum > 0) //user has notifications in their profile
@@ -100,11 +98,17 @@ public class Global extends Application
 			Button friendRequestsButton = (Button)view.findViewById(R.id.friendRequestsButtonFA);
 			friendRequestsButton.setText("Friend Requests (" + Integer.toString(numFriendRequests) + ")");
 		}
+		if (view.findViewById(R.id.friendsButtonUA) != null && userNotificationNum > 0)
+		{
+			Button friendRequestsButton = (Button)view.findViewById(R.id.friendsButtonUA);
+			friendRequestsButton.setText("Friends (" + Integer.toString(numFriendRequests) + " new)");
+		}
 		else if (userNotificationNum == 0)
 		{
 			TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
-			userNotification.setText("0");
-			userNotification.setVisibility(1);
+			System.out.println("Are we here?");
+			//userNotification.setVisibility(1);
+			//userNotification.setText("0");	
 		}
 
 

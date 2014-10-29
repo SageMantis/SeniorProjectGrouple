@@ -35,6 +35,12 @@ public class FriendsActivity extends ActionBarActivity
 		
 		Global global = ((Global)getApplicationContext());
 		View friends = findViewById(R.id.friendsLayout);
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		global.setNotifications(friends);
 		
 		//START KILL SWITCH LISTENER

@@ -40,6 +40,14 @@ public class HomeActivity extends ActionBarActivity
 		ab.setIcon(Color.TRANSPARENT);
 		Global global = ((Global)getApplicationContext());
 		View home = findViewById(R.id.homeLayout);
+
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		global.setNotifications(home);
 	
 		

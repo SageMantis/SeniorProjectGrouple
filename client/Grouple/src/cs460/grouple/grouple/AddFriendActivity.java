@@ -49,6 +49,16 @@ public class AddFriendActivity extends ActionBarActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
 		
+		Global global = ((Global)getApplicationContext());
+		View addFriend = findViewById(R.id.addFriendLayout);
+		try {
+			global.fetchNumFriendRequests();
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		global.setNotifications(addFriend); //PANDA TEST
+		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
