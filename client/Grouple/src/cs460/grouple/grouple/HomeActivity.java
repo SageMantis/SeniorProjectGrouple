@@ -39,10 +39,10 @@ public class HomeActivity extends ActionBarActivity
 		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText("Home");
 		
 		Global global = ((Global)getApplicationContext());
 		View home = findViewById(R.id.homeLayout);
+		actionbarTitle.setText("Welcome, "+global.getName()+"!");
 
 		try {
 			global.fetchNumFriendRequests();
