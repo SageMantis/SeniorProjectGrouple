@@ -14,8 +14,9 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
-        android:text="@string/userTextView"
-        android:textSize="24sp" />
+        android:textSize="24sp" 
+        android:text="hi"
+        />
     
   	<GridLayout
    		android:id="@+id/navigationBarGridLayout"
@@ -104,7 +105,8 @@
   	    android:layout_alignParentLeft="true"
   	    android:layout_below="@+id/addFriendTextViewAFA"
   	    android:layout_marginTop="62dp"
-  	    android:text="Groups" />
+  	    android:text="Groups"
+  	     />
 
   	<Button
   	    android:id="@+id/friendsButtonUA"

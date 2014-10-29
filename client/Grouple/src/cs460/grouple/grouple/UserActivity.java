@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 public class UserActivity extends ActionBarActivity
@@ -27,8 +28,10 @@ public class UserActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_user);
 
+		
 		if (savedInstanceState == null)
 		{
 			getSupportFragmentManager().beginTransaction()
@@ -57,6 +60,8 @@ public class UserActivity extends ActionBarActivity
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
 		//End Kill switch listener
+		
+		
 	}
 
 	@Override
@@ -65,6 +70,14 @@ public class UserActivity extends ActionBarActivity
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
+		
+		Global global = ((Global)getApplicationContext());
+				
+		//the layout is finally fucking non null.
+		TextView tv = (TextView) findViewById(R.id.addFriendTextViewAFA);
+		String name = global.getName();
+		
+		tv.setText("Welcome, "+name);
 		return true;
 	}
 
@@ -107,6 +120,7 @@ public class UserActivity extends ActionBarActivity
 					false);
 			Global global = ((Global)getApplicationContext());
 			global.setNotifications(rootView);
+		
 			return rootView;
 		}
 	}
@@ -156,5 +170,5 @@ public class UserActivity extends ActionBarActivity
         }
         return false;
     }
-
+	
 }
