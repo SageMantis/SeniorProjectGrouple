@@ -42,7 +42,6 @@ public class AddFriendActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
-		//setContentView(R.layout.fragment_add_friend);
 		if (savedInstanceState == null)
 		{
 			getFragmentManager().beginTransaction()

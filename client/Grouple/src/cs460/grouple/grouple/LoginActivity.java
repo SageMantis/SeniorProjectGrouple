@@ -176,10 +176,10 @@ public class LoginActivity extends ActionBarActivity
 
 		global.setCurrentUser(email);
 
-		new getLoginTask() 
+		new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
 						+ email + "&password=" + password);
-		
+
 	}
 
 	private class getLoginTask extends AsyncTask<String, Void, String>
@@ -200,8 +200,6 @@ public class LoginActivity extends ActionBarActivity
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
 					global.fetchNumFriendRequests();
-					//set the users real name for future access.
-					global.fetchName();
 					Thread.sleep(500); //Sleeping to let home activity start up
 					startHomeActivity();
 				} 
@@ -220,8 +218,7 @@ public class LoginActivity extends ActionBarActivity
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
