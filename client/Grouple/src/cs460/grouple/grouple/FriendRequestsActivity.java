@@ -46,26 +46,21 @@ public class FriendRequestsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_requests);
-		if (savedInstanceState == null)
-		{
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
-		
-		
+			
 		//display friend requests
 		// Create helper and if successful, will bring the correct home
 		// activity.
 		
-
 		
 		Global global = ((Global)getApplicationContext());
 		String receiver = global.getCurrentUser();
+		View friendRequests = findViewById(R.id.friendRequestsLayout);
+		global.setNotifications(friendRequests); //PANDA
 		System.out.println("Receiver: " + receiver);
 		new getFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
@@ -119,29 +114,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_friend_requests,
-					container, false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-			return rootView;
-		}
-	}
-	
 	public String readJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
@@ -192,11 +164,13 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					ArrayList<String> senders = new ArrayList<String>();
 					JSONArray jsonSenders = (JSONArray)jsonObject.getJSONArray("senders").getJSONArray(0);
-					//Global global = ((Global)getApplicationContext());
-					//global.setNumFriendRequests(senders.size());
-					//global.setNotifications(findViewById(R.id.friendRequestsRelativeLayout));
+					Global global = ((Global)getApplicationContext());
+
 					if (jsonSenders != null)
 					{
+						View friendRequests = findViewById(R.id.friendRequestsLayout);
+						global.setNumFriendRequests(jsonSenders.length());
+						global.setNotifications(friendRequests);
 						System.out.println(jsonSenders.toString() + "\n" + jsonSenders.length());
 		
 						//looping thru json and adding to an array
@@ -211,15 +185,19 @@ public class FriendRequestsActivity extends ActionBarActivity
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < senders.size(); i++)
 						{
-							RelativeLayout friendRequestsRL =  (RelativeLayout)findViewById(R.id.friendRequestsRelativeLayout);					
-							li.inflate(R.layout.listitem_friend_request, friendRequestsRL);
-							GridLayout rowRL = (GridLayout)friendRequestsRL.findViewById(R.id.friendRequestGridLayout);
+							RelativeLayout friendRequestsLayout =  (RelativeLayout)findViewById(R.id.friendRequestsLayout);					
+							li.inflate(R.layout.listitem_friend_request, friendRequestsLayout);
+							GridLayout rowRL = (GridLayout)friendRequestsLayout.findViewById(R.id.friendRequestGridLayout);
 							rowRL.setId(i);//(newIDStr);
 							//Setting text of each friend request to the email of the sender
 							((TextView)rowRL.findViewById(R.id.emailTextViewFRLI)).setText(senders.get(i));				
 							int y = 120*(i+1);
 							rowRL.setY(y);
 						}
+					}
+					else //no friend requests
+					{
+						global.setNumFriendRequests(0);
 					}
 				} 
 				else

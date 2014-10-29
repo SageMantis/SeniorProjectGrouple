@@ -41,11 +41,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_current_friends);
-		if (savedInstanceState == null)
-		{
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
@@ -53,6 +48,9 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		ab.setIcon(Color.TRANSPARENT);
 		
 		Global global = ((Global)getApplicationContext());
+		//Grab view
+		View currentFriends = findViewById(R.id.currentFriendsLayout);
+		global.setNotifications(currentFriends); //PANDA TEST
 		String email = global.getCurrentUser();
 		System.out.println("Email: " + email);
 		new getFriendsTask()
@@ -107,28 +105,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_current_friends,
-					container, false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-			return rootView;
-		}
 	}
 	
 	public String readJSONFeed(String URL)
@@ -206,7 +182,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < friends.size(); i++)
 						{
-							RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsRelativeLayout);
+							RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsLayout);
 							
 							li.inflate(R.layout.listitem_friend, currentFriendsRL);
 							GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
@@ -225,7 +201,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				//user has no friends
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
-					RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsRelativeLayout);
+					RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsLayout);
 					
 					li.inflate(R.layout.listitem_friend, currentFriendsRL);
 					GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);

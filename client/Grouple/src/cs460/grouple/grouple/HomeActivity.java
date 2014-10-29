@@ -34,17 +34,13 @@ public class HomeActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		if (savedInstanceState == null)
-		{
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		ActionBar ab = getActionBar();
 		ab.setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		ab.setIcon(Color.TRANSPARENT);
-		//Global global = ((Global)getApplicationContext());
-		//setNotifications();
+		Global global = ((Global)getApplicationContext());
+		View home = findViewById(R.id.homeLayout);
+		global.setNotifications(home);
 	
 		
 		//START KILL SWITCH LISTENER
@@ -66,8 +62,6 @@ public class HomeActivity extends ActionBarActivity
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
 				//End Kill switch listener	
-		
-	
 	}
 
 	@Override
@@ -99,29 +93,6 @@ public class HomeActivity extends ActionBarActivity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public class PlaceholderFragment extends Fragment
-	{
-
-		public PlaceholderFragment()
-		{
-			
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState)
-		{
-			View rootView = inflater.inflate(R.layout.fragment_home, container,
-					false);
-			Global global = ((Global)getApplicationContext());
-			global.setNotifications(rootView);
-			return rootView;
-		}
 	}
 
 	public void startHomeActivity(View view)
