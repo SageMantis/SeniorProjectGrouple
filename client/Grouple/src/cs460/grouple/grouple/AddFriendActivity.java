@@ -2,6 +2,8 @@ package cs460.grouple.grouple;
 
 import java.io.BufferedReader;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -44,10 +46,11 @@ public class AddFriendActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
 		
-		ActionBar ab = getActionBar();
-		ab.setTitle("");
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		ab.setIcon(Color.TRANSPARENT);
+		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText("Add Friend");
 		
 		Global global = ((Global)getApplicationContext());
 		View addFriend = findViewById(R.id.addFriendLayout);

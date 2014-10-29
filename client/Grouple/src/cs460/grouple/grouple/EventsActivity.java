@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class EventsActivity extends ActionBarActivity
 {
@@ -24,9 +26,12 @@ public class EventsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
-		ActionBar ab = getActionBar();
-		ab.setTitle("");
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText("Events");
+		
 		Global global = ((Global)getApplicationContext());
 		View events = findViewById(R.id.eventsLayout);
 		try {

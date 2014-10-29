@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,10 +35,12 @@ public class HomeActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		ActionBar ab = getActionBar();
-		ab.setTitle("");
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		ab.setIcon(Color.TRANSPARENT);
+		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText("Home");
+		
 		Global global = ((Global)getApplicationContext());
 		View home = findViewById(R.id.homeLayout);
 

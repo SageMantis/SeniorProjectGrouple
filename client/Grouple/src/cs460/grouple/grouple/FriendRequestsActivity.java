@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -47,10 +48,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_requests);
 		
-		ActionBar ab = getActionBar();
-		ab.setTitle("");
+		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		ab.setIcon(Color.TRANSPARENT);
+		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText("Friend Requests");
 			
 		//display friend requests
 		// Create helper and if successful, will bring the correct home

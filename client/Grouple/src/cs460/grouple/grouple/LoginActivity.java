@@ -46,10 +46,8 @@ public class LoginActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		
 		ActionBar ab = getActionBar();
 		ab.hide();
-		ab.setTitle("");
 		Log.d("app666", "we created");
 		
 		//populating views in global (for access from global)
@@ -73,7 +71,7 @@ public class LoginActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		//global.setViews(views);*/
 
-		// START KILL SWITCH LISTENER
+		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
 		BroadcastReceiver broadcastReceiver = new BroadcastReceiver()

@@ -58,16 +58,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/loginTextViewLA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="@string/loginTextView"
-        android:textSize="24sp" />
-
-    <TextView
         android:id="@+id/loginFailTextViewLA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,5 +66,15 @@
         android:text="@string/loginFailString"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/loginTextViewLA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/emailEditTextLA"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="29dp"
+        android:text="@string/loginTextView"
+        android:textSize="40sp" />
 
 </RelativeLayout>
