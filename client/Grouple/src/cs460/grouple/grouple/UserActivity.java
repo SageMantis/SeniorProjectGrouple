@@ -45,9 +45,9 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		getSupportActionBar().setCustomView(R.layout.actionbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText("Brett's Profile");
-		
+
 		Global global = ((Global)getApplicationContext());
+		actionbarTitle.setText(global.getName()+"'s Profile");
 		View user = findViewById(R.id.userLayout);
 		
 		try {

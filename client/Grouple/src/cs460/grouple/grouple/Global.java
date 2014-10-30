@@ -29,6 +29,7 @@ public class Global extends Application
 	private String currentUser;
 	private String acceptEmail;
 	private String declineEmail;
+	private String name;
 	private int numFriendRequests = 0;
 	private ArrayList<View> views; //All of our views
 	
@@ -201,4 +202,98 @@ public class Global extends Application
 			}
 		}
 	}
-}
+	
+	//Get name
+		public void fetchName()
+		{
+			new getNameTask()
+			.execute("http://98.213.107.172/android_connect/get_user_by_email.php?email="
+				+getCurrentUser());
+		}
+		
+		
+		public String readNamesJSONFeed(String URL)
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(URL);
+			try
+			{
+				HttpResponse response = httpClient.execute(httpGet);
+				StatusLine statusLine = response.getStatusLine();
+				int statusCode = statusLine.getStatusCode();
+				if (statusCode == 200)
+				{
+					HttpEntity entity = response.getEntity();
+					InputStream inputStream = entity.getContent();
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(inputStream));
+					String line;
+					while ((line = reader.readLine()) != null)
+					{
+						System.out.println("New line: " + line);
+						stringBuilder.append(line);
+					}
+					inputStream.close();
+				} else
+				{
+					Log.d("JSON", "Failed to download file");
+				}
+			} catch (Exception e)
+			{
+				Log.d("readJSONFeed", e.getLocalizedMessage());
+			}
+			return stringBuilder.toString();
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		private class getNameTask extends AsyncTask<String, Void, String>
+		{
+			protected String doInBackground(String... urls)
+			{
+				return readNamesJSONFeed(urls[0]);
+			}
+
+			protected void onPostExecute(String result)
+			{
+				try
+				{
+					JSONObject jsonObject = new JSONObject(result);
+					if (jsonObject.getString("success").toString().equals("1"))
+					{
+						// successful
+						String temp = jsonObject.getString("users");
+						//Do not need to replace out double quotes or brackets
+						String raw = temp.replace("\"","").replace("]", "").replace("[", "").replace(","," ");
+						
+						//String raw = jsonFriends.get(i).toString();
+						//String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
+						
+						
+					
+
+						
+						setName(raw);
+					} 
+					else
+					{
+						// failed
+						
+					}
+				} 
+				catch (Exception e)
+				{
+					Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				}
+			}
+		}
+		
+	 }
+

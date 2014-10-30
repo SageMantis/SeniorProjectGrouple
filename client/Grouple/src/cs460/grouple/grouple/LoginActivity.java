@@ -171,6 +171,7 @@ public class LoginActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 
 		global.setCurrentUser(email);
+		
 
 		new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
@@ -196,6 +197,8 @@ public class LoginActivity extends ActionBarActivity
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
 					global.fetchNumFriendRequests();
+					//Sets this users name.
+					global.fetchName();
 					Thread.sleep(500); //Sleeping to let home activity start up
 					startHomeActivity();
 				} 
