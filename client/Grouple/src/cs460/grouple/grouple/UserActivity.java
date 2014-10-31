@@ -117,42 +117,6 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	public void startFriendsActivity(View view)
-	{
-		Intent intent = new Intent(this, FriendsActivity.class);
-		startActivity(intent);
-	}
-	
-	public void startHomeActivity(View view)
-	{
-		Intent intent = new Intent(this, HomeActivity.class);
-		startActivity(intent);
-	}
-
-	public void startUserActivity(View view)
-	{
-		Intent intent = new Intent(this, UserActivity.class);
-		startActivity(intent);
-	}
-
-	public void startGroupsActivity(View view)
-	{
-		Intent intent = new Intent(this, GroupsActivity.class);
-		startActivity(intent);
-	}
-
-	public void startEventsActivity(View view)
-	{
-		Intent intent = new Intent(this, EventsActivity.class);
-		startActivity(intent);
-	}
-	
-	public void startLoginActivity(View view)
-	{
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-	}
 	
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) 
@@ -186,5 +150,15 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		}
 	}
 
-	
+	/*Start activity functions for going back to home and logging out*/
+	public void startHomeActivity(View view)
+	{
+		Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+	}
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}	
 }

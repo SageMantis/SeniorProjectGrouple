@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -232,24 +233,21 @@ public class CurrentFriendsActivity extends ActionBarActivity
 			}
 		}
 	}
-	public void startUserActivity(View view)
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
-		Intent intent = new Intent(this, UserActivity.class);
-		startActivity(intent);
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	        startFriendsActivity(null);
+	    }
+	    return false;
 	}
-	public void startHomeActivity(View view)
+	
+	/*Start activity function for going back and logging out*/
+	public void startFriendsActivity(View view)
 	{
-		Intent intent = new Intent(this, HomeActivity.class);
-		startActivity(intent);
-	}
-	public void startEventsActivity(View view)
-	{
-		Intent intent = new Intent(this, EventsActivity.class);
-		startActivity(intent);
-	}
-	public void startGroupsActivity(View view)
-	{
-		Intent intent = new Intent(this, GroupsActivity.class);
+		Intent intent = new Intent(this, FriendsActivity.class);
 		startActivity(intent);
 	}
 	public void startLoginActivity(View view)

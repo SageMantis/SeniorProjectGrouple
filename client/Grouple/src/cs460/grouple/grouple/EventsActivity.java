@@ -89,36 +89,6 @@ public class EventsActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	public void startHomeActivity(View view)
-	{
-		Intent intent = new Intent(this, HomeActivity.class);
-		startActivity(intent);
-	}
-
-	public void startUserActivity(View view)
-	{
-		Intent intent = new Intent(this, UserActivity.class);
-		startActivity(intent);
-	}
-
-	public void startGroupsActivity(View view)
-	{
-		Intent intent = new Intent(this, GroupsActivity.class);
-		startActivity(intent);
-	}
-
-	public void startEventsActivity(View view)
-	{
-		Intent intent = new Intent(this, EventsActivity.class);
-		startActivity(intent);
-	}
-	
-	public void startLoginActivity(View view)
-	{
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
@@ -130,4 +100,15 @@ public class EventsActivity extends ActionBarActivity
 	    return false;
 	}
 
+	/*Start activity functions for going back and logging out*/
+	public void startHomeActivity(View view)
+	{
+		Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+	}
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
 }

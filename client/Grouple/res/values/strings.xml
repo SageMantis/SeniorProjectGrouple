@@ -45,5 +45,7 @@
     <string name="title_activity_resources">Resources</string>
     <string name="title_activity_global">Global</string>
     <string name="editProfilePhotoButton">Edit Photo</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_messages">MessagesActivity</string>
 
 </resources>

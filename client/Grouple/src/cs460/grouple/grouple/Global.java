@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
@@ -87,27 +88,41 @@ public class Global extends Application
 		int userNotificationNum = getUserNotificationNum();
 		System.out.println("Notification num: " + userNotificationNum);
 		//View homeRL = findViewById(R.id.homeRelativeLayout);
-	
-		if (userNotificationNum > 0) //user has notifications in their profile
+		Button friendsButton = (Button)view.findViewById(R.id.friendsButton);
+		
+		if (userNotificationNum > 0 && view.findViewById(R.id.friendsButton) != null) //user has notifications in their profile
 		{
-			TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
-			userNotification.setText(Integer.toString(userNotificationNum));
-			userNotification.setVisibility(0);
+			//TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
+			//userNotification.setText(Integer.toString(userNotificationNum));
+			//userNotification.setVisibility(1); //PANDA Invisible
+			//Quick fix for the weird margin top problem
+			friendsButton.setTop(-100);
+			//FrameLayout.LayoutParams params = new FrameLayout.LayoutParams( 
+		        //    FrameLayout.LayoutParams.FILL_PARENT, 
+		         //   FrameLayout.LayoutParams.WRAP_CONTENT); 
+			//params.setMargins(0, -10, 0, 0); 
+			//friendsButton.setLayoutParams(params);
+			//friendsButton.requestLayout();
+
+			if (userNotificationNum == 1)
+			{
+				friendsButton.setText("Friends \n(" + userNotificationNum + " request)");
+			}
+			else
+			{
+				friendsButton.setText("Friends \n(" + userNotificationNum + " requests)");
+			}
 		}
 		if (view.findViewById(R.id.friendRequestsButtonFA) != null)
 		{
 			Button friendRequestsButton = (Button)view.findViewById(R.id.friendRequestsButtonFA);
-			friendRequestsButton.setText("Friend Requests (" + Integer.toString(numFriendRequests) + ")");
+			friendRequestsButton.setText("Friend Requests (" + Integer.toString(numFriendRequests) + " new)");
 		}
-		if (view.findViewById(R.id.friendsButtonUA) != null && userNotificationNum > 0)
+		else if (userNotificationNum == 0 && view.findViewById(R.id.friendsButton) != null)
 		{
-			Button friendRequestsButton = (Button)view.findViewById(R.id.friendsButtonUA);
-			friendRequestsButton.setText("Friends (" + Integer.toString(numFriendRequests) + " new)");
-		}
-		else if (userNotificationNum == 0)
-		{
-			TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
+			//TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
 			System.out.println("Are we here?");
+			friendsButton.setText("Friends");
 			//userNotification.setVisibility(1);
 			//userNotification.setText("0");	
 		}
@@ -115,15 +130,6 @@ public class Global extends Application
 
 		//else do nothing, keep that invisible
 	}	
-	
-	//for the attempted implementation of an all in one notification setting
-	public void setViews(ArrayList<View> views)
-	{
-		for (View v : views)
-		{
-			this.views.add(v);
-		}
-	}
 	
 	public void fetchNumFriendRequests()
 	{
@@ -204,12 +210,12 @@ public class Global extends Application
 	}
 	
 	//Get name
-		public void fetchName()
-		{
-			new getNameTask()
-			.execute("http://98.213.107.172/android_connect/get_user_by_email.php?email="
-				+getCurrentUser());
-		}
+	public void fetchName()
+	{
+		new getNameTask()
+		.execute("http://98.213.107.172/android_connect/get_user_by_email.php?email="
+			+getCurrentUser());
+	}
 		
 		
 		public String readNamesJSONFeed(String URL)
@@ -235,11 +241,13 @@ public class Global extends Application
 						stringBuilder.append(line);
 					}
 					inputStream.close();
-				} else
+				} 
+				else
 				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e)
+			} 
+			catch (Exception e)
 			{
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
@@ -275,11 +283,7 @@ public class Global extends Application
 						
 						//String raw = jsonFriends.get(i).toString();
 						//String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
-						
-						
-					
-
-						
+				
 						setName(raw);
 					} 
 					else

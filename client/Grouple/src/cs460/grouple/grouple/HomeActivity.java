@@ -106,6 +106,17 @@ public class HomeActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	       
+	    }
+	    return false;
+	}
+	
+	/*Start activity functions for main navigation*/
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
@@ -123,7 +134,21 @@ public class HomeActivity extends ActionBarActivity
 		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
 	}
-
+	public void startMessagesActivity(View view)
+	{
+		Intent intent = new Intent(this, MessagesActivity.class);
+		startActivity(intent);
+	}
+	public void startFriendsActivity(View view)
+	{
+		Intent intent = new Intent(this, FriendsActivity.class);
+		startActivity(intent);
+	}
+	public void startSettingsActivity(View view)
+	{
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
 	public void startEventsActivity(View view)
 	{
 		Intent intent = new Intent(this, EventsActivity.class);
@@ -134,14 +159,5 @@ public class HomeActivity extends ActionBarActivity
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{
-	    if(keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	       
-	    }
-	    return false;
-	}
+	
 }
