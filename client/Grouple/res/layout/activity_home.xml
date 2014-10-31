@@ -9,75 +9,100 @@
 
       	<GridLayout
       	    android:id="@+id/navigationBarGridLayout"
-      	    android:layout_width="wrap_content"
+      	    android:layout_width="match_parent"
       	    android:layout_height="wrap_content"
       	    android:layout_marginBottom="0dp"
-      	    android:layout_marginTop="400dp"
+      	    android:layout_marginTop="270dp"
         	android:layout_centerHorizontal="true"
-      	    android:columnCount="4"
+      	    android:columnCount="3"
       	    android:padding="0dp"
-      	    android:rowCount="2" >
+      	    android:rowCount="3" >
 
       	    <Button
-      	        android:id="@+id/homeButton"
-      	        android:layout_width="80dp"
-      	        android:layout_height="80dp"
+      	        android:id="@+id/friendsButton"
+      	        android:layout_width="100dp"
+      	        android:layout_height="100dp"
+      			android:textSize="16sp"
+      	        android:text="Friends"
       	        android:layout_column="0"
-      	        android:layout_gravity="center_horizontal"
-      	        android:layout_margin="3dp"
-      	        android:layout_marginLeft="10dp"
+      	        android:layout_margin="8dp"
+      	        android:layout_row="1"
+      	        android:background="@drawable/border"
+      	      	android:onClick="startFriendsActivity" />
+
+      	    <Button
+      	        android:id="@+id/messagesButton"
+      	        android:layout_width="100dp"
+      	        android:layout_height="100dp"
+      			android:textSize="16sp"
+      	        android:text="Messages"
+      	        android:layout_column="1"
+      	   		android:layout_margin="8dp"
       	        android:layout_row="0"
-      	        android:background="@drawable/home_icon"
-      	        android:padding="0dp" />
+      	        android:background="@drawable/border"
+      	        android:onClick="startMessagesActivity" />
+
+      	    <Button
+      	        android:id="@+id/settingsButton"
+      	        android:layout_width="100dp"
+      	        android:layout_height="100dp"
+      			android:textSize="16sp"
+      	       	android:text="Settings"
+      	        android:layout_column="2"
+      	       	android:layout_margin="8dp"
+      	        android:layout_row="0"
+      	        android:background="@drawable/border"
+      	        android:onClick="startSettingsActivity" />
+      	    
 
       	    <Button
       	        android:id="@+id/groupsButton"
-      	        android:layout_width="80dp"
-      	        android:layout_height="80dp"
-      	        android:layout_column="2"
-      	        android:layout_gravity="center_horizontal"
-      	        android:layout_margin="3dp"
-      	        android:layout_row="0"
-      	        android:background="@drawable/groups_icon"
-      	        android:onClick="startGroupsActivity"
-      	        android:padding="0dp" />
+      	        android:layout_width="100dp"
+      	        android:layout_height="100dp"
+      			android:textSize="16sp"
+      	   		android:text="Groups"
+      	        android:layout_column="1"
+      	        android:layout_margin="8dp"
+      	        android:layout_row="1"
+      	        android:background="@drawable/border"
+      	        android:onClick="startGroupsActivity" />
 
       	    <Button
       	        android:id="@+id/userButton"
-      	        android:layout_width="80dp"
-      	        android:layout_height="80dp"
-      	        android:layout_column="1"
-      	        android:layout_gravity="center_horizontal"
-      	        android:layout_margin="3dp"
+      	        android:layout_width="100dp"
+      	        android:layout_height="100dp"
+      	        android:textSize="16sp"
+      	        android:text="Profile"
+      	        android:layout_column="0"
+      	        android:layout_margin="8dp"
       	        android:layout_row="0"
-      	        android:background="@drawable/user_icon"
-      	        android:onClick="startUserActivity"
-      	        android:padding="0dp" />
+      	        android:background="@drawable/border"
+      	        android:onClick="startUserActivity" />
 
-      	    <TextView
+      	    <!-- TextView
       	        android:id="@+id/userNotificationTextView"
       	        android:layout_width="16dp"
       	        android:layout_height="16dp"
       	        android:layout_column="1"
       	        android:layout_gravity="center_horizontal|top"
-      	        android:layout_row="1"
+      	        android:layout_row="2"
       	        android:background="@drawable/notification_icon"
       	        android:gravity="center"
       	        android:textAppearance="?android:attr/textAppearanceSmall"
       	        android:textColor="#FFFFFF"
-      	        android:visibility="invisible" />
+      	        android:visibility="invisible" /> -->
 
       	    <Button
       	        android:id="@+id/eventsButton"
-      	        android:layout_width="80dp"
-      	        android:layout_height="80dp"
-      	        android:layout_column="3"
-      	        android:layout_gravity="left|center_vertical"
-      	        android:layout_margin="3dp"
-      	        android:layout_row="0"
-      	        android:background="@drawable/events_icon"
-      	        android:onClick="startEventsActivity"
-      	        android:padding="0dp" />
+      	        android:layout_width="100dp"
+      	        android:layout_height="100dp"
+      			android:textSize="16sp"
+      	    	android:text="Events"
+      	        android:layout_column="2"
+      	        android:layout_margin="8dp"
+      	        android:layout_row="1"
+      	        android:background="@drawable/border"
+      	        android:onClick="startEventsActivity" />
 
       	</GridLayout>
 
@@ -86,7 +111,7 @@
       	    android:layout_width="400dp"
       	    android:layout_height="wrap_content"
       	    android:layout_alignParentLeft="true"
-      	    android:layout_marginTop="-100dp"
+      	    android:layout_marginTop="-200dp"
       	    android:contentDescription="Home Icon"
       	    android:src="@drawable/home_logo" />
 

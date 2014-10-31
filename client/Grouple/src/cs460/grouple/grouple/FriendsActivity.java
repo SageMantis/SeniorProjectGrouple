@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 public class FriendsActivity extends ActionBarActivity
 {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -96,6 +95,17 @@ public class FriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+	    if(keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	        startHomeActivity(null);
+	    }
+	    return false;
+	}
+	
+	/*Start activity functions for friends sub activities, going back and logging out*/
 	public void startAddFriendActivity(View view)
 	{
 		Intent intent = new Intent(this, AddFriendActivity.class);
@@ -106,24 +116,10 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		startActivity(intent);
 	}
-	public void startUserActivity(View view)
-	{
-		Intent intent = new Intent(this, UserActivity.class);
-		startActivity(intent);
-	}
+
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
-		startActivity(intent);
-	}
-	public void startEventsActivity(View view)
-	{
-		Intent intent = new Intent(this, EventsActivity.class);
-		startActivity(intent);
-	}
-	public void startGroupsActivity(View view)
-	{
-		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
 	}
 	public void startFriendRequestsActivity(View view)
@@ -135,16 +131,6 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{
-	    if(keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	        startUserActivity(null);
-	    }
-	    return false;
 	}
 }
 
