@@ -1,7 +1,6 @@
 package cs460.grouple.grouple;
 
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +9,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,28 +24,45 @@ import android.widget.TextView;
 
 public class FriendsActivity extends ActionBarActivity
 {
+	int friendRequests;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
 		
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
-		getSupportActionBar().setCustomView(R.layout.actionbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friends");
 		
 		Global global = ((Global)getApplicationContext());
 		View friends = findViewById(R.id.friendsLayout);
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    	global.fetchNumFriendRequests();
+    	friendRequests = global.getNumFriendRequests();
 		global.setNotifications(friends);
 		
+	    Handler handler = new Handler();
+	    handler.postDelayed(new Runnable() {
+			View friends = findViewById(R.id.friendsLayout);
+			View home = ((View) friends.getParent());
+		    @Override
+		    public void run() 
+		    {
+			    System.out.println("In Friends main run()");
+
+				Global global = ((Global)getApplicationContext());
+				global.fetchNumFriendRequests();
+				if (friendRequests != global.getNumFriendRequests())
+				{
+					global.setNotifications(friends);
+					global.setNotifications(home);
+				}
+			}
+		    }, 1000);
+			
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -64,7 +82,19 @@ public class FriendsActivity extends ActionBarActivity
 		registerReceiver(broadcastReceiver, intentFilter);
 		//End Kill switch listener
 	}
-
+	
+	@Override
+	public void onResume() {
+	    super.onResume();  // Always call the superclass method first
+	    System.out.println("In Friends onResume()");
+		Global global = ((Global)getApplicationContext());
+		View friends = findViewById(R.id.friendsLayout);
+    	global.fetchNumFriendRequests();
+    	//friendRequests = global.getNumFriendRequests();
+    	global.setNotifications(friends);
+   
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -100,7 +130,12 @@ public class FriendsActivity extends ActionBarActivity
 	{
 	    if(keyCode == KeyEvent.KEYCODE_BACK)
 	    {
-	        startHomeActivity(null);
+			Global global = ((Global)getApplicationContext());
+			View friends = findViewById(R.id.friendsLayout);
+			View home = ((View) friends.getParent());
+			global.fetchNumFriendRequests(); 
+			global.setNotifications(home);
+	        startHomeActivity(home);
 	    }
 	    return false;
 	}

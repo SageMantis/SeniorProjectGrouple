@@ -45,7 +45,7 @@ public class LoginActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+ 
 		ActionBar ab = getActionBar();
 		ab.hide();
 		Log.d("app666", "we created");

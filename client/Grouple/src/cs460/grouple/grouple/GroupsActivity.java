@@ -1,9 +1,10 @@
 package cs460.grouple.grouple;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
-import android.app.ActionBar;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,9 +37,10 @@ public class GroupsActivity extends ActionBarActivity
 
 		//ab.setIcon(
 				 //  new ColorDrawable(getResources().getColor(android.R.color.transparent)));  
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
-		getSupportActionBar().setCustomView(R.layout.actionbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Groups");
 		//ImageView view = (ImageView)findViewById(android.R.id.home);
