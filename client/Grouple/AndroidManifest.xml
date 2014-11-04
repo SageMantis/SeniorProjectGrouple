@@ -14,7 +14,7 @@
         android:name=".Global"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat.Light" >
+       	android:theme="@style/AppBaseTheme" >
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation"
@@ -70,7 +70,7 @@
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="cs460.grouple.grouple.UserActivity" />
+                android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".AddFriendActivity"

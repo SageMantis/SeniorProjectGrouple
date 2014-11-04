@@ -1,10 +1,10 @@
 package cs460.grouple.grouple;
 
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
-import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,30 +29,52 @@ import android.widget.TextView;
 public class HomeActivity extends ActionBarActivity
 {
 	LayoutInflater li;
+	int friendRequests;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
-		getSupportActionBar().setCustomView(R.layout.actionbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		
 		Global global = ((Global)getApplicationContext());
-		View home = findViewById(R.id.homeLayout);
+
 		actionbarTitle.setText("Welcome, "+global.getName()+"!");
 
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+	    Handler handler = new Handler();
+		View home = findViewById(R.id.homeLayout);
+	    //do anything 
+
+    	global.fetchNumFriendRequests();
+    	friendRequests = global.getNumFriendRequests();
 		global.setNotifications(home);
+	    handler.postDelayed(new Runnable() {
+			View home = findViewById(R.id.homeLayout);
+		    @Override
+		    public void run() 
+		    {
+		    	System.out.println("In Home Main run()");
+				Global global = ((Global)getApplicationContext());
+		    	global.fetchNumFriendRequests();
+		    	if (friendRequests != global.getNumFriendRequests())
+		    	{
+					global.setNotifications(home);
+		    	}
+		    }
+	    }, 1000);
+
+
 	
 		
 		//START KILL SWITCH LISTENER
@@ -106,6 +129,18 @@ public class HomeActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onResume() {
+	    super.onResume();  // Always call the superclass method first
+	    System.out.println("In Home onResume()");
+		Global global = ((Global)getApplicationContext());
+		View home = findViewById(R.id.homeLayout);
+    	global.fetchNumFriendRequests();
+    	//friendRequests = global.getNumFriendRequests();
+
+		global.setNotifications(home);
+	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{

@@ -190,10 +190,12 @@ public class Global extends Application
 					if (jsonSenders != null)
 					{
 						setNumFriendRequests(jsonSenders.length());
+						System.out.println("updating friend requests!!!!!!\n");
 					}
 					else
 					{
 						setNumFriendRequests(0);
+						System.out.println("updating friend requeststo 0\n");
 					}
 					//successful		
 				} 

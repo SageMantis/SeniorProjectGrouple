@@ -17,7 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -47,10 +47,10 @@ public class FriendRequestsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_requests);
-		
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
-		getSupportActionBar().setCustomView(R.layout.actionbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friend Requests");
 			
@@ -61,11 +61,17 @@ public class FriendRequestsActivity extends ActionBarActivity
 		
 		Global global = ((Global)getApplicationContext());
 		String receiver = global.getCurrentUser();
-		View friendRequests = findViewById(R.id.friendRequestsLayout);
 		//global.setNotifications(friendRequests); //PANDA
 		new getFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 						+ receiver);
+		
+    	View friendRequests = findViewById(R.id.friendRequestsLayout);
+		View friends = ((View) friendRequests.getParent());
+		View home = ((View) friends.getParent());
+		global.setNotifications(friendRequests);
+		global.setNotifications(friends);
+		global.setNotifications(home);
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -261,13 +267,17 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 		protected void onPostExecute(String result)
 		{
+			Global global = ((Global)getApplicationContext());
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					
+					View friends = (View) findViewById(R.id.friendRequestsLayout).getParent();
+					View home = (View) friends.getParent();
+					global.setNotifications(friends);
+					global.setNotifications(home);
 					System.out.println("success in decline!");
 					startFriendRequestsActivity();
 			
@@ -356,6 +366,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 		protected void onPostExecute(String result)
 		{
+			Global global = ((Global)getApplicationContext());
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -364,7 +375,10 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					// successful
 					System.out.println("success!");
-	
+					View friends = (View) findViewById(R.id.friendRequestsLayout).getParent();
+					View home = (View) friends.getParent();
+					global.setNotifications(friends);
+					global.setNotifications(home);
 					startFriendRequestsActivity();
 					
 				} else
@@ -426,7 +440,12 @@ public class FriendRequestsActivity extends ActionBarActivity
 	{
 	    if(keyCode == KeyEvent.KEYCODE_BACK)
 	    {
-	        startFriendsActivity(null);
+	    	Global global = ((Global)getApplicationContext());
+	    	View friendRequests = findViewById(R.id.friendRequestsLayout);
+			View friends = ((View) friendRequests.getParent());
+			global.fetchNumFriendRequests(); 
+			global.setNotifications(friendRequests);
+	        startFriendsActivity(friends);
 	    }
 	    return false;
 	}

@@ -3,6 +3,7 @@
     android:id="@+id/friendRequestsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:padding="0dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp" >
@@ -11,6 +12,9 @@
         android:id="@+id/noFriendRequestsTextViewFRA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+                   	android:fontFamily="sans-serif-condensed"
+                  
         android:layout_marginTop="10dp"
         android:background="@drawable/border"
         android:text="@string/noFriendRequestsTextView"

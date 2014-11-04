@@ -47,5 +47,10 @@
     <string name="editProfilePhotoButton">Edit Photo</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_messages">MessagesActivity</string>
-
+    
+    
+    <color name="background_color">#292933</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name="button_background_color">#292933</color>
+	<color name="button_border_color">#FFFFFF</color>
 </resources>

@@ -858,10 +858,14 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070003;
+        public static final int abc_search_url_text_holo=0x7f070007;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
+        public static final int background_color=0x7f070003;
+        public static final int button_background_color=0x7f070005;
+        public static final int button_border_color=0x7f070006;
+        public static final int text_color=0x7f070004;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1078,16 +1082,17 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int border=0x7f020057;
-        public static final int events_icon=0x7f020058;
-        public static final int groups_icon=0x7f020059;
-        public static final int home_icon=0x7f02005a;
-        public static final int home_logo=0x7f02005b;
-        public static final int ic_launcher=0x7f02005c;
-        public static final int notification_icon=0x7f02005d;
-        public static final int user_icon=0x7f02005e;
+        public static final int button_border=0x7f020058;
+        public static final int events_icon=0x7f020059;
+        public static final int groups_icon=0x7f02005a;
+        public static final int home_icon=0x7f02005b;
+        public static final int home_logo=0x7f02005c;
+        public static final int ic_launcher=0x7f02005d;
+        public static final int notification_icon=0x7f02005e;
+        public static final int user_icon=0x7f02005f;
     }
     public static final class id {
-        public static final int acceptFriendRequestButtonFRLI=0x7f050071;
+        public static final int acceptFriendRequestButtonFRLI=0x7f050077;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1096,27 +1101,29 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f050023;
         public static final int action_bar_title=0x7f050022;
         public static final int action_context_bar=0x7f05001d;
-        public static final int action_logout=0x7f050077;
+        public static final int action_logout=0x7f05007d;
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050076;
+        public static final int action_settings=0x7f05007c;
         public static final int actionbarTitleTextView=0x7f05003c;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int addFriendButtonAFA=0x7f05003f;
         public static final int addFriendButtonFA=0x7f05004a;
         public static final int addFriendLayout=0x7f05003d;
         public static final int addFriendMessageTextViewAFA=0x7f050040;
+        public static final int ageTextView=0x7f05006d;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
+        public static final int bioTextView=0x7f05006f;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int createEventButton=0x7f050046;
         public static final int createGroupButton=0x7f050050;
-        public static final int currentFriendsButtonFA=0x7f05004c;
+        public static final int currentFriendsButtonFA=0x7f05004b;
         public static final int currentFriendsLayout=0x7f050041;
         public static final int currentUser=0x7f05006a;
-        public static final int declineFriendRequestButtonFRLI=0x7f050072;
+        public static final int declineFriendRequestButtonFRLI=0x7f050078;
         public static final int default_activity_button=0x7f050028;
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
@@ -1126,26 +1133,29 @@ containing a value of this type.
         public static final int emailEditTextAFA=0x7f05003e;
         public static final int emailEditTextLA=0x7f05005b;
         public static final int emailEditTextRA=0x7f050060;
-        public static final int emailTextViewFLI=0x7f05006f;
-        public static final int emailTextViewFRLI=0x7f050073;
+        public static final int emailTextViewFLI=0x7f050075;
+        public static final int emailTextViewFRLI=0x7f050079;
         public static final int end=0x7f050013;
         public static final int errorMessageTextView=0x7f050068;
         public static final int eventsButton=0x7f050058;
+        public static final int eventsButtonUPA=0x7f050073;
         public static final int eventsLayout=0x7f050042;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
         public static final int fNameEditText=0x7f050064;
-        public static final int friendGridLayout=0x7f05006e;
-        public static final int friendRequestGridLayout=0x7f050070;
-        public static final int friendRequestsButtonFA=0x7f05004b;
+        public static final int friendGridLayout=0x7f050074;
+        public static final int friendRequestGridLayout=0x7f050076;
+        public static final int friendRequestsButtonFA=0x7f05004c;
         public static final int friendRequestsLayout=0x7f050047;
         public static final int friendsButton=0x7f050053;
+        public static final int friendsButtonUPA=0x7f050071;
         public static final int friendsLayout=0x7f050049;
         public static final int groupsButton=0x7f050056;
+        public static final int groupsButtonUPA=0x7f050072;
         public static final int groupsLayout=0x7f05004d;
         public static final int home=0x7f050014;
         public static final int homeAsUp=0x7f050005;
-        public static final int homeButton=0x7f050074;
+        public static final int homeButton=0x7f05007a;
         public static final int homeIconImageViewHA=0x7f050059;
         public static final int homeLayout=0x7f050051;
         public static final int icon=0x7f05002a;
@@ -1154,6 +1164,7 @@ containing a value of this type.
         public static final int lNameEditText=0x7f050065;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
+        public static final int locationTextView=0x7f05006e;
         public static final int loginButtonLA=0x7f05005c;
         public static final int loginButtonRA=0x7f050061;
         public static final int loginFailTextViewLA=0x7f05005e;
@@ -1161,7 +1172,7 @@ containing a value of this type.
         public static final int messagesButton=0x7f050054;
         public static final int middle=0x7f050012;
         public static final int navigationBarGridLayout=0x7f050052;
-        public static final int navigationRL=0x7f050075;
+        public static final int navigationRL=0x7f05007b;
         public static final int never=0x7f050009;
         public static final int noFriendRequestsTextView=0x7f050066;
         public static final int noFriendRequestsTextViewFRA=0x7f050048;
@@ -1171,7 +1182,7 @@ containing a value of this type.
         public static final int passwordEditTextRA=0x7f050062;
         public static final int pastEventsButton=0x7f050043;
         public static final int pendingGroupsButton=0x7f05004e;
-        public static final int profilePhoto=0x7f05006d;
+        public static final int profilePhoto=0x7f050070;
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
@@ -1413,6 +1424,20 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b008c;
+        /**  the theme applied to the application or activity 
+         */
+        public static final int CustomActionBarTheme=0x7f0b008d;
+        /**  ActionBar styles 
+         */
+        public static final int MyActionBar=0x7f0b008e;
+        /**  ActionBar tabs text 
+ The textColor property is backward compatible with the Support Library 
+         */
+        public static final int MyActionBarTabText=0x7f0b0090;
+        /**  ActionBar title text 
+ The textColor property is backward compatible with the Support Library 
+         */
+        public static final int MyActionBarTitleText=0x7f0b008f;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0b0063;
