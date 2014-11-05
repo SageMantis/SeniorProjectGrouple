@@ -1,0 +1,145 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+   	android:id="@+id/userLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+   	android:background="@color/background_color"
+    android:layout_margin="0dp" >
+
+   	<GridLayout
+     	android:id="@+id/navigationBarGridLayout"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_marginTop="10dp"
+       	android:layout_centerHorizontal="true"
+       	android:textColor="@color/text_color"
+   	    android:columnCount="3"
+   	    android:padding="0dp"
+   	    android:rowCount="6" >
+    	
+	  	<Button
+	  	    android:id="@+id/editProfilePhotoButton"
+	  	    android:layout_width="130dp"
+	  	    android:layout_height="20dp"
+	  	    android:layout_column="1"
+	  	    android:layout_row="1"
+	  	    android:background="@drawable/button_border"
+	  	    android:fontFamily="sans-serif-condensed"
+	  	    android:onClick="startEditProfileActivity"
+	  	    android:text="Edit Photo"
+	  	    android:textColor="@color/text_color"
+	  	    android:textSize="12sp" />
+
+	  	<TextView
+	  	    android:id="@+id/ageTextView"
+	  	    android:layout_width="80dp"
+	  	    android:layout_height="wrap_content"
+	  	    android:layout_column="0"
+	  	    android:layout_row="0"
+   			android:fontFamily="sans-serif-condensed"
+	  	    android:textColor="@color/text_color"
+	  	    android:layout_margin="5dp"
+	  	    android:layout_marginTop="40dp"
+	  	    android:text="22 years old"
+	  	    android:textAppearance="?android:attr/textAppearanceMedium"
+	  	    android:textSize="14sp" />
+	
+	  	<TextView
+	  	    android:id="@+id/locationTextView"
+	  	    android:layout_width="80dp"
+	  	    android:layout_height="wrap_content"
+	  	   	android:textColor="@color/text_color"
+	  	   	android:fontFamily="sans-serif-condensed"
+	  	    android:layout_column="2"
+	  	    android:layout_gravity="left"
+	  	    android:layout_margin="5dp"
+	  	   	android:layout_marginTop="40dp"
+	  	    android:layout_row="0"
+	  	    android:gravity="right"
+	  	    android:text="Fort Wayne,\nIndiana"
+	  	    android:textAppearance="?android:attr/textAppearanceMedium"
+	  	    android:textSize="14sp" />
+	
+	  	<TextView
+	  	    android:id="@+id/bioTextView"
+	  	    android:layout_width="wrap_content"
+           	android:textColor="@color/text_color"
+           	android:fontFamily="sans-serif-condensed"
+	  	    android:layout_height="wrap_content"
+   			android:layout_margin="15dp"
+	  	    android:text="Welcome to my Grouple profille. Here you can write yourself a mini bio."
+	  	    android:textAppearance="?android:attr/textAppearanceMedium"
+	  	    android:layout_row="3"
+	  	    android:layout_column="0"
+	  	    android:layout_columnSpan="3"
+	  	    android:textSize="14sp" />
+
+	  	<ImageView
+	  	    android:id="@+id/profilePhoto"
+	  	    android:layout_width="130dp"
+	  	    android:layout_height="130dp"
+	  	    android:layout_column="1"
+	  	    android:layout_row="0"
+	  	    android:background="@drawable/border"
+	  	    android:padding="4dp"
+	  	    android:cropToPadding="true"
+	  	    android:src="@drawable/abc_ab_bottom_solid_light_holo" />
+	  	
+		<Button
+	   	    android:id="@+id/friendsButtonUPA"
+	   	    android:textColor="@color/text_color"
+	   	    	   	  	android:fontFamily="sans-serif-condensed"
+	   	    android:layout_column="0"
+	   	    android:layout_row="4"
+	   	    android:layout_width="100dp"
+   	   	    android:layout_height="40dp"
+   	   	    android:layout_gravity="center"
+ 	   	    android:layout_margin="0dp"
+   	  	    android:textSize="10sp"
+	   	    android:text="Friends\n(63)" />
+	
+	   	<Button
+	   	    android:id="@+id/groupsButtonUPA"
+	   	  	android:fontFamily="sans-serif-condensed"
+	   	    android:layout_gravity="center"
+	   	    android:textColor="@color/text_color"
+	 		android:layout_column="1"
+	   	    android:layout_row="4"
+	   	    android:layout_width="100dp"
+	   	    android:layout_height="40dp"
+	   	    android:layout_margin="0dp"
+   	  	    android:textSize="10sp"
+	   	    android:text="Groups\n(12)" />
+
+	   	<Button
+	   	    android:id="@+id/eventsButtonUPA"
+	   	    android:layout_width="100dp"
+	   	    android:layout_height="40dp"
+	   	    android:layout_column="2"
+	   	    android:layout_gravity="left"
+	   	    	   	  	android:fontFamily="sans-serif-condensed"
+	   	    android:layout_margin="0dp"
+	   	    android:layout_marginRight="0dp"
+	   	    android:layout_row="4"
+	   	    android:text="Events\n(3)"
+	   	    android:textColor="@color/text_color"
+	   	    android:textSize="10sp" />
+  
+	</GridLayout>
+
+   	<Button
+   	    android:id="@+id/editProfileButton"
+   	    android:layout_width="130dp"
+   	    android:layout_height="20dp"
+   	    android:layout_alignParentBottom="true"
+   	    android:layout_centerHorizontal="true"
+   	    android:layout_marginBottom="40dp"
+   	    android:background="@drawable/button_border"
+   	    android:fontFamily="sans-serif-condensed"
+   	    android:onClick="startEditProfileActivity"
+   	    android:text="Edit Profile"
+   	    android:textColor="@color/text_color"
+   	    android:textSize="12sp" />
+
+</RelativeLayout>
