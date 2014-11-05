@@ -22,12 +22,13 @@
 	  	    android:id="@+id/editProfilePhotoButton"
 	  	    android:layout_width="130dp"
 	  	    android:layout_height="20dp"
-			android:layout_column="1"
-			android:layout_row="1"
-			android:textColor="@color/text_color"
-			android:fontFamily="sans-serif-condensed"
-	  	    android:text="@string/editProfilePhotoButton"
-	  	  	android:background="@drawable/button_border"
+	  	    android:layout_column="1"
+	  	    android:layout_row="1"
+	  	    android:background="@drawable/button_border"
+	  	    android:fontFamily="sans-serif-condensed"
+	  	    android:onClick="startEditProfileActivity"
+	  	    android:text="Edit Photo"
+	  	    android:textColor="@color/text_color"
 	  	    android:textSize="12sp" />
 
 	  	<TextView
@@ -127,6 +128,18 @@
   
 	</GridLayout>
 
-   	
+   	<Button
+   	    android:id="@+id/editProfileButton"
+   	    android:layout_width="130dp"
+   	    android:layout_height="20dp"
+   	    android:layout_alignParentBottom="true"
+   	    android:layout_centerHorizontal="true"
+   	    android:layout_marginBottom="33dp"
+   	    android:background="@drawable/button_border"
+   	    android:fontFamily="sans-serif-condensed"
+   	    android:onClick="startEditProfileActivity"
+   	    android:text="Edit Profile"
+   	    android:textColor="@color/text_color"
+   	    android:textSize="12sp" />
 
 </RelativeLayout>
