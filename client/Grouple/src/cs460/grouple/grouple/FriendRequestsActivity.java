@@ -189,17 +189,16 @@ public class FriendRequestsActivity extends ActionBarActivity
 							senders.add(row);
 							System.out.println("Row: " + row +"\nCount: " + i);
 						}
-				
+						RelativeLayout friendRequestsLayout =  (RelativeLayout)findViewById(R.id.friendRequestsLayout);		
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < senders.size(); i++)
 						{
-							RelativeLayout friendRequestsLayout =  (RelativeLayout)findViewById(R.id.friendRequestsLayout);					
 							li.inflate(R.layout.listitem_friend_request, friendRequestsLayout);
 							GridLayout rowRL = (GridLayout)friendRequestsLayout.findViewById(R.id.friendRequestGridLayout);
 							rowRL.setId(i);//(newIDStr);
 							//Setting text of each friend request to the email of the sender
 							((TextView)rowRL.findViewById(R.id.emailTextViewFRLI)).setText(senders.get(i));				
-							int y = 120*(i+1);
+							int y = (120*i) + 10;
 							rowRL.setY(y);
 						}
 					}

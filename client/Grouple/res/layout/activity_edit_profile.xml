@@ -3,15 +3,56 @@
     android:id="@+id/TableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     android:background="@color/background_color"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cs460.grouple.grouple.EditProfileActivity" >
+
+    <ImageView
+        android:id="@+id/profilePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+
+    <Button
+        android:id="@+id/editProfilePhotoButton"
+        android:layout_width="130dp"
+        android:layout_height="20dp"
+        android:background="@drawable/button_border"
+        android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/text_color"
+        android:onClick="startEditProfileActivity"
+        android:text="Edit Photo"
+
+        android:textSize="12sp" />
 
     <TableRow
         android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
@@ -23,92 +64,76 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/text_color" />
 
-        <EditText
-            android:id="@+id/nameEditTextEPA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:textColor="@color/text_color" >
-
-            <requestFocus />
-        </EditText>
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Age:"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_color" />
-
-        <EditText
-            android:id="@+id/ageEditTextEPA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:textColor="@color/text_color" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Location:"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_color" />
-
-        <EditText
-            android:id="@+id/locationEditTextEPA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:textColor="@color/text_color" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/bioTextViewEPA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bio:"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_color" />
-
-        <EditText
-            android:id="@+id/bioEditTextEPA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textMultiLine"
-            android:textColor="@color/text_color" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
         <TextView
             android:id="@+id/resultTextViewEPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />
+
     </TableRow>
+
+    <EditText
+        android:id="@+id/nameEditTextEPA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="@color/text_color"
+        
+         />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Age:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/text_color"
+/>
+
+    <EditText
+        android:id="@+id/ageEditTextEPA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color"  />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/text_color" />
+
+    <EditText
+        android:id="@+id/locationEditTextEPA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color"  />
+
+    <TextView
+        android:id="@+id/bioTextViewEPA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bio:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color"  />
+
+    <EditText
+        android:id="@+id/bioEditTextEPA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color"  >
+
+        <requestFocus />
+    </EditText>
 
     <Button
         android:id="@+id/submitButtonEPA"

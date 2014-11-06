@@ -75,13 +75,7 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		//execute php script, using the current users email address to populate the textviews
 		new getProfileTask().execute("http://98.213.107.172/android_connect/get_profile.php");
 		
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+		global.fetchNumFriendRequests();
 		global.setNotifications(user);
 		
 		System.out.println("What the heck is going on now?");

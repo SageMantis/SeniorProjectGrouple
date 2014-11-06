@@ -32,6 +32,7 @@ public class Global extends Application
 	private String declineEmail;
 	private String name;
 	private int numFriendRequests = 0;
+	private int numFriends = 0;
 	private ArrayList<View> views; //All of our views
 	
 	public String getCurrentUser()
@@ -56,6 +57,11 @@ public class Global extends Application
 		return numFriendRequests;
 	}
 	
+	public int getNumFriends()
+	{
+		return numFriends;
+	}
+	
 	/*PANDA*/
 	public void setDeclineEmail(String email)
 	{
@@ -77,26 +83,23 @@ public class Global extends Application
 		return acceptEmail;
 	}
 	
-	public int getUserNotificationNum()
+	public void setNumFriends(int numFriends)
 	{
-		//System.out.println("In the get:" + numFriendRequests);
-		return numFriendRequests; //+ new messages num ... (when implemented)
+		this.numFriends = numFriends;
 	}
 	
 	public void setNotifications(View view)
 	{
-		int userNotificationNum = getUserNotificationNum();
-		System.out.println("Notification num: " + userNotificationNum);
+		int numFriendRequests = getNumFriendRequests();
 		//View homeRL = findViewById(R.id.homeRelativeLayout);
 		Button friendsButton = (Button)view.findViewById(R.id.friendsButton);
 		
-		if (userNotificationNum > 0 && view.findViewById(R.id.friendsButton) != null) //user has notifications in their profile
+		if (numFriendRequests > 0 && view.findViewById(R.id.friendsButton) != null) //user has notifications in their profile
 		{
 			//TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
 			//userNotification.setText(Integer.toString(userNotificationNum));
 			//userNotification.setVisibility(1); //PANDA Invisible
-			//Quick fix for the weird margin top problem
-			friendsButton.setTop(-100);
+
 			//FrameLayout.LayoutParams params = new FrameLayout.LayoutParams( 
 		        //    FrameLayout.LayoutParams.FILL_PARENT, 
 		         //   FrameLayout.LayoutParams.WRAP_CONTENT); 
@@ -104,13 +107,13 @@ public class Global extends Application
 			//friendsButton.setLayoutParams(params);
 			//friendsButton.requestLayout();
 
-			if (userNotificationNum == 1)
+			if (numFriendRequests == 1)
 			{
-				friendsButton.setText("Friends \n(" + userNotificationNum + " request)");
+				friendsButton.setText("Friends \n(" + numFriendRequests + " request)");
 			}
 			else
 			{
-				friendsButton.setText("Friends \n(" + userNotificationNum + " requests)");
+				friendsButton.setText("Friends \n(" + numFriendRequests + " requests)");
 			}
 		}
 		if (view.findViewById(R.id.friendRequestsButtonFA) != null)
@@ -118,7 +121,7 @@ public class Global extends Application
 			Button friendRequestsButton = (Button)view.findViewById(R.id.friendRequestsButtonFA);
 			friendRequestsButton.setText("Friend Requests (" + Integer.toString(numFriendRequests) + " new)");
 		}
-		else if (userNotificationNum == 0 && view.findViewById(R.id.friendsButton) != null)
+		else if (numFriendRequests == 0 && view.findViewById(R.id.friendsButton) != null)
 		{
 			//TextView userNotification = (TextView)view.findViewById(R.id.userNotificationTextView);
 			System.out.println("Are we here?");

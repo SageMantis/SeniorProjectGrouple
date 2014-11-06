@@ -2,15 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="0dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp" >
+    android:background="@color/background_color"
+    android:padding="5dp" >
 
     <EditText
         android:id="@+id/emailEditTextRA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        		android:fontFamily="sans-serif-condensed"
+        		                android:textColorHint="@color/text_color"
+		android:textColor="@color/text_color"
         android:layout_marginTop="70dp"
         android:ems="10"
         android:hint="@string/emailEditText"
@@ -24,7 +26,10 @@
         android:layout_width="600dp"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-		
+		android:background="@drawable/button_border"
+		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
+
         android:onClick="loginButton"
         android:text="@string/loginButton" />
 
@@ -33,7 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/emailEditTextRA"
+                android:textColorHint="@color/text_color"
         android:layout_alignRight="@+id/emailEditTextRA"
+        		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
         android:layout_below="@+id/emailEditTextRA"
         android:ems="10"
         android:hint="@string/passwordEditText"
@@ -41,6 +49,9 @@
 
     <EditText
         android:id="@+id/rePasswordEditTextRA"
+                android:textColorHint="@color/text_color"
+                		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/passwordEditTextRA"
@@ -52,6 +63,7 @@
 
     <EditText
         android:id="@+id/fNameEditText"
+                android:textColorHint="@color/text_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/rePasswordEditTextRA"
@@ -62,10 +74,13 @@
 
     <EditText
         android:id="@+id/lNameEditText"
+                android:textColorHint="@color/text_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/fNameEditText"
         android:layout_below="@+id/fNameEditText"
+        		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
         android:ems="10"
         android:hint="@string/lNameEditText"
         android:inputType="textPersonName" />
@@ -74,6 +89,8 @@
         android:id="@+id/noFriendRequestsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
         android:layout_above="@+id/loginButtonRA"
         android:layout_centerHorizontal="true"
         android:text="Already have a Grouple account?"
@@ -83,6 +100,9 @@
         android:id="@+id/registerButtonRA"
         android:layout_width="600dp"
         android:layout_height="70dp"
+        		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
+		android:background="@drawable/button_border"
         android:layout_alignLeft="@+id/lNameEditText"
         android:layout_below="@+id/lNameEditText"
         android:onClick="registerButton"
@@ -91,6 +111,7 @@
     <TextView
         android:id="@+id/errorMessageTextView"
         android:layout_width="wrap_content"
+        		android:fontFamily="sans-serif-condensed"
         android:layout_height="wrap_content"
         android:layout_below="@+id/registerButtonRA"
         android:layout_centerHorizontal="true"
@@ -103,6 +124,8 @@
         android:id="@+id/registerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        		android:fontFamily="sans-serif-condensed"
+		android:textColor="@color/text_color"
         android:layout_alignLeft="@+id/errorMessageTextView"
         android:layout_alignParentTop="true"
         android:layout_marginTop="14dp"
