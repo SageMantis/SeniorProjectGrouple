@@ -189,16 +189,18 @@ public class CurrentFriendsActivity extends ActionBarActivity
 							
 						}
 						//looping thru array and inflating listitems to the friend requests list
+						RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsLayout);
+						//ScrollView sv = new ScrollView();
 						for (int i = 0; i < friends.size(); i++)
 						{
-							RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsLayout);
-							
+						
 							li.inflate(R.layout.listitem_friend, currentFriendsRL);
+	
 							GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
 							rowRL.setId(i);//(newIDStr);
 							((TextView)rowRL.findViewById(R.id.emailTextViewFLI)).setText(friends.get(i));
 					
-							int y = 100*(i+1);
+							int y = (100*i)+10;
 							rowRL.setY(y);
 						}
 					}

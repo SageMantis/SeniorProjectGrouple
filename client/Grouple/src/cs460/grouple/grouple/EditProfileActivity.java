@@ -21,27 +21,41 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 //import cs460.grouple.grouple.RegisterActivity.getRegisterTask;
-
+import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class EditProfileActivity extends Activity {
-
+public class EditProfileActivity extends ActionBarActivity implements View.OnClickListener {
+	private Button b;
+	private ImageView iv;
+	private final static int CAMERA_DATA = 0;
+	private Bitmap bmp;
+	private Intent i;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
+		
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
+
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -56,10 +70,10 @@ public class EditProfileActivity extends Activity {
 				 //Log.d("app666","we killin the login it");
 				 //System.exit(1);
 				 finish();
-			  }
-					  
+			  }		  
 		 }
 	};
+	
 		registerReceiver(broadcastReceiver, intentFilter);
 		//End Kill switch listener
 				
@@ -156,9 +170,7 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 				ageTextView.setText(age);
 				bioTextView.setText(bio);
 				locationTextView.setText(location);
-				
-				
-				
+		
 			} 
 			else
 			{
@@ -174,7 +186,12 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_profile, menu);
+		getMenuInflater().inflate(R.menu.navigation_actions, menu);
+		//Set up the edit button and image view
+		b = (Button) findViewById(R.id.editProfilePhotoButton);
+		iv = (ImageView) findViewById(R.id.profilePhoto);
+		b.setOnClickListener(this);
+		iv.setOnClickListener(this);
 		return true;
 	}
 
@@ -299,6 +316,18 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch(v.getId()){
+		case R.id.editProfilePhotoButton:
+			i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			startActivityForResult(i, CAMERA_DATA);
+			break;
+		
 		}
 	}
 	

@@ -50,26 +50,6 @@ public class LoginActivity extends ActionBarActivity
 		ab.hide();
 		Log.d("app666", "we created");
 		
-		//populating views in global (for access from global)
-		/*ArrayList<View> views = new ArrayList<View>();
-		View homeLayout = (View)findViewById(R.id.homeLayout);
-		View userLayout = (View)findViewById(R.id.userLayout);
-		View groupsLayout = (View)findViewById(R.id.groupsLayout);
-		View eventsLayout = (View)findViewById(R.id.eventsLayout);
-		View friendsLayout = (View)findViewById(R.id.friendsLayout);
-		View friendRequestsLayout = (View)findViewById(R.id.friendRequestsLayout);
-		View addFriendLayout = (View)findViewById(R.id.addFriendLayout);
-		View currentFriendsLayout = (View)findViewById(R.id.currentFriendsLayout);
-		views.add(homeLayout);
-		views.add(userLayout);
-		views.add(groupsLayout);
-		views.add(eventsLayout);
-		views.add(friendsLayout);
-		views.add(friendRequestsLayout);
-		views.add(addFriendLayout);
-		views.add(currentFriendsLayout);
-		Global global = ((Global) getApplicationContext());
-		//global.setViews(views);*/
 
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();

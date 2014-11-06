@@ -3,9 +3,8 @@
    	android:id="@+id/userLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="0dp"
-   	android:background="@color/background_color"
-    android:layout_margin="0dp" >
+    android:padding="5dp"
+   	android:background="@color/background_color" >
 
    	<GridLayout
      	android:id="@+id/navigationBarGridLayout"
@@ -63,11 +62,16 @@
 	
 	  	<TextView
 	  	    android:id="@+id/bioTextView"
-	  	    android:layout_width="wrap_content"
+	  	    android:layout_width="match_parent"
            	android:textColor="@color/text_color"
            	android:fontFamily="sans-serif-condensed"
 	  	    android:layout_height="wrap_content"
-   			android:layout_margin="15dp"
+	  	    android:background="@drawable/top_bottom_border"
+   			android:layout_margin="0dp"
+   			android:padding="10dp"
+   			android:layout_marginTop="10dp"
+   			android:gravity="center"
+   			android:layout_gravity="center"
 	  	    android:text="Welcome to my Grouple profille. Here you can write yourself a mini bio."
 	  	    android:textAppearance="?android:attr/textAppearanceMedium"
 	  	    android:layout_row="3"
