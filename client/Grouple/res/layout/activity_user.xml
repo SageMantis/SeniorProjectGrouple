@@ -91,30 +91,32 @@
 	  	    android:src="@drawable/abc_ab_bottom_solid_light_holo" />
 	  	
 		<Button
-	   	    android:id="@+id/friendsButtonUPA"
-	   	    android:textColor="@color/text_color"
-	   	    	   	  	android:fontFamily="sans-serif-condensed"
-	   	    android:layout_column="0"
-	   	    android:layout_row="4"
-	   	    android:layout_width="100dp"
-   	   	    android:layout_height="40dp"
-   	   	    android:layout_gravity="center"
- 	   	    android:layout_margin="0dp"
-   	  	    android:textSize="10sp"
-	   	    android:text="Friends\n(63)" />
+		    android:id="@+id/friendsButtonUPA"
+		    android:layout_width="100dp"
+		    android:layout_height="40dp"
+		    android:layout_column="0"
+		    android:layout_gravity="center"
+		    android:layout_margin="0dp"
+		    android:layout_row="4"
+		    android:fontFamily="sans-serif-condensed"
+		    android:onClick="startCurrentFriendsActivity"
+		    android:text="Friends\n(63)"
+		    android:textColor="@color/text_color"
+		    android:textSize="10sp" />
 	
 	   	<Button
 	   	    android:id="@+id/groupsButtonUPA"
-	   	  	android:fontFamily="sans-serif-condensed"
-	   	    android:layout_gravity="center"
-	   	    android:textColor="@color/text_color"
-	 		android:layout_column="1"
-	   	    android:layout_row="4"
 	   	    android:layout_width="100dp"
 	   	    android:layout_height="40dp"
+	   	    android:layout_column="1"
+	   	    android:layout_gravity="center"
 	   	    android:layout_margin="0dp"
-   	  	    android:textSize="10sp"
-	   	    android:text="Groups\n(12)" />
+	   	    android:layout_row="4"
+	   	    android:fontFamily="sans-serif-condensed"
+	   	    android:onClick="startGroupsActivity"
+	   	    android:text="Groups\n"
+	   	    android:textColor="@color/text_color"
+	   	    android:textSize="10sp" />
 
 	   	<Button
 	   	    android:id="@+id/eventsButtonUPA"
@@ -122,11 +124,12 @@
 	   	    android:layout_height="40dp"
 	   	    android:layout_column="2"
 	   	    android:layout_gravity="left"
-	   	    	   	  	android:fontFamily="sans-serif-condensed"
 	   	    android:layout_margin="0dp"
 	   	    android:layout_marginRight="0dp"
 	   	    android:layout_row="4"
-	   	    android:text="Events\n(3)"
+	   	    android:fontFamily="sans-serif-condensed"
+	   	    android:onClick="startEventsActivity"
+	   	    android:text="Events\n"
 	   	    android:textColor="@color/text_color"
 	   	    android:textSize="10sp" />
   

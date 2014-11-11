@@ -14,12 +14,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
 import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -31,8 +35,8 @@ public class Global extends Application
 	private String acceptEmail;
 	private String declineEmail;
 	private String name;
-	private int numFriendRequests = 0;
-	private int numFriends = 0;
+	private int numFriendRequests;
+	private int numFriends;
 	private ArrayList<View> views; //All of our views
 	
 	public String getCurrentUser()
@@ -60,6 +64,14 @@ public class Global extends Application
 	public int getNumFriends()
 	{
 		return numFriends;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/*PANDA*/
@@ -214,6 +226,90 @@ public class Global extends Application
 		}
 	}
 	
+	//Get numFriends
+	public void fetchNumFriends()
+	{
+		new getFriendsTask()
+		.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
+				+ getCurrentUser());
+	}
+	
+	public String readGetFriendsJSONFeed(String URL)
+	{
+		StringBuilder stringBuilder = new StringBuilder();
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(URL);
+		try
+		{
+			HttpResponse response = httpClient.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200)
+			{
+				HttpEntity entity = response.getEntity();
+				InputStream inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream));
+				String line;
+				while ((line = reader.readLine()) != null)
+				{
+					System.out.println("New line: " + line);
+					stringBuilder.append(line);
+				}
+				inputStream.close();
+			} else
+			{
+				Log.d("JSON", "Failed to download file");
+			}
+		} catch (Exception e)
+		{
+			Log.d("readJSONFeed", e.getLocalizedMessage());
+		}
+		return stringBuilder.toString();
+	}
+	private class getFriendsTask extends AsyncTask<String, Void, String>
+	{
+		protected String doInBackground(String... urls)
+		{
+			return readGetFriendsJSONFeed(urls[0]);
+		}
+
+		protected void onPostExecute(String result)
+		{
+		
+			try
+			{
+				JSONObject jsonObject = new JSONObject(result);
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
+					JSONArray jsonFriends = (JSONArray)jsonObject.getJSONArray("friends");
+					System.out.println("Should be setting the num friends here.");
+					
+					if (jsonFriends != null)
+					{
+						System.out.println("Setting it to" + jsonFriends.length());
+						
+						setNumFriends(jsonFriends.length());
+					}
+				}
+				//user has no friends
+				if (jsonObject.getString("success").toString().equals("2"))
+				{
+					setNumFriends(0);
+				}
+				else
+				{
+					//setNumFriends(0);
+					// failed
+					//TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
+					//loginFail.setVisibility(0);
+				}
+			} catch (Exception e)
+			{
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
+	}
 	//Get name
 	public void fetchName()
 	{
@@ -257,14 +353,6 @@ public class Global extends Application
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
 			return stringBuilder.toString();
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
 		}
 
 		private class getNameTask extends AsyncTask<String, Void, String>

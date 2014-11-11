@@ -118,7 +118,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public String readJSONFeed(String URL)
+	public String readGetFriendsJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
@@ -155,7 +155,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readJSONFeed(urls[0]);
+			return readGetFriendsJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result)

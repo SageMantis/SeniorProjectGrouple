@@ -55,7 +55,10 @@ public class EditProfileActivity extends ActionBarActivity implements View.OnCli
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
-
+		
+		//Resetting error text view
+		TextView errorTextView = (TextView)findViewById(R.id.errorTextViewEPA);
+		errorTextView.setVisibility(1);
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -81,18 +84,6 @@ public class EditProfileActivity extends ActionBarActivity implements View.OnCli
 		new getProfileTask().execute("http://98.213.107.172/android_connect/get_profile.php");
 	
 }
-
-// public void loginButton(View view)
-// {
-// Create helper and if successful, will bring the correct home activity.
-// EditText usernameEditText = (EditText)
-// findViewById(R.id.emailEditTextRA);
-// EditText passwordEditText = (EditText)
-// findViewById(R.id.passwordEditText);
-
-// new
-// getRegisterTask().execute("http://98.213.107.172/android_connect/get_login.php?email="+usernameEditText.getText().toString()+"&password="+passwordEditText.getText().toString());
-// }
 
 /*
  * Get profile executes get_profile.php. It uses the current users email address to retrieve the users name, age, and bio. 
@@ -170,7 +161,6 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 				ageTextView.setText(age);
 				bioTextView.setText(bio);
 				locationTextView.setText(location);
-		
 			} 
 			else
 			{
@@ -201,22 +191,44 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_logout)
+		{
+			Global global = ((Global)getApplicationContext());
+			global.setAcceptEmail("");
+			global.setCurrentUser("");
+			global.setDeclineEmail("");
+			startLoginActivity(null);
+			Intent intent = new Intent("CLOSE_ALL");
+			this.sendBroadcast(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	
 	//Button Listener for submit changes. It the profile in the database.
 	//This executes the 
 	public void submitButton(View view)
 	{
-		new setProfileTask().execute("http://98.213.107.172/android_connect/update_profile.php");
+		//error checking
 		
+		//bio no more than
+		TextView bioTextView = (TextView) findViewById(R.id.bioEditTextEPA);
+		String bio = bioTextView.getText().toString();
+		if (bio.length() > 100)
+		{
+			TextView errorTextView = (TextView)findViewById(R.id.errorTextViewEPA);
+			errorTextView.setText("Bio is too many characters.");
+			errorTextView.setVisibility(0);
+		}
+		else
+		{
+		new setProfileTask().execute("http://98.213.107.172/android_connect/update_profile.php");
 		Intent intent = new Intent(this,UserActivity.class);
 		startActivity(intent);
-		
 		finish();
+		}
+
 	}
 	
 	/*
@@ -248,9 +260,9 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 				
 				String name = nameTextView.getText().toString();
 				//Split name by space because sleep.
-				String[] splited = name.split("\\s+");
-				String firstName = splited[0];
-				String lastName = splited[1];
+				String[] splitted = name.split("\\s+");
+				String firstName = splitted[0];
+				String lastName = splitted[1];
 				
 				String age = ageTextView.getText().toString();
 				
@@ -303,14 +315,12 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					//Success
-					TextView resultTextView = (TextView) findViewById(R.id.resultTextViewEPA);
-					resultTextView.setText("Success");
+					System.out.println("Success");
 				} 
 				else
 				{
 					//Fail
-					TextView resultTextView = (TextView) findViewById(R.id.resultTextViewEPA);
-					resultTextView.setText("Fail");
+					System.out.println("Fail");
 				}
 			} catch (Exception e)
 			{
@@ -318,7 +328,11 @@ private class getProfileTask extends AsyncTask<String, Void, String>
 			}
 		}
 	}
-
+	public void startLoginActivity(View view)
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
