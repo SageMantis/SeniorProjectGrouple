@@ -30,7 +30,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -52,14 +54,14 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		
 		Global global = ((Global)getApplicationContext());
 		//Grab view
-		View currentFriends = findViewById(R.id.currentFriendsLayout);
+		/*View currentFriends = findViewById(R.id.currentFriendsLayout);
 		try {
 			global.fetchNumFriendRequests();
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		global.setNotifications(currentFriends); //PANDA TEST
+		global.setNotifications(currentFriends);*/
 		String email = global.getCurrentUser();
 		System.out.println("Email: " + email);
 		new getFriendsTask()
@@ -116,7 +118,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public String readJSONFeed(String URL)
+	public String readGetFriendsJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
@@ -153,7 +155,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readJSONFeed(urls[0]);
+			return readGetFriendsJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result)
@@ -189,19 +191,14 @@ public class CurrentFriendsActivity extends ActionBarActivity
 							
 						}
 						//looping thru array and inflating listitems to the friend requests list
-						RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsLayout);
+						LinearLayout currentFriendsRL =  (LinearLayout)findViewById(R.id.currentFriendsLayout);
 						//ScrollView sv = new ScrollView();
 						for (int i = 0; i < friends.size(); i++)
 						{
-						
-							li.inflate(R.layout.listitem_friend, currentFriendsRL);
-	
-							GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
-							rowRL.setId(i);//(newIDStr);
-							((TextView)rowRL.findViewById(R.id.emailTextViewFLI)).setText(friends.get(i));
-					
-							int y = (100*i)+10;
-							rowRL.setY(y);
+							GridLayout row = (GridLayout)li.inflate(R.layout.listitem_friend, null);
+							((Button)row.findViewById(R.id.friendNameButton)).setText(friends.get(i));
+				
+							currentFriendsRL.addView(row);
 						}
 					}
 					//successful
@@ -212,17 +209,29 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				//user has no friends
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
-					RelativeLayout currentFriendsRL =  (RelativeLayout)findViewById(R.id.currentFriendsLayout);
+					LinearLayout currentFriendsRL =  (LinearLayout)findViewById(R.id.currentFriendsLayout);
 					
-					li.inflate(R.layout.listitem_friend, currentFriendsRL);
-					GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
-					rowRL.setId(0);//(newIDStr);
+					View row = li.inflate(R.layout.listitem_friend, null);
 					
+					//GridLayout rowRL = (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
+					//rowRL.setId(0);//(newIDStr);
+	
 					String message = jsonObject.getString("message").toString();
-					((TextView)rowRL.findViewById(R.id.emailTextViewFLI)).setText(message);
-			
-					int y = 100*(0+1);
-					rowRL.setY(y);
+					((Button)row.findViewById(R.id.friendNameButton)).setText(message);
+					row.setOnClickListener(new View.OnClickListener() {
+			                public void onClick(View v) {
+			                    // Perform action on click   
+
+			               
+
+			                   
+			                }
+			            });
+					row.findViewById(R.id.removeFriendButton).setVisibility(1);
+					//((TextView)rowRL.findViewById(R.id.friendTextView)).setText(message);
+					currentFriendsRL.addView(row);
+					//int y = 100*(0+1);
+					//rowRL.setY(y);
 				}
 				else
 				{
@@ -257,5 +266,12 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+	}
+	
+	public void startFriendProfileActivity(View view)
+	{
+    	//need to get access to this friends email
+    	//launches friendProfileActivity and loads content based on that email
+		System.out.println("startFriendProfile!");
 	}
 }

@@ -67,9 +67,13 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
-
 		Global global = ((Global)getApplicationContext());
 		actionbarTitle.setText(global.getName()+"'s Profile");
+		
+		//Setting num friends on friends button
+		Button friendsButton = (Button)findViewById(R.id.friendsButtonUPA);
+		//global.fetchNumFriends();
+		friendsButton.setText("Friends\n("+global.getNumFriends()+")");
 		View user = findViewById(R.id.userLayout);
 		
 		//execute php script, using the current users email address to populate the textviews
@@ -77,8 +81,7 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		
 		global.fetchNumFriendRequests();
 		global.setNotifications(user);
-		
-		System.out.println("What the heck is going on now?");
+	
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -276,5 +279,21 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
+	}
+	
+	public void startGroupsActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsActivity.class);
+		startActivity(intent);
+	}
+	public void startCurrentFriendsActivity(View view)
+	{
+		Intent intent = new Intent(this, CurrentFriendsActivity.class);
+		startActivity(intent);
+	}
+	public void startEventsActivity(View view)
+	{
+		Intent intent = new Intent(this, EventsActivity.class);
+		startActivity(intent);
 	}
 }

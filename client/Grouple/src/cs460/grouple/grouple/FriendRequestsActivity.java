@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,7 +62,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 		
 		Global global = ((Global)getApplicationContext());
 		String receiver = global.getCurrentUser();
-		//global.setNotifications(friendRequests); //PANDA
 		new getFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 						+ receiver);
@@ -189,17 +189,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 							senders.add(row);
 							System.out.println("Row: " + row +"\nCount: " + i);
 						}
-						RelativeLayout friendRequestsLayout =  (RelativeLayout)findViewById(R.id.friendRequestsLayout);		
+						LinearLayout friendRequestsLayout =  (LinearLayout)findViewById(R.id.friendRequestsLayout);		
 						//looping thru array and inflating listitems to the friend requests list
 						for (int i = 0; i < senders.size(); i++)
 						{
-							li.inflate(R.layout.listitem_friend_request, friendRequestsLayout);
-							GridLayout rowRL = (GridLayout)friendRequestsLayout.findViewById(R.id.friendRequestGridLayout);
-							rowRL.setId(i);//(newIDStr);
+							GridLayout row = (GridLayout)li.inflate(R.layout.listitem_friend_request, null);
 							//Setting text of each friend request to the email of the sender
-							((TextView)rowRL.findViewById(R.id.emailTextViewFRLI)).setText(senders.get(i));				
-							int y = (120*i) + 10;
-							rowRL.setY(y);
+							((TextView)row.findViewById(R.id.emailTextViewFRLI)).setText(senders.get(i));	
+							friendRequestsLayout.addView(row);
 						}
 					}
 					else //no friend requests

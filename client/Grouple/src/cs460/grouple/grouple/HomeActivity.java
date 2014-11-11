@@ -57,6 +57,7 @@ public class HomeActivity extends ActionBarActivity
 	    //do anything 
 
     	global.fetchNumFriendRequests();
+    	global.fetchNumFriends();
     	friendRequests = global.getNumFriendRequests();
 		global.setNotifications(home);
 	    handler.postDelayed(new Runnable() {
