@@ -54,5 +54,6 @@
     <color name="button_border_color">#FFFFFF</color>
 
     <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="title_activity_friend_profile">FriendProfileActivity</string>
 
 </resources>
