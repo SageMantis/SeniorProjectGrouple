@@ -115,6 +115,10 @@
             android:name=".EditProfileActivity"
             android:label="@string/title_activity_edit_profile" >
         </activity>
+        <activity
+            android:name=".FriendProfileActivity"
+            android:label="@string/title_activity_friend_profile" >
+        </activity>
     </application>
 
 </manifest>
