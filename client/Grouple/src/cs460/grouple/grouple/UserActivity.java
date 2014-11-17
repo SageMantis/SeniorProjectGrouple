@@ -181,11 +181,13 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	public void startLoginActivity(View view)
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+		finish();
 	}	
 	public void startEditProfileActivity(View view)
 	{
@@ -284,16 +286,19 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 	public void startGroupsActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsActivity.class);
+		intent.putExtra("ParentClassName", "UserActivity");
 		startActivity(intent);
 	}
 	public void startCurrentFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
+		intent.putExtra("ParentClassName", "UserActivity");
 		startActivity(intent);
 	}
 	public void startEventsActivity(View view)
 	{
 		Intent intent = new Intent(this, EventsActivity.class);
+		intent.putExtra("ParentClassName", "UserActivity");
 		startActivity(intent);
 	}
 }

@@ -168,6 +168,7 @@ public class HomeActivity extends ActionBarActivity
 	public void startGroupsActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsActivity.class);
+		intent.putExtra("ParentClassName", "HomeActivity");
 		startActivity(intent);
 	}
 	public void startMessagesActivity(View view)
@@ -188,12 +189,14 @@ public class HomeActivity extends ActionBarActivity
 	public void startEventsActivity(View view)
 	{
 		Intent intent = new Intent(this, EventsActivity.class);
+		intent.putExtra("ParentClassName", "HomeActivity");
 		startActivity(intent);
 	}
 	public void startLoginActivity(View view)
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	
 }

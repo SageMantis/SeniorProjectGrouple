@@ -149,6 +149,7 @@ public class FriendsActivity extends ActionBarActivity
 	public void startCurrentFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
+		intent.putExtra("ParentClassName", "FriendsActivity");
 		startActivity(intent);
 	}
 
@@ -156,6 +157,7 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	public void startFriendRequestsActivity(View view)
 	{
@@ -166,6 +168,7 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+		finish();
 	}
 }
 

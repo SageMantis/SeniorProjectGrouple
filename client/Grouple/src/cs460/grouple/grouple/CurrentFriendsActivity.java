@@ -82,6 +82,20 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	}
 
 	@Override
+	public Intent getSupportParentActivityIntent() {
+	    Intent parentIntent= getIntent();
+	    String className = parentIntent.getStringExtra("ParentClassName"); //getting the parent class name
+
+	    Intent newIntent=null;
+	    try {		
+	         newIntent = new Intent(this,Class.forName("cs460.grouple.grouple."+className));
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return newIntent;
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 
@@ -243,7 +257,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		}
 	}
 	
-	@Override
+	/*@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
 	    if(keyCode == KeyEvent.KEYCODE_BACK)
@@ -251,24 +265,27 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	        startFriendsActivity(null);
 	    }
 	    return false;
-	}
+	}*/
 	
 	/*Start activity function for going back and logging out*/
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	public void startLoginActivity(View view)
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+		finish();
 	}
+	
 	
 	public void startFriendProfileActivity(View view)
 	{
 		
-		
+		System.out.println("startFriendProfileActivity");
     	//need to get access to this friends email
     	//launches friendProfileActivity and loads content based on that email
 		int id = view.getId();
