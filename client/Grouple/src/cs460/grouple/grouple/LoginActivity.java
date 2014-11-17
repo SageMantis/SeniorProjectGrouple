@@ -128,13 +128,11 @@ public class LoginActivity extends Activity
 		String password = passwordEditText.getText().toString();
 
 		Global global = ((Global) getApplicationContext());
-
 		global.setCurrentUser(email);
-		
-
 		new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
 						+ email + "&password=" + password);
+		
 
 	}
 
@@ -180,7 +178,6 @@ public class LoginActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		System.out.println("ARe we not yet there");
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
 			Intent intent = new Intent("CLOSE_ALL");

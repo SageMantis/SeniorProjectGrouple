@@ -45,18 +45,13 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_groups"
             android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="cs460.grouple.grouple.HomeActivity" />
+
         </activity>
         <activity
             android:name=".EventsActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_events"
             android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -86,9 +81,6 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_current_friends"
             android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
             android:name=".FriendRequestsActivity"

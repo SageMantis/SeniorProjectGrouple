@@ -63,6 +63,21 @@ public class EventsActivity extends ActionBarActivity
 	}
 
 	@Override
+	public Intent getSupportParentActivityIntent() {
+	    Intent parentIntent= getIntent();
+	    String className = parentIntent.getStringExtra("ParentClassName"); //getting the parent class name
+
+	    Intent newIntent=null;
+	    try {
+	         //you need to define the class with package name
+	         newIntent = new Intent(this,Class.forName("cs460.grouple.grouple."+className));
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return newIntent;
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -91,25 +106,18 @@ public class EventsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{
-	    if(keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	        startHomeActivity(null);
-	    }
-	    return false;
-	}
 
 	/*Start activity functions for going back and logging out*/
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	public void startLoginActivity(View view)
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+		finish();
 	}
 }
