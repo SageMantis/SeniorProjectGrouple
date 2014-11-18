@@ -40,11 +40,11 @@ public class FriendsActivity extends ActionBarActivity
 		
 		Global global = ((Global)getApplicationContext());
 		View friends = findViewById(R.id.friendsLayout);
-    	global.fetchNumFriendRequests();
+    	global.fetchNumFriendRequests(global.getCurrentUser());
     	friendRequests = global.getNumFriendRequests();
 		global.setNotifications(friends);
 		
-	    Handler handler = new Handler();
+	   /* Handler handler = new Handler();
 	    handler.postDelayed(new Runnable() {
 			View friends = findViewById(R.id.friendsLayout);
 			View home = ((View) friends.getParent());
@@ -54,14 +54,14 @@ public class FriendsActivity extends ActionBarActivity
 			    System.out.println("In Friends main run()");
 
 				Global global = ((Global)getApplicationContext());
-				global.fetchNumFriendRequests();
+				global.fetchNumFriendRequests(global.getCurrentUser());
 				if (friendRequests != global.getNumFriendRequests())
 				{
 					global.setNotifications(friends);
 					global.setNotifications(home);
 				}
 			}
-		    }, 1000);
+		    }, 1000);*/
 			
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -89,7 +89,7 @@ public class FriendsActivity extends ActionBarActivity
 	    System.out.println("In Friends onResume()");
 		Global global = ((Global)getApplicationContext());
 		View friends = findViewById(R.id.friendsLayout);
-    	global.fetchNumFriendRequests();
+    	global.fetchNumFriendRequests(global.getCurrentUser());
     	//friendRequests = global.getNumFriendRequests();
     	global.setNotifications(friends);
    
@@ -133,7 +133,7 @@ public class FriendsActivity extends ActionBarActivity
 			Global global = ((Global)getApplicationContext());
 			View friends = findViewById(R.id.friendsLayout);
 			View home = ((View) friends.getParent());
-			global.fetchNumFriendRequests(); 
+			global.fetchNumFriendRequests(global.getCurrentUser()); 
 			global.setNotifications(home);
 	        startHomeActivity(home);
 	    }
@@ -150,6 +150,8 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
+		Global global = ((Global) getApplicationContext());
+		intent.putExtra("email", global.getCurrentUser());
 		startActivity(intent);
 	}
 

@@ -53,20 +53,23 @@ public class FriendProfileActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_profile);
-		
+		System.out.println("onCreate FriendProfileActivity");
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+
 		//Global global = ((Global)getApplicationContext());
 		//actionbarTitle.setText(global.getName()+"'s Profile");
+		//This where we add our friends email. not ours.
+		Bundle extras = getIntent().getExtras();
+		String email = extras.getString("email");
 		
-		//Setting num friends on friends button
-		Button friendsButton = (Button)findViewById(R.id.friendsButtonUPA);
-		//global.fetchNumFriends();
-		//friendsButton.setText("Friends\n("+global.getNumFriends()+")");
-		View user = findViewById(R.id.userLayout);
+		Button friendsButton = (Button)findViewById(R.id.friendsButtonFPA);
+		Global global = ((Global)getApplicationContext());
+
+		friendsButton.setText("Friends\n("+global.getNumFriends()+")");
+
 		
 		//execute php script, using the current users email address to populate the textviews
 		new getProfileTask().execute("http://98.213.107.172/android_connect/get_profile.php");
@@ -162,7 +165,7 @@ public class FriendProfileActivity extends ActionBarActivity {
 		}
 		public String readJSONFeed(String URL)
 		{
-
+			System.out.println("readJSONFeed FriendProfileActivity");
 			StringBuilder stringBuilder = new StringBuilder();
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(URL);
@@ -171,6 +174,7 @@ public class FriendProfileActivity extends ActionBarActivity {
 				//This where we add our friends email. not ours.
 				Bundle extras = getIntent().getExtras();
 				String email = extras.getString("email");
+
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 				nameValuePairs.add(new BasicNameValuePair("email", email));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -212,15 +216,24 @@ public class FriendProfileActivity extends ActionBarActivity {
 					//Success
 					JSONArray jsonProfileArray = (JSONArray)jsonObject.getJSONArray("profile");
 					
-					String name = jsonProfileArray.getString(0)+" "+jsonProfileArray.getString(1);
+					String first = jsonProfileArray.getString(0);
+					String last = jsonProfileArray.getString(1);
+					first = first.substring(0, 1).toUpperCase() + first.substring(1);
+					last = last.substring(0, 1).toUpperCase() + last.substring(1);
+
+					String name = first+ " " + last; 
 					String age = jsonProfileArray.getString(2);
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
 					
+					TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+					actionbarTitle.setText(name + "'s Profile");
 					//TextView nameTextView = (TextView) findViewById(R.id.nameEditTextEPA);
 					TextView ageTextView = (TextView) findViewById(R.id.ageTextViewFPA);
 					TextView locationTextView = (TextView) findViewById(R.id.locationTextViewFPA);
 					TextView bioTextView = (TextView) findViewById(R.id.bioTextViewFPA);
+					
+
 					//JSONObject bioJson = jsonProfileArray.getJSONObject(0);
 					//nameTextView.setText(name);
 					
@@ -258,6 +271,9 @@ public class FriendProfileActivity extends ActionBarActivity {
 	public void startCurrentFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
+		Bundle extras = getIntent().getExtras();
+		String email = extras.getString("email");
+		intent.putExtra("email", email);
 		startActivity(intent);
 	}
 	public void startEventsActivity(View view)

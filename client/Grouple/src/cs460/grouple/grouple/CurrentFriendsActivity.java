@@ -55,7 +55,9 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		actionbarTitle.setText("Friends");
 		Global global = ((Global)getApplicationContext());
 		
-		String email = global.getCurrentUser();
+		Bundle extras = getIntent().getExtras();
+		String email = extras.getString("email");
+		//String email = global.getCurrentUser();
 		System.out.println("Email: " + email);
 		new getFriendsTask()
 				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
@@ -179,43 +181,41 @@ public class CurrentFriendsActivity extends ActionBarActivity
 					if (jsonFriends != null)
 					{
 						System.out.println(jsonFriends.toString() + "\n" + jsonFriends.length());
+						LinearLayout currentFriendsRL =  (LinearLayout)findViewById(R.id.currentFriendsLayout);
 						//looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
 						{			
 							String firstraw = jsonFriends.getJSONObject(i).getString("first");
 							String lastraw = jsonFriends.getJSONObject(i).getString("last");
 							String friendEmail = jsonFriends.getJSONObject(i).getString("email");
-							friendsEmailList.add(friendEmail);
+							friendsEmailList.add(i,friendEmail);
+				
+						
 							String row = firstraw.substring(0,1).toUpperCase() + firstraw.substring(1);
 							row = row + " ";
 							row = row + lastraw.substring(0,1).toUpperCase() + lastraw.substring(1);
 							
+							System.out.println("Idx: " + i + " Email: "+ friendEmail + "\n" + row +"\n");
 							//Do not need to replace out double quotes or brackets
 							//String raw = jsonFriends.get(i).toString().replace("\"","").replace("]", "").replace("[", "");
 							
 							//String raw = jsonFriends.get(i).toString();
 							//String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
-							friends.add(row);
+							//friends.add(row);
+							
+							GridLayout rowView = (GridLayout)li.inflate(R.layout.listitem_friend, null);
+							Button friendNameButton = (Button)rowView.findViewById(R.id.friendNameButton);
+							friendNameButton.setText(row);
+							
+							friendNameButton.setId(i);
+							rowView.setId(i);
+							currentFriendsRL.addView(rowView);		
 							//System.out.println("Row: " + row +"\nCount: " + i);
 							
 						}
-						//looping thru array and inflating listitems to the friend requests list
-						LinearLayout currentFriendsRL =  (LinearLayout)findViewById(R.id.currentFriendsLayout);
-						//ScrollView sv = new ScrollView();
-						for (int i = 0; i < friends.size(); i++)
-						{
-							GridLayout row = (GridLayout)li.inflate(R.layout.listitem_friend, null);
-							((Button)row.findViewById(R.id.friendNameButton)).setText(friends.get(i));
-							
-							row.setId(i);
-							currentFriendsRL.addView(row);
-							
-						}
-						
-					}
-					
-					
+
 				
+					}			
 				}
 				//user has no friends
 				if (jsonObject.getString("success").toString().equals("2"))
@@ -229,15 +229,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	
 					String message = jsonObject.getString("message").toString();
 					((Button)row.findViewById(R.id.friendNameButton)).setText(message);
-					row.setOnClickListener(new View.OnClickListener() {
-			                public void onClick(View v) {
-			                    // Perform action on click   
-
-			                	
-
-			                   
-			                }
-			            });
 					row.findViewById(R.id.removeFriendButton).setVisibility(1);
 					//((TextView)rowRL.findViewById(R.id.friendTextView)).setText(message);
 					currentFriendsRL.addView(row);
@@ -256,7 +247,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 			}
 		}
 	}
-	
+	//Removing this makes it default to going to the previous page you were on.
 	/*@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
@@ -282,17 +273,17 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	}
 	
 	
-	public void startFriendProfileActivity(View view)
-	{
-		
-		System.out.println("startFriendProfileActivity");
+	public void startFriendProfileActivity(View view) throws InterruptedException
+	{	
     	//need to get access to this friends email
     	//launches friendProfileActivity and loads content based on that email
-		int id = view.getId();
-		
+		int id = view.getId();	
 		//got the id, now we need to grab the users email and somehow pass it to the activity
 		String friendEmail = friendsEmailList.get(id);
 		Intent intent = new Intent(this, FriendProfileActivity.class);
+		Global global = ((Global)getApplicationContext());
+		global.fetchNumFriends(friendEmail);
+		Thread.sleep(300);
 		intent.putExtra("email", friendEmail);
 		startActivity(intent);
 	}

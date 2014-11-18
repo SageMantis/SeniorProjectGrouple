@@ -146,11 +146,11 @@ public class Global extends Application
 		//else do nothing, keep that invisible
 	}	
 	
-	public void fetchNumFriendRequests()
+	public void fetchNumFriendRequests(String email) //Should take in email
 	{
 		new getFriendRequestsTask()
 		.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
-				+ getCurrentUser());
+				+ email);
 	}
 	
 	public String readFriendRequestsJSONFeed(String URL)
@@ -227,11 +227,11 @@ public class Global extends Application
 	}
 	
 	//Get numFriends
-	public void fetchNumFriends()
+	public void fetchNumFriends(String email)
 	{
 		new getFriendsTask()
 		.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
-				+ getCurrentUser());
+				+ email);
 	}
 	
 	public String readGetFriendsJSONFeed(String URL)
@@ -288,7 +288,6 @@ public class Global extends Application
 					if (jsonFriends != null)
 					{
 						System.out.println("Setting it to" + jsonFriends.length());
-						
 						setNumFriends(jsonFriends.length());
 					}
 				}
@@ -310,7 +309,7 @@ public class Global extends Application
 			}
 		}
 	}
-	//Get name
+	//Get name, should change to take in email
 	public void fetchName()
 	{
 		new getNameTask()
@@ -391,6 +390,5 @@ public class Global extends Application
 				}
 			}
 		}
-		
 	 }
 
