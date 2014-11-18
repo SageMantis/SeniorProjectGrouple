@@ -295,6 +295,7 @@ public class UserActivity extends ActionBarActivity implements View.OnClickListe
 		intent.putExtra("ParentClassName", "UserActivity");
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("mod", "true");
 		startActivity(intent);
 	}
 	public void startEventsActivity(View view)

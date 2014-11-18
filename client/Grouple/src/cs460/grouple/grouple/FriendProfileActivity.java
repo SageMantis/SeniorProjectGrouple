@@ -274,6 +274,7 @@ public class FriendProfileActivity extends ActionBarActivity {
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
 		intent.putExtra("email", email);
+		intent.putExtra("mod", "false");
 		startActivity(intent);
 	}
 	public void startEventsActivity(View view)
