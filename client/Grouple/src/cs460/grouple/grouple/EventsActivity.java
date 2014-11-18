@@ -33,15 +33,7 @@ public class EventsActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Events");
 		
-		Global global = ((Global)getApplicationContext());
-		View events = findViewById(R.id.eventsLayout);
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		global.setNotifications(events);
+
 
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();

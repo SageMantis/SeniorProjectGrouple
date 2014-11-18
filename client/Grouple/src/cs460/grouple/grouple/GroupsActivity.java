@@ -47,15 +47,7 @@ public class GroupsActivity extends ActionBarActivity
 		//view.setPadding(15, 20, 5, 40);
 		
 		
-		Global global = ((Global)getApplicationContext());
-		View groups = findViewById(R.id.groupsLayout);
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		global.setNotifications(groups);
+
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");

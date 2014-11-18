@@ -53,15 +53,7 @@ public class AddFriendActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Add Friend");
 		
-		Global global = ((Global)getApplicationContext());
-		View addFriend = findViewById(R.id.addFriendLayout);
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		global.setNotifications(addFriend); //PANDA TEST
+
 		
 		//START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();

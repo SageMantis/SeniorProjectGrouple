@@ -56,11 +56,13 @@ public class HomeActivity extends ActionBarActivity
 		View home = findViewById(R.id.homeLayout);
 	    //do anything 
 
-    	global.fetchNumFriendRequests();
-    	global.fetchNumFriends();
+    	global.fetchNumFriendRequests(global.getCurrentUser());
+    	global.fetchNumFriends(global.getCurrentUser());
     	friendRequests = global.getNumFriendRequests();
 		global.setNotifications(home);
-	    handler.postDelayed(new Runnable() {
+		
+		
+	   /* handler.postDelayed(new Runnable() {
 			View home = findViewById(R.id.homeLayout);
 		    @Override
 		    public void run() 
@@ -73,7 +75,7 @@ public class HomeActivity extends ActionBarActivity
 					global.setNotifications(home);
 		    	}
 		    }
-	    }, 1000);
+	    }, 1000);*/
 
 
 	
@@ -136,7 +138,7 @@ public class HomeActivity extends ActionBarActivity
 	    System.out.println("In Home onResume()");
 		Global global = ((Global)getApplicationContext());
 		View home = findViewById(R.id.homeLayout);
-    	global.fetchNumFriendRequests();
+    	global.fetchNumFriendRequests(global.getCurrentUser());
     	//friendRequests = global.getNumFriendRequests();
 
 		global.setNotifications(home);

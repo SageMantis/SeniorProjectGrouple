@@ -439,7 +439,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 	    	Global global = ((Global)getApplicationContext());
 	    	View friendRequests = findViewById(R.id.friendRequestsLayout);
 			View friends = ((View) friendRequests.getParent());
-			global.fetchNumFriendRequests(); 
+			global.fetchNumFriendRequests(global.getCurrentUser()); 
 			global.setNotifications(friendRequests);
 	        startFriendsActivity(friends);
 	    }
