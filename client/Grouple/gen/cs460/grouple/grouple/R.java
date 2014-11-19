@@ -1327,9 +1327,10 @@ containing a value of this type.
         public static final int activity_user=0x7f030029;
         public static final int listitem_friend=0x7f03002a;
         public static final int listitem_friend_request=0x7f03002b;
-        public static final int navigation_bar=0x7f03002c;
-        public static final int resource_navigation=0x7f03002d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002e;
+        public static final int listitem_friends_friend=0x7f03002c;
+        public static final int navigation_bar=0x7f03002d;
+        public static final int resource_navigation=0x7f03002e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002f;
     }
     public static final class menu {
         public static final int add_friend=0x7f0c0000;

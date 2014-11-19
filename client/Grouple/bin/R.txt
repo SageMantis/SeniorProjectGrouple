@@ -456,9 +456,10 @@ int layout activity_settings 0x7f030028
 int layout activity_user 0x7f030029
 int layout listitem_friend 0x7f03002a
 int layout listitem_friend_request 0x7f03002b
-int layout navigation_bar 0x7f03002c
-int layout resource_navigation 0x7f03002d
-int layout support_simple_spinner_dropdown_item 0x7f03002e
+int layout listitem_friends_friend 0x7f03002c
+int layout navigation_bar 0x7f03002d
+int layout resource_navigation 0x7f03002e
+int layout support_simple_spinner_dropdown_item 0x7f03002f
 int menu add_friend 0x7f0c0000
 int menu current_friends 0x7f0c0001
 int menu edit_profile 0x7f0c0002

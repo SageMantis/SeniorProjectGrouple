@@ -182,6 +182,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 					{
 						System.out.println(jsonFriends.toString() + "\n" + jsonFriends.length());
 						LinearLayout currentFriendsRL =  (LinearLayout)findViewById(R.id.currentFriendsLayout);
+						Bundle extras = getIntent().getExtras();
 						//looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
 						{			
@@ -203,10 +204,23 @@ public class CurrentFriendsActivity extends ActionBarActivity
 							//String row = raw.substring(0,1).toUpperCase() + raw.substring(1);
 							//friends.add(row);
 							
-							GridLayout rowView = (GridLayout)li.inflate(R.layout.listitem_friend, null);
+
+							GridLayout rowView;
+							if (extras.getString("mod").equals("true"))
+							{
+								rowView = (GridLayout)li.inflate(R.layout.listitem_friend, null);
+								Button removeFriendButton = (Button)rowView.findViewById(R.id.removeFriendButton);
+								removeFriendButton.setId(i);
+							}
+							else
+							{
+								rowView = (GridLayout)li.inflate(R.layout.listitem_friends_friend, null);
+
+							}
 							Button friendNameButton = (Button)rowView.findViewById(R.id.friendNameButton);
-							friendNameButton.setText(row);
 							
+							friendNameButton.setText(row);
+
 							friendNameButton.setId(i);
 							rowView.setId(i);
 							currentFriendsRL.addView(rowView);		
@@ -272,6 +286,27 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		finish();
 	}
 	
+	public void removeFriendButton(View view)
+	{
+		int id = view.getId();	
+		//got the id, now we need to grab the users email and somehow pass it to the activity
+		String friendEmail = friendsEmailList.get(id); //Email of friend to delete
+		Global global = ((Global)getApplicationContext());
+		String userEmail = global.getCurrentUser();
+		//removeFriend(friendEmail);
+		//Make the function removeFriend to fire up some json to remove the friend from the database
+		
+		//refreshing the current friends layout
+		Bundle extras = getIntent().getExtras();
+		String email = extras.getString("email");
+		//removing all views
+		LinearLayout currentFriendsLayout = (LinearLayout)findViewById(R.id.currentFriendsLayout);
+		currentFriendsLayout.removeAllViews();
+		//calling getFriends to repopulate view
+		new getFriendsTask()
+				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
+						+ email);
+	}
 	
 	public void startFriendProfileActivity(View view) throws InterruptedException
 	{	
@@ -283,9 +318,11 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendProfileActivity.class);
 		Global global = ((Global)getApplicationContext());
 		global.fetchNumFriends(friendEmail);
-		Thread.sleep(300);
+		Thread.sleep(500);
 		intent.putExtra("email", friendEmail);
 		startActivity(intent);
+		
+		
 	}
 	
 }

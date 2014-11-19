@@ -152,6 +152,7 @@ public class FriendsActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("mod", "true");
 		startActivity(intent);
 	}
 
