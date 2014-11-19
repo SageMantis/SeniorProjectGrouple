@@ -4,17 +4,26 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -31,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -288,28 +298,107 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 	}
 
 	public void removeFriendButton(View view) {
-		int id = view.getId();
-		// got the id, now we need to grab the users email and somehow pass it
-		// to the activity
-		String friendEmail = friendsEmailList.get(id); // Email of friend to
-														// delete
-		Global global = ((Global) getApplicationContext());
-		String userEmail = global.getCurrentUser();
-		// removeFriend(friendEmail);
-		// Make the function removeFriend to fire up some json to remove the
-		// friend from the database
-
-		// refreshing the current friends layout
-		Bundle extras = getIntent().getExtras();
-		String email = extras.getString("email");
-		// removing all views
-		LinearLayout currentFriendsLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
-		currentFriendsLayout.removeAllViews();
-		// calling getFriends to repopulate view
-		new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
-						+ email);
+		
+		  final int idz = view.getId();  //Email of user
+		  final String friendEmail = friendsEmailList.get(idz); // Email of friend to remove
+		  new AlertDialog.Builder(this)
+		           .setMessage("Are you sure you want to remove that friend?")
+		           .setCancelable(true)
+		           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int id) {
+		           		
+		           		new deleteFriendTask()
+		           		.execute("http://98.213.107.172/android_connect/delete_friend.php", friendEmail);
+		           		
+		           		// refreshing the current friends layout
+		           		Bundle extras = getIntent().getExtras();
+		           		String email = extras.getString("email");
+		           		// removing all views
+		           		LinearLayout currentFriendsLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
+		           		currentFriendsLayout.removeAllViews();
+		           		// calling getFriends to repopulate view
+		           		new getFriendsTask()
+		           				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
+		           						+ email);
+		               }
+		           })
+		           .setNegativeButton("Cancel", null)
+		           .show();
 	}
+	
+	public String deleteFriendJSONFeed(String URL, String friendEmail) {
+		// Get all the fields and store locally
+		Global global = ((Global) getApplicationContext());
+		String sender = global.getCurrentUser();
+
+		StringBuilder stringBuilder = new StringBuilder();
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(URL);
+		try {
+			// Add your data
+			System.out.println("Receiver Email: " + friendEmail + "Sender Email: "
+					+ sender);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			nameValuePairs.add(new BasicNameValuePair("receiver", friendEmail));
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+			HttpResponse response = httpClient.execute(httpPost);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					stringBuilder.append(line);
+				}
+				inputStream.close();
+			} else {
+				Log.d("JSON", "Failed to download file");
+			}
+		} catch (Exception e) {
+			Log.d("readJSONFeed", e.getLocalizedMessage());
+		}
+		return stringBuilder.toString();
+	}
+
+	private class deleteFriendTask extends AsyncTask<String, Void, String> {
+		protected String doInBackground(String... urls) {
+			return deleteFriendJSONFeed(urls[0], urls[1]);
+		}
+
+		protected void onPostExecute(String result) {
+			try {
+				JSONObject jsonObject = new JSONObject(result);
+
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
+					// success: friend has been deleted
+					Log.d("dbmsg", jsonObject.getString("message"));
+				} 
+				else if(jsonObject.getString("success").toString().equals("2"))
+				{
+					//friend was not found in database
+					Log.d("dbmsg", jsonObject.getString("message"));
+				}
+				else
+				{
+					//sql error
+					Log.d("dbmsg", jsonObject.getString("message"));
+				}
+
+			} catch (Exception e) {
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
+	}
+	
+	
+	
+	
 
 	public void startFriendProfileActivity(View view)
 			throws InterruptedException {
