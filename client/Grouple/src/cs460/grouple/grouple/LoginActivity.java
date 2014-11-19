@@ -37,34 +37,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class LoginActivity extends Activity
-{
+public class LoginActivity extends Activity {
 	Button loginButton;
-
+	BroadcastReceiver broadcastReceiver;
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
- 
+
 		ActionBar ab = getActionBar();
 		ab.hide();
 		Log.d("app666", "we created");
-		
 
-		//START KILL SWITCH LISTENER
+		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
-		{
+		broadcastReceiver = new BroadcastReceiver() {
 			@Override
-			public void onReceive(Context context, Intent intent)
-			{
+			public void onReceive(Context context, Intent intent) {
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
+				if (intent.getAction().equals("CLOSE_ALL")) {
 					Log.d("app666", "we killin the login it");
-					//System.exit(1);
+					// System.exit(1);
 					finish();
 				}
 			}
@@ -73,53 +68,51 @@ public class LoginActivity extends Activity
 		// End Kill switch listener
 	}
 
-	public void startRegisterActivity(View view)
-	{
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
+	}
+
+	public void startRegisterActivity(View view) {
 		Intent intent = new Intent(this, RegisterActivity.class);
 		startActivity(intent);
 	}
 
-	public void startHomeActivity()
-	{
+	public void startHomeActivity() {
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 	}
 
-	public String readJSONFeed(String URL)
-	{
+	public String readJSONFeed(String URL) {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URL);
-		try
-		{
+		try {
 			HttpResponse response = httpClient.execute(httpGet);
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
+			if (statusCode == 200) {
 				HttpEntity entity = response.getEntity();
 				InputStream inputStream = entity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream));
 				String line;
-				while ((line = reader.readLine()) != null)
-				{
+				while ((line = reader.readLine()) != null) {
 					stringBuilder.append(line);
 				}
 				inputStream.close();
-			} else
-			{
+			} else {
 				Log.d("JSON", "Failed to download file");
 			}
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.d("readJSONFeed", e.getLocalizedMessage());
 		}
 		return stringBuilder.toString();
 	}
 
-	public void loginButton(View view)
-	{
+	public void loginButton(View view) {
 		// Create helper and if successful, will bring the correct home
 		// activity.
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
@@ -134,51 +127,40 @@ public class LoginActivity extends Activity
 						+ email + "&password=" + password);
 	}
 
-	private class getLoginTask extends AsyncTask<String, Void, String>
-	{
-		protected String doInBackground(String... urls)
-		{
+	private class getLoginTask extends AsyncTask<String, Void, String> {
+		protected String doInBackground(String... urls) {
 			return readJSONFeed(urls[0]);
 		}
 
-		protected void onPostExecute(String result)
-		{
-			try
-			{
+		protected void onPostExecute(String result) {
+			try {
 				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
+				if (jsonObject.getString("success").toString().equals("1")) {
 					// successful
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
 					global.fetchNumFriendRequests(global.getCurrentUser());
-					//Sets this users name.
+					// Sets this users name.
 					global.fetchName();
-					Thread.sleep(500); //Sleeping to let home activity start up
+					Thread.sleep(500); // Sleeping to let home activity start up
 					startHomeActivity();
-					finish(); //Finishing login (possibly save some memory)
-				} 
-				else
-				{
+					finish(); // Finishing login (possibly save some memory)
+				} else {
 					// failed
 					System.out.println("failed");
 					TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
 					loginFail.setText(jsonObject.getString("message"));
 					loginFail.setVisibility(0);
 				}
-			} 
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			System.exit(0);
