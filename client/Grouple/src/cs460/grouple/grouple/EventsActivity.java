@@ -18,75 +18,81 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class EventsActivity extends ActionBarActivity
-{
+public class EventsActivity extends ActionBarActivity {
+	BroadcastReceiver broadcastReceiver;
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
 		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Events");
-		
 
-
-		//START KILL SWITCH LISTENER
+		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		  @Override
-		  public void onReceive(Context context, Intent intent) {
-		    // close activity
-			  if(intent.getAction().equals("CLOSE_ALL"))
-			  {
-				  Log.d("app666","we killin the login it");
-				  //System.exit(1);
-				  finish();
-			  }	
-		  }
+		broadcastReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL")) {
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
+			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
-		//End Kill switch listener
+		// End Kill switch listener
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
 	}
 
 	@Override
 	public Intent getSupportParentActivityIntent() {
-	    Intent parentIntent= getIntent();
-	    String className = parentIntent.getStringExtra("ParentClassName"); //getting the parent class name
+		Intent parentIntent = getIntent();
+		String className = parentIntent.getStringExtra("ParentClassName"); // getting
+																			// the
+																			// parent
+																			// class
+																			// name
 
-	    Intent newIntent=null;
-	    try {
-	         //you need to define the class with package name
-	         newIntent = new Intent(this,Class.forName("cs460.grouple.grouple."+className));
-	    } catch (ClassNotFoundException e) {
-	        e.printStackTrace();
-	    }
-	    return newIntent;
+		Intent newIntent = null;
+		try {
+			// you need to define the class with package name
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return newIntent;
 	}
-	
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout)
-		{
-			Global global = ((Global)getApplicationContext());
+		if (id == R.id.action_logout) {
+			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
@@ -97,17 +103,15 @@ public class EventsActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 
-	/*Start activity functions for going back and logging out*/
-	public void startHomeActivity(View view)
-	{
+	/* Start activity functions for going back and logging out */
+	public void startHomeActivity(View view) {
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}
-	public void startLoginActivity(View view)
-	{
+
+	public void startLoginActivity(View view) {
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();

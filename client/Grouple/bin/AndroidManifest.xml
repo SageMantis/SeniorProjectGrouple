@@ -14,7 +14,8 @@
         android:name=".Global"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme" >
+        android:theme="@style/AppBaseTheme" 
+        android:largeHeap="true">
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation"
