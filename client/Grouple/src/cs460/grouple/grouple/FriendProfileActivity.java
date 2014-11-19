@@ -22,19 +22,19 @@ import cs460.grouple.grouple.R;
 //import cs460.grouple.grouple.EditProfileActivity.getProfileTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-
 import android.support.v4.app.Fragment;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,6 +49,8 @@ import android.widget.TextView;
 
 public class FriendProfileActivity extends ActionBarActivity {
 	BroadcastReceiver broadcastReceiver;
+	private Bitmap bmp;
+	private ImageView iv;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,16 +143,22 @@ public class FriendProfileActivity extends ActionBarActivity {
 	public void startHomeActivity(View view) {
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 	public void startLoginActivity(View view) {
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 	public void startEditProfileActivity(View view) {
 		Intent intent = new Intent(this, EditProfileActivity.class);
 		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 	/*
@@ -221,6 +229,28 @@ public class FriendProfileActivity extends ActionBarActivity {
 					String age = jsonProfileArray.getString(2);
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
+					String img = jsonProfileArray.getString(5);
+					
+					//decode image back to android bitmap format
+					byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+					Log.d("ReadatherJSONFeedTask", "1");
+		            if(decodedString != null)
+		            {
+		            	Log.d("ReadatherJSONFeedTask", "2");
+		            	bmp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+		            }			
+					//set the image
+					if (bmp != null) {
+						if(iv == null)
+						{
+							Log.d("ReadatherJSONFeedTask", "3");
+							iv = (ImageView) findViewById(R.id.profilePhotoFPA);
+						}
+						Log.d("ReadatherJSONFeedTask", "4");
+						img = null;
+						decodedString = null;
+					}
+
 
 					TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 					actionbarTitle.setText(name + "'s Profile");
@@ -230,26 +260,33 @@ public class FriendProfileActivity extends ActionBarActivity {
 					TextView locationTextView = (TextView) findViewById(R.id.locationTextViewFPA);
 					TextView bioTextView = (TextView) findViewById(R.id.bioTextViewFPA);
 
-					// JSONObject bioJson = jsonProfileArray.getJSONObject(0);
-					// nameTextView.setText(name);
-
 					// We only want to add the profile details if the user
 					// filled them out.
 					if (!age.equalsIgnoreCase("null")) {
 						ageTextView.setText(age + " years old");
 					}
+					else
+					{
+						ageTextView.setText("");
+					}
 					if (!bio.equalsIgnoreCase("null")) {
 						bioTextView.setText(bio);
 					}
-					if (!location.equalsIgnoreCase("")) {
+					if (!(location.equalsIgnoreCase("") || location.equalsIgnoreCase("null"))) 
+					{
 						locationTextView.setText(location);
 					}
+					else
+					{
+						locationTextView.setText("");
+					}
+					iv.setImageBitmap(bmp);
 
 				} else {
 					// Fail
 				}
 			} catch (Exception e) {
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				Log.d("ReadatherJSONFeedTask", "poop2");
 			}
 		}
 	}
@@ -257,6 +294,8 @@ public class FriendProfileActivity extends ActionBarActivity {
 	public void startGroupsActivity(View view) {
 		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 	public void startCurrentFriendsActivity(View view) {
@@ -266,11 +305,15 @@ public class FriendProfileActivity extends ActionBarActivity {
 		intent.putExtra("email", email);
 		intent.putExtra("mod", "false");
 		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 	public void startEventsActivity(View view) {
 		Intent intent = new Intent(this, EventsActivity.class);
 		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 }
