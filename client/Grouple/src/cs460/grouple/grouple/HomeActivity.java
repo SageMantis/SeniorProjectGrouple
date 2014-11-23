@@ -1,6 +1,5 @@
 package cs460.grouple.grouple;
 
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
@@ -25,80 +24,82 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
-
 public class HomeActivity extends ActionBarActivity
 {
 	LayoutInflater li;
 	int friendRequests;
+	BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		try {
+		try
+		{
 			Thread.sleep(500);
-		} catch (InterruptedException e1) {
+		} catch (InterruptedException e1)
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
-		
-		Global global = ((Global)getApplicationContext());
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 
-		actionbarTitle.setText("Welcome, "+global.getName()+"!");
+		Global global = ((Global) getApplicationContext());
 
-	    Handler handler = new Handler();
+		actionbarTitle.setText("Welcome, " + global.getName() + "!");
+
+		Handler handler = new Handler();
 		View home = findViewById(R.id.homeLayout);
-	    //do anything 
+		// do anything
 
-    	global.fetchNumFriendRequests(global.getCurrentUser());
-    	global.fetchNumFriends(global.getCurrentUser());
-    	friendRequests = global.getNumFriendRequests();
+		global.fetchNumFriendRequests(global.getCurrentUser());
+		global.fetchNumFriends(global.getCurrentUser());
+		friendRequests = global.getNumFriendRequests();
 		global.setNotifications(home);
-		
-		
-	   /* handler.postDelayed(new Runnable() {
-			View home = findViewById(R.id.homeLayout);
-		    @Override
-		    public void run() 
-		    {
-		    	System.out.println("In Home Main run()");
-				Global global = ((Global)getApplicationContext());
-		    	global.fetchNumFriendRequests();
-		    	if (friendRequests != global.getNumFriendRequests())
-		    	{
-					global.setNotifications(home);
-		    	}
-		    }
-	    }, 1000);*/
 
+		/*
+		 * handler.postDelayed(new Runnable() { View home =
+		 * findViewById(R.id.homeLayout);
+		 * 
+		 * @Override public void run() {
+		 * System.out.println("In Home Main run()"); Global global =
+		 * ((Global)getApplicationContext()); global.fetchNumFriendRequests();
+		 * if (friendRequests != global.getNumFriendRequests()) {
+		 * global.setNotifications(home); } } }, 1000);
+		 */
 
-	
-		
-		//START KILL SWITCH LISTENER
+		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() 
+		broadcastReceiver = new BroadcastReceiver()
 		{
-		 @Override
-			public void onReceive(Context context, Intent intent) 
-			 {
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if(intent.getAction().equals("CLOSE_ALL"))
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					Log.d("app666","we killin the home");
-					//System.exit(1);
+					Log.d("app666", "we killin the home");
+					// System.exit(1);
 					finish();
-				}	  
+				}
 			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
-				//End Kill switch listener	
+		// End Kill switch listener
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
 	}
 
 	@Override
@@ -119,42 +120,48 @@ public class HomeActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global)getApplicationContext());
+			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			global.setNumFriendRequests(0);
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public void onResume() {
-	    super.onResume();  // Always call the superclass method first
-	    System.out.println("In Home onResume()");
-		Global global = ((Global)getApplicationContext());
+	public void onResume()
+	{
+		super.onResume(); // Always call the superclass method first
+		System.out.println("In Home onResume()");
+		Global global = ((Global) getApplicationContext());
 		View home = findViewById(R.id.homeLayout);
-    	global.fetchNumFriendRequests(global.getCurrentUser());
-    	//friendRequests = global.getNumFriendRequests();
+		global.fetchNumFriendRequests(global.getCurrentUser());
+		// friendRequests = global.getNumFriendRequests();
 
 		global.setNotifications(home);
 	}
-	
+
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-	    if(keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	       
-	    }
-	    return false;
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+
+		}
+		return false;
 	}
-	
-	/*Start activity functions for main navigation*/
+
+	/* Start activity functions for main navigation */
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
@@ -173,32 +180,30 @@ public class HomeActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "HomeActivity");
 		startActivity(intent);
 	}
+
 	public void startMessagesActivity(View view)
 	{
 		Intent intent = new Intent(this, MessagesActivity.class);
 		startActivity(intent);
 	}
+
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);
 		startActivity(intent);
 	}
+
 	public void startSettingsActivity(View view)
 	{
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 	}
+
 	public void startEventsActivity(View view)
 	{
 		Intent intent = new Intent(this, EventsActivity.class);
 		intent.putExtra("ParentClassName", "HomeActivity");
 		startActivity(intent);
 	}
-	public void startLoginActivity(View view)
-	{
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		finish();
-	}
-	
+
 }

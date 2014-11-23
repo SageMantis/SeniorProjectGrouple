@@ -858,14 +858,15 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070007;
+        public static final int abc_search_url_text_holo=0x7f070008;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
         public static final int background_color=0x7f070003;
-        public static final int button_background_color=0x7f070005;
-        public static final int button_border_color=0x7f070006;
-        public static final int text_color=0x7f070004;
+        public static final int button_background_color=0x7f070006;
+        public static final int button_border_color=0x7f070007;
+        public static final int button_text_color=0x7f070004;
+        public static final int text_color=0x7f070005;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1087,22 +1088,23 @@ containing a value of this type.
         public static final int events_icon=0x7f02005a;
         public static final int friends_button_border=0x7f02005b;
         public static final int friends_icon=0x7f02005c;
-        public static final int groups_button_border=0x7f02005d;
-        public static final int groups_icon=0x7f02005e;
-        public static final int home_button_border=0x7f02005f;
-        public static final int home_icon=0x7f020060;
-        public static final int home_logo=0x7f020061;
-        public static final int ic_launcher=0x7f020062;
-        public static final int messages_button_border=0x7f020063;
-        public static final int messages_icon=0x7f020064;
-        public static final int notification_icon=0x7f020065;
-        public static final int settings_button_border=0x7f020066;
-        public static final int settings_icon=0x7f020067;
-        public static final int thumbs_down=0x7f020068;
-        public static final int thumbs_up=0x7f020069;
-        public static final int top_bottom_border=0x7f02006a;
-        public static final int user_button_border=0x7f02006b;
-        public static final int user_icon=0x7f02006c;
+        public static final int grouple_icon=0x7f02005d;
+        public static final int groups_button_border=0x7f02005e;
+        public static final int groups_icon=0x7f02005f;
+        public static final int home_button_border=0x7f020060;
+        public static final int home_icon=0x7f020061;
+        public static final int home_logo=0x7f020062;
+        public static final int ic_launcher=0x7f020063;
+        public static final int messages_button_border=0x7f020064;
+        public static final int messages_icon=0x7f020065;
+        public static final int notification_icon=0x7f020066;
+        public static final int settings_button_border=0x7f020067;
+        public static final int settings_icon=0x7f020068;
+        public static final int thumbs_down=0x7f020069;
+        public static final int thumbs_up=0x7f02006a;
+        public static final int top_bottom_border=0x7f02006b;
+        public static final int user_button_border=0x7f02006c;
+        public static final int user_icon=0x7f02006d;
     }
     public static final class id {
         public static final int acceptFriendRequestButtonFRLI=0x7f050090;
@@ -1114,7 +1116,8 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f050023;
         public static final int action_bar_title=0x7f050022;
         public static final int action_context_bar=0x7f05001d;
-        public static final int action_logout=0x7f050096;
+        public static final int action_home=0x7f050096;
+        public static final int action_logout=0x7f050097;
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;

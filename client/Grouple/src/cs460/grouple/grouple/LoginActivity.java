@@ -40,22 +40,22 @@ import android.widget.TextView;
 public class LoginActivity extends Activity
 {
 	Button loginButton;
+	BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
- 
+
 		ActionBar ab = getActionBar();
 		ab.hide();
 		Log.d("app666", "we created");
-		
 
-		//START KILL SWITCH LISTENER
+		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+		broadcastReceiver = new BroadcastReceiver()
 		{
 			@Override
 			public void onReceive(Context context, Intent intent)
@@ -64,13 +64,21 @@ public class LoginActivity extends Activity
 				if (intent.getAction().equals("CLOSE_ALL"))
 				{
 					Log.d("app666", "we killin the login it");
-					//System.exit(1);
+					// System.exit(1);
 					finish();
 				}
 			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
 	}
 
 	public void startRegisterActivity(View view)
@@ -152,13 +160,12 @@ public class LoginActivity extends Activity
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
 					global.fetchNumFriendRequests(global.getCurrentUser());
-					//Sets this users name.
+					// Sets this users name.
 					global.fetchName();
-					Thread.sleep(500); //Sleeping to let home activity start up
+					Thread.sleep(500); // Sleeping to let home activity start up
 					startHomeActivity();
-					finish(); //Finishing login (possibly save some memory)
-				} 
-				else
+					finish(); // Finishing login (possibly save some memory)
+				} else
 				{
 					// failed
 					System.out.println("failed");
@@ -166,8 +173,7 @@ public class LoginActivity extends Activity
 					loginFail.setText(jsonObject.getString("message"));
 					loginFail.setVisibility(0);
 				}
-			} 
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}

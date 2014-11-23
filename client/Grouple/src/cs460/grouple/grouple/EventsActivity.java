@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 public class EventsActivity extends ActionBarActivity
 {
+	BroadcastReceiver broadcastReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -27,48 +29,64 @@ public class EventsActivity extends ActionBarActivity
 		setContentView(R.layout.activity_events);
 
 		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Events");
-		
 
-
-		//START KILL SWITCH LISTENER
+		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		  @Override
-		  public void onReceive(Context context, Intent intent) {
-		    // close activity
-			  if(intent.getAction().equals("CLOSE_ALL"))
-			  {
-				  Log.d("app666","we killin the login it");
-				  //System.exit(1);
-				  finish();
-			  }	
-		  }
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
+			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
-		//End Kill switch listener
+		// End Kill switch listener
 	}
 
 	@Override
-	public Intent getSupportParentActivityIntent() {
-	    Intent parentIntent= getIntent();
-	    String className = parentIntent.getStringExtra("ParentClassName"); //getting the parent class name
-
-	    Intent newIntent=null;
-	    try {
-	         //you need to define the class with package name
-	         newIntent = new Intent(this,Class.forName("cs460.grouple.grouple."+className));
-	    } catch (ClassNotFoundException e) {
-	        e.printStackTrace();
-	    }
-	    return newIntent;
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
 	}
-	
+
+	@Override
+	public Intent getSupportParentActivityIntent()
+	{
+		Intent parentIntent = getIntent();
+		String className = parentIntent.getStringExtra("ParentClassName"); // getting
+																			// the
+																			// parent
+																			// class
+																			// name
+
+		Intent newIntent = null;
+		try
+		{
+			// you need to define the class with package name
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return newIntent;
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -86,30 +104,30 @@ public class EventsActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global)getApplicationContext());
+			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
 		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
+		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 
-	/*Start activity functions for going back and logging out*/
+	/* Start activity functions for going back and logging out */
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}
-	public void startLoginActivity(View view)
-	{
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		finish();
-	}
+
 }

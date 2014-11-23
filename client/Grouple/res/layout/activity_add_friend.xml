@@ -29,7 +29,7 @@
         android:background="@drawable/button_border"
         android:layout_alignLeft="@+id/emailEditTextAFA"
                 android:fontFamily="sans-serif-condensed"
-                android:textColor="@color/text_color"
+                android:textColor="@color/button_text_color"
         android:layout_alignRight="@+id/emailEditTextAFA"
         android:layout_below="@+id/emailEditTextAFA"
         android:onClick="addFriendButton"

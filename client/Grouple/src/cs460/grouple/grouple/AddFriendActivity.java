@@ -40,39 +40,48 @@ import android.widget.TextView;
 
 public class AddFriendActivity extends ActionBarActivity
 {
-	
+	BroadcastReceiver broadcastReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
 		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Add Friend");
-		
 
-		
-		//START KILL SWITCH LISTENER
+		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-		// close activity
-		if(intent.getAction().equals("CLOSE_ALL"))
+		broadcastReceiver = new BroadcastReceiver()
 		{
-			Log.d("app666","we killin the login it");
-			//System.exit(1);
-			 finish();
-		}
-		  
-		}
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
+
+			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
-		//End Kill switch listener
+		// End Kill switch listener
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
 	}
 
 	@Override
@@ -93,28 +102,32 @@ public class AddFriendActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global)getApplicationContext());
+			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
 		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
+		}
 		return super.onOptionsItemSelected(item);
 	}
-
 
 	public void addFriendButton(View view)
 	{
 		EditText emailEditTextAFA = (EditText) findViewById(R.id.emailEditTextAFA);
 		String email = emailEditTextAFA.getText().toString();
-		Global global = ((Global)getApplicationContext());
+		Global global = ((Global) getApplicationContext());
 		String senderEmail = global.getCurrentUser();
-		System.out.println("Email:" + email
-				+"\nSender Email:" + senderEmail);
-		
+		System.out.println("Email:" + email + "\nSender Email:" + senderEmail);
+
 		// write the mf
 		new getAddFriendTask()
 				.execute("http://98.213.107.172/android_connect/add_friend.php");
@@ -124,10 +137,9 @@ public class AddFriendActivity extends ActionBarActivity
 	{
 		// Get all the fields and store locally
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
-		Global global = ((Global)getApplicationContext());
+		Global global = ((Global) getApplicationContext());
 		String sender = global.getCurrentUser();
 		String receiver = emailEditText.getText().toString();
-	
 
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
@@ -135,7 +147,8 @@ public class AddFriendActivity extends ActionBarActivity
 		try
 		{
 			// Add your data
-			System.out.println("Receiver Email: " + receiver + "Sender Email: " + sender);
+			System.out.println("Receiver Email: " + receiver + "Sender Email: "
+					+ sender);
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
@@ -166,7 +179,7 @@ public class AddFriendActivity extends ActionBarActivity
 		}
 		return stringBuilder.toString();
 	}
-	
+
 	private class getAddFriendTask extends AsyncTask<String, Void, String>
 	{
 		protected String doInBackground(String... urls)
@@ -180,19 +193,20 @@ public class AddFriendActivity extends ActionBarActivity
 			{
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
-				
+
 				EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
 				emailEditText.setText("");
 				TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
 				addFriendMessage.setText(jsonObject.getString("message"));
-				
-				if (jsonObject.getString("success").toString().equals("1") || jsonObject.getString("success").toString().equals("2"))
+
+				if (jsonObject.getString("success").toString().equals("1")
+						|| jsonObject.getString("success").toString()
+								.equals("2"))
 				{
 					// friend added or already friends (user's goal)
-					System.out.println("success!");			
+					System.out.println("success!");
 					addFriendMessage.setTextColor(Color.GREEN);
-				} 
-				else
+				} else
 				{
 					// user does not exist, self request, or sql error
 					System.out.println("fail!");
@@ -208,22 +222,17 @@ public class AddFriendActivity extends ActionBarActivity
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-	    if(keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	        startFriendsActivity(null);
-	    }
-	    return false;
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			startFriendsActivity(null);
+		}
+		return false;
 	}
-	
-	/*Start activity functions for going back and logging out*/
-	public void startLoginActivity(View view)
-	{
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-	}
-	
+
+	/* Start activity functions for going back and logging out */
+
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);

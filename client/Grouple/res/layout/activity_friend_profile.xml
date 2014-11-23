@@ -87,8 +87,8 @@
 		    android:layout_row="4"
 		    android:fontFamily="sans-serif-condensed"
 		    android:onClick="startCurrentFriendsActivity"
-		    android:text="Friends\n(63)"
-		    android:textColor="@color/text_color"
+		    android:text="Friends\n"
+		    android:textColor="@color/button_text_color"
 		    android:textSize="10sp" />
 	
 	   	<Button
@@ -102,7 +102,7 @@
 	   	    android:fontFamily="sans-serif-condensed"
 	   	    android:onClick="startGroupsActivity"
 	   	    android:text="Groups\n"
-	   	    android:textColor="@color/text_color"
+	   	    android:textColor="@color/button_text_color"
 	   	    android:textSize="10sp" />
 
 	   	<Button
@@ -117,7 +117,7 @@
 	   	    android:fontFamily="sans-serif-condensed"
 	   	    android:onClick="startEventsActivity"
 	   	    android:text="Events\n"
-	   	    android:textColor="@color/text_color"
+	   	    android:textColor="@color/button_text_color"
 	   	    android:textSize="10sp" />
   
 	</GridLayout>

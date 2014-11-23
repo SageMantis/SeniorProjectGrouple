@@ -49,6 +49,7 @@
     <string name="title_activity_messages">Messages</string>
 
     <color name="background_color">#292933</color>
+    <color name="button_text_color">#FFFFFF</color>
     <color name="text_color">#FFFFFF</color>
     <color name="button_background_color">#292933</color>
     <color name="button_border_color">#FFFFFF</color>
