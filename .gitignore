@@ -1,0 +1,10 @@
+.metadata/
+android-support-v7-appcompat/
+.metadata
+.cache
+bin/
+gen/
+*.apk
+*.dex
+*.class
+proguard/
