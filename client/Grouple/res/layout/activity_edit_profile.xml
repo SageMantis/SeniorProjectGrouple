@@ -37,7 +37,7 @@
 	        android:fontFamily="sans-serif-condensed"
 	        android:onClick="startEditProfileActivity"
 	        android:text="Edit Photo"
-	        android:textColor="@color/text_color"
+	        android:textColor="@color/button_text_color"
 	        android:textSize="12sp" />
 	
 	
@@ -145,7 +145,7 @@
 	        android:layout_column="0"
 	        android:layout_marginTop="0dp"
 	        android:text="Submit"
-	        android:textColor="@color/text_color" />
+	        android:textColor="@color/button_text_color" />
 	
 	</GridLayout>
 </RelativeLayout>

@@ -46,7 +46,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class UserActivity extends ActionBarActivity implements
-		View.OnClickListener {
+		View.OnClickListener
+{
 
 	private ImageView iv;
 	private final static int CAMERA_DATA = 0;
@@ -55,7 +56,8 @@ public class UserActivity extends ActionBarActivity implements
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
 
@@ -84,11 +86,14 @@ public class UserActivity extends ActionBarActivity implements
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
+		broadcastReceiver = new BroadcastReceiver()
+		{
 			@Override
-			public void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
 					Log.d("app666", "we killin the login it");
 					// System.exit(1);
 					finish();
@@ -99,22 +104,24 @@ public class UserActivity extends ActionBarActivity implements
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
 	}
-	
+
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 
 		// Set up the image view
-		if(iv == null)
+		if (iv == null)
 		{
 			iv = (ImageView) findViewById(R.id.profilePhoto);
 		}
@@ -122,36 +129,50 @@ public class UserActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout) {
+		if (id == R.id.action_logout)
+		{
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
+			bmp = null;
+			iv = null;
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
 			startHomeActivity(null);
 		}
 		return false;
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v)
+	{
 		// TODO Auto-generated method stub
-		switch (v.getId()) {
+		switch (v.getId())
+		{
 		case R.id.editProfileButton:
 			startEditProfileActivity(v);
 			break;
@@ -159,7 +180,8 @@ public class UserActivity extends ActionBarActivity implements
 	}
 
 	/* Start activity functions for going back to home and logging out */
-	public void startHomeActivity(View view) {
+	public void startHomeActivity(View view)
+	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		bmp = null;
@@ -167,15 +189,8 @@ public class UserActivity extends ActionBarActivity implements
 		finish();
 	}
 
-	public void startLoginActivity(View view) {
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		bmp = null;
-		iv = null;
-		finish();
-	}
-
-	public void startEditProfileActivity(View view) {
+	public void startEditProfileActivity(View view)
+	{
 		Intent intent = new Intent(this, EditProfileActivity.class);
 		startActivity(intent);
 		bmp = null;
@@ -186,19 +201,23 @@ public class UserActivity extends ActionBarActivity implements
 	 * Get profile executes get_profile.php. It uses the current users email
 	 * address to retrieve the users name, age, and bio.
 	 */
-	private class getProfileTask extends AsyncTask<String, Void, String> {
+	private class getProfileTask extends AsyncTask<String, Void, String>
+	{
 
-		protected String doInBackground(String... urls) {
+		protected String doInBackground(String... urls)
+		{
 
 			return readJSONFeed(urls[0]);
 		}
 
-		public String readJSONFeed(String URL) {
+		public String readJSONFeed(String URL)
+		{
 
 			StringBuilder stringBuilder = new StringBuilder();
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(URL);
-			try {
+			try
+			{
 				Global global = ((Global) getApplicationContext());
 				String email = global.getCurrentUser();
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
@@ -209,31 +228,38 @@ public class UserActivity extends ActionBarActivity implements
 				HttpResponse response = httpClient.execute(httpPost);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
+				if (statusCode == 200)
+				{
 					HttpEntity entity = response.getEntity();
 					InputStream inputStream = entity.getContent();
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(inputStream));
 					String line;
-					while ((line = reader.readLine()) != null) {
+					while ((line = reader.readLine()) != null)
+					{
 						stringBuilder.append(line);
 					}
 					inputStream.close();
 					reader.close();
-				} else {
+				} else
+				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
 			return stringBuilder.toString();
 		}
 
-		protected void onPostExecute(String result) {
-			try {
+		protected void onPostExecute(String result)
+		{
+			try
+			{
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
-				if (jsonObject.getString("success").toString().equals("1")) {
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
 					// Success
 					JSONArray jsonProfileArray = (JSONArray) jsonObject
 							.getJSONArray("profile");
@@ -244,19 +270,21 @@ public class UserActivity extends ActionBarActivity implements
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
 					String img = jsonProfileArray.getString(5);
-					
-					//decode image back to android bitmap format
+
+					// decode image back to android bitmap format
 					byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
-		            if(decodedString != null)
-		            {
-		            	bmp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-		            }			
-					//set the image
-					if (bmp != null) {
-						if(iv == null)
+					if (decodedString != null)
+					{
+						bmp = BitmapFactory.decodeByteArray(decodedString, 0,
+								decodedString.length);
+					}
+					// set the image
+					if (bmp != null)
+					{
+						if (iv == null)
 						{
 							iv = (ImageView) findViewById(R.id.profilePhoto);
-							
+
 						}
 						iv.setImageBitmap(bmp);
 						img = null;
@@ -273,24 +301,28 @@ public class UserActivity extends ActionBarActivity implements
 					ageTextView.setText(age + " years old");
 					bioTextView.setText(bio);
 					locationTextView.setText(location);
-				} else {
+				} else
+				{
 					// Fail
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
 	}
 
-	public void startGroupsActivity(View view) {
+	public void startGroupsActivity(View view)
+	{
 		Intent intent = new Intent(this, GroupsActivity.class);
 		intent.putExtra("ParentClassName", "UserActivity");
 		startActivity(intent);
 		bmp = null;
-	    iv = null;
+		iv = null;
 	}
 
-	public void startCurrentFriendsActivity(View view) {
+	public void startCurrentFriendsActivity(View view)
+	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		intent.putExtra("ParentClassName", "UserActivity");
 		Global global = ((Global) getApplicationContext());
@@ -301,7 +333,8 @@ public class UserActivity extends ActionBarActivity implements
 		iv = null;
 	}
 
-	public void startEventsActivity(View view) {
+	public void startEventsActivity(View view)
+	{
 		Intent intent = new Intent(this, EventsActivity.class);
 		intent.putExtra("ParentClassName", "UserActivity");
 		startActivity(intent);

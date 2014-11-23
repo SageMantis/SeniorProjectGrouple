@@ -47,13 +47,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FriendProfileActivity extends ActionBarActivity {
+public class FriendProfileActivity extends ActionBarActivity
+{
 	BroadcastReceiver broadcastReceiver;
 	private Bitmap bmp;
 	private ImageView iv;
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_profile);
 		System.out.println("onCreate FriendProfileActivity");
@@ -84,11 +86,14 @@ public class FriendProfileActivity extends ActionBarActivity {
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
+		broadcastReceiver = new BroadcastReceiver()
+		{
 			@Override
-			public void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
 					Log.d("app666", "we killin the login it");
 					// System.exit(1);
 					finish();
@@ -99,16 +104,18 @@ public class FriendProfileActivity extends ActionBarActivity {
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
 	}
-	
+
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(R.menu.friend_profile, menu);
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
@@ -116,20 +123,30 @@ public class FriendProfileActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout) {
+		if (id == R.id.action_logout)
+		{
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			// startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
+			bmp = null;
+			iv = null;
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -140,21 +157,18 @@ public class FriendProfileActivity extends ActionBarActivity {
 	 */
 
 	/* Start activity functions for going back to home and logging out */
-	public void startHomeActivity(View view) {
+	public void startHomeActivity(View view)
+	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
 	}
 
-	public void startLoginActivity(View view) {
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		bmp = null;
-		iv = null;
-	}
 
-	public void startEditProfileActivity(View view) {
+
+	public void startEditProfileActivity(View view)
+	{
 		Intent intent = new Intent(this, EditProfileActivity.class);
 		startActivity(intent);
 		bmp = null;
@@ -165,19 +179,23 @@ public class FriendProfileActivity extends ActionBarActivity {
 	 * Get profile executes get_profile.php. It uses the current users email
 	 * address to retrieve the users name, age, and bio.
 	 */
-	private class getProfileTask extends AsyncTask<String, Void, String> {
+	private class getProfileTask extends AsyncTask<String, Void, String>
+	{
 
-		protected String doInBackground(String... urls) {
+		protected String doInBackground(String... urls)
+		{
 
 			return readJSONFeed(urls[0]);
 		}
 
-		public String readJSONFeed(String URL) {
+		public String readJSONFeed(String URL)
+		{
 			System.out.println("readJSONFeed FriendProfileActivity");
 			StringBuilder stringBuilder = new StringBuilder();
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(URL);
-			try {
+			try
+			{
 				// This where we add our friends email. not ours.
 				Bundle extras = getIntent().getExtras();
 				String email = extras.getString("email");
@@ -190,30 +208,37 @@ public class FriendProfileActivity extends ActionBarActivity {
 				HttpResponse response = httpClient.execute(httpPost);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
+				if (statusCode == 200)
+				{
 					HttpEntity entity = response.getEntity();
 					InputStream inputStream = entity.getContent();
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(inputStream));
 					String line;
-					while ((line = reader.readLine()) != null) {
+					while ((line = reader.readLine()) != null)
+					{
 						stringBuilder.append(line);
 					}
 					inputStream.close();
-				} else {
+				} else
+				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
 			return stringBuilder.toString();
 		}
 
-		protected void onPostExecute(String result) {
-			try {
+		protected void onPostExecute(String result)
+		{
+			try
+			{
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
-				if (jsonObject.getString("success").toString().equals("1")) {
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
 					// Success
 					JSONArray jsonProfileArray = (JSONArray) jsonObject
 							.getJSONArray("profile");
@@ -230,18 +255,20 @@ public class FriendProfileActivity extends ActionBarActivity {
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
 					String img = jsonProfileArray.getString(5);
-					
-					//decode image back to android bitmap format
+
+					// decode image back to android bitmap format
 					byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
 					Log.d("ReadatherJSONFeedTask", "1");
-		            if(decodedString != null)
-		            {
-		            	Log.d("ReadatherJSONFeedTask", "2");
-		            	bmp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-		            }			
-					//set the image
-					if (bmp != null) {
-						if(iv == null)
+					if (decodedString != null)
+					{
+						Log.d("ReadatherJSONFeedTask", "2");
+						bmp = BitmapFactory.decodeByteArray(decodedString, 0,
+								decodedString.length);
+					}
+					// set the image
+					if (bmp != null)
+					{
+						if (iv == null)
 						{
 							Log.d("ReadatherJSONFeedTask", "3");
 							iv = (ImageView) findViewById(R.id.profilePhotoFPA);
@@ -250,7 +277,6 @@ public class FriendProfileActivity extends ActionBarActivity {
 						img = null;
 						decodedString = null;
 					}
-
 
 					TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 					actionbarTitle.setText(name + "'s Profile");
@@ -262,43 +288,48 @@ public class FriendProfileActivity extends ActionBarActivity {
 
 					// We only want to add the profile details if the user
 					// filled them out.
-					if (!age.equalsIgnoreCase("null")) {
+					if (!age.equalsIgnoreCase("null"))
+					{
 						ageTextView.setText(age + " years old");
-					}
-					else
+					} else
 					{
 						ageTextView.setText("");
 					}
-					if (!bio.equalsIgnoreCase("null")) {
+					if (!bio.equalsIgnoreCase("null"))
+					{
 						bioTextView.setText(bio);
 					}
-					if (!(location.equalsIgnoreCase("") || location.equalsIgnoreCase("null"))) 
+					if (!(location.equalsIgnoreCase("") || location
+							.equalsIgnoreCase("null")))
 					{
 						locationTextView.setText(location);
-					}
-					else
+					} else
 					{
 						locationTextView.setText("");
 					}
 					iv.setImageBitmap(bmp);
 
-				} else {
+				} else
+				{
 					// Fail
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("ReadatherJSONFeedTask", "poop2");
 			}
 		}
 	}
 
-	public void startGroupsActivity(View view) {
+	public void startGroupsActivity(View view)
+	{
 		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
 	}
 
-	public void startCurrentFriendsActivity(View view) {
+	public void startCurrentFriendsActivity(View view)
+	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
@@ -309,7 +340,8 @@ public class FriendProfileActivity extends ActionBarActivity {
 		iv = null;
 	}
 
-	public void startEventsActivity(View view) {
+	public void startEventsActivity(View view)
+	{
 		Intent intent = new Intent(this, EventsActivity.class);
 		startActivity(intent);
 		bmp = null;

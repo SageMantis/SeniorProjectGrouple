@@ -24,16 +24,20 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
-public class HomeActivity extends ActionBarActivity {
+public class HomeActivity extends ActionBarActivity
+{
 	LayoutInflater li;
 	int friendRequests;
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		try {
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		try
+		{
 			Thread.sleep(500);
-		} catch (InterruptedException e1) {
+		} catch (InterruptedException e1)
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -72,11 +76,14 @@ public class HomeActivity extends ActionBarActivity {
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
+		broadcastReceiver = new BroadcastReceiver()
+		{
 			@Override
-			public void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
 					Log.d("app666", "we killin the home");
 					// System.exit(1);
 					finish();
@@ -86,16 +93,18 @@ public class HomeActivity extends ActionBarActivity {
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
 	}
-	
+
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
@@ -103,27 +112,35 @@ public class HomeActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout) {
+		if (id == R.id.action_logout)
+		{
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			global.setNumFriendRequests(0);
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public void onResume() {
+	public void onResume()
+	{
 		super.onResume(); // Always call the superclass method first
 		System.out.println("In Home onResume()");
 		Global global = ((Global) getApplicationContext());
@@ -135,55 +152,58 @@ public class HomeActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
 
 		}
 		return false;
 	}
 
 	/* Start activity functions for main navigation */
-	public void startHomeActivity(View view) {
+	public void startHomeActivity(View view)
+	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 	}
 
-	public void startUserActivity(View view) {
+	public void startUserActivity(View view)
+	{
 		Intent intent = new Intent(this, UserActivity.class);
 		startActivity(intent);
 	}
 
-	public void startGroupsActivity(View view) {
+	public void startGroupsActivity(View view)
+	{
 		Intent intent = new Intent(this, GroupsActivity.class);
 		intent.putExtra("ParentClassName", "HomeActivity");
 		startActivity(intent);
 	}
 
-	public void startMessagesActivity(View view) {
+	public void startMessagesActivity(View view)
+	{
 		Intent intent = new Intent(this, MessagesActivity.class);
 		startActivity(intent);
 	}
 
-	public void startFriendsActivity(View view) {
+	public void startFriendsActivity(View view)
+	{
 		Intent intent = new Intent(this, FriendsActivity.class);
 		startActivity(intent);
 	}
 
-	public void startSettingsActivity(View view) {
+	public void startSettingsActivity(View view)
+	{
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 	}
 
-	public void startEventsActivity(View view) {
+	public void startEventsActivity(View view)
+	{
 		Intent intent = new Intent(this, EventsActivity.class);
 		intent.putExtra("ParentClassName", "HomeActivity");
 		startActivity(intent);
-	}
-
-	public void startLoginActivity(View view) {
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		finish();
 	}
 
 }

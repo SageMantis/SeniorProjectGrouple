@@ -22,11 +22,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class GroupsActivity extends ActionBarActivity {
+public class GroupsActivity extends ActionBarActivity
+{
 	BroadcastReceiver broadcastReceiver;
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
 
@@ -48,11 +50,14 @@ public class GroupsActivity extends ActionBarActivity {
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
+		broadcastReceiver = new BroadcastReceiver()
+		{
 			@Override
-			public void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
 					Log.d("app666", "we killin the login it");
 					// System.exit(1);
 					finish();
@@ -63,16 +68,18 @@ public class GroupsActivity extends ActionBarActivity {
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
 	}
-	
+
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
+
 	@Override
-	public Intent getSupportParentActivityIntent() {
+	public Intent getSupportParentActivityIntent()
+	{
 		Intent parentIntent = getIntent();
 		String className = parentIntent.getStringExtra("ParentClassName"); // getting
 																			// the
@@ -81,18 +88,21 @@ public class GroupsActivity extends ActionBarActivity {
 																			// name
 
 		Intent newIntent = null;
-		try {
+		try
+		{
 			// you need to define the class with package name
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e)
+		{
 			e.printStackTrace();
 		}
 		return newIntent;
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
@@ -100,34 +110,43 @@ public class GroupsActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout) {
+		if (id == R.id.action_logout)
+		{
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/* Start activity functions for going back to home and logging out */
-	public void startHomeActivity(View view) {
+	public void startHomeActivity(View view)
+	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
-	public void startLoginActivity(View view) {
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		finish();
-	}
 }

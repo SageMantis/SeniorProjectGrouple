@@ -24,14 +24,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
-
-
-
-
-
-
-
 //import cs460.grouple.grouple.RegisterActivity.getRegisterTask;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -56,7 +48,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EditProfileActivity extends ActionBarActivity implements
-		View.OnClickListener {
+		View.OnClickListener
+{
 	private Button b;
 	private ImageView iv;
 	private final static int CAMERA_DATA = 0;
@@ -66,7 +59,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
 
@@ -82,11 +76,14 @@ public class EditProfileActivity extends ActionBarActivity implements
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
+		broadcastReceiver = new BroadcastReceiver()
+		{
 			@Override
-			public void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
 					// Log.d("app666","we killin the login it");
 					// System.exit(1);
 					finish();
@@ -105,29 +102,34 @@ public class EditProfileActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
+
 	/*
 	 * Get profile executes get_profile.php. It uses the current users email
 	 * address to retrieve the users name, age, and bio.
 	 */
-	private class getProfileTask extends AsyncTask<String, Void, String> {
+	private class getProfileTask extends AsyncTask<String, Void, String>
+	{
 
-		protected String doInBackground(String... urls) {
+		protected String doInBackground(String... urls)
+		{
 
 			return readJSONFeed(urls[0]);
 		}
 
-		public String readJSONFeed(String URL) {
+		public String readJSONFeed(String URL)
+		{
 
 			StringBuilder stringBuilder = new StringBuilder();
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(URL);
-			try {
+			try
+			{
 				Global global = ((Global) getApplicationContext());
 				String email = global.getCurrentUser();
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
@@ -138,31 +140,38 @@ public class EditProfileActivity extends ActionBarActivity implements
 				HttpResponse response = httpClient.execute(httpPost);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
+				if (statusCode == 200)
+				{
 					HttpEntity entity = response.getEntity();
 					InputStream inputStream = entity.getContent();
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(inputStream));
 					String line;
-					while ((line = reader.readLine()) != null) {
+					while ((line = reader.readLine()) != null)
+					{
 						stringBuilder.append(line);
 					}
 					inputStream.close();
 					reader.close();
-				} else {
+				} else
+				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
 			return stringBuilder.toString();
 		}
 
-		protected void onPostExecute(String result) {
-			try {
+		protected void onPostExecute(String result)
+		{
+			try
+			{
 				JSONObject jsonObject = new JSONObject(result);
 				System.out.println(jsonObject.getString("success"));
-				if (jsonObject.getString("success").toString().equals("1")) {
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
 					// Success
 					JSONArray jsonProfileArray = (JSONArray) jsonObject
 							.getJSONArray("profile");
@@ -173,29 +182,28 @@ public class EditProfileActivity extends ActionBarActivity implements
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
 					String img = jsonProfileArray.getString(5);
-					
-					//decode image back to android bitmap format
+
+					// decode image back to android bitmap format
 					decodedString = Base64.decode(img, Base64.DEFAULT);
-					
-					Log.d("scott","1st");
-		           
-					if(decodedString != null)
-		            {
-		            	Log.d("scott","2nd");
-		            	bmp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-		            }
-		            Log.d("scott","3rd");
-					//set the image
-		            Log.d("scott","4th");
-		            if (bmp != null) {
-						Log.d("scott","5th");
+
+					Log.d("scott", "1st");
+
+					if (decodedString != null)
+					{
+						Log.d("scott", "2nd");
+						bmp = BitmapFactory.decodeByteArray(decodedString, 0,
+								decodedString.length);
+					}
+					Log.d("scott", "3rd");
+					// set the image
+					Log.d("scott", "4th");
+					if (bmp != null)
+					{
+						Log.d("scott", "5th");
 						img = null;
 						decodedString = null;
-						}
-					Log.d("scott","6th");
-
-					
-
+					}
+					Log.d("scott", "6th");
 
 					TextView nameTextView = (TextView) findViewById(R.id.nameEditTextEPA);
 					TextView ageTextView = (TextView) findViewById(R.id.ageEditTextEPA);
@@ -203,7 +211,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 					TextView bioTextView = (TextView) findViewById(R.id.bioEditTextEPA);
 					if (iv == null)
 					{
-						Log.d("scott","7th");
+						Log.d("scott", "7th");
 						iv = (ImageView) findViewById(R.id.profilePhoto);
 					}
 					// JSONObject bioJson = jsonProfileArray.getJSONObject(0);
@@ -212,62 +220,76 @@ public class EditProfileActivity extends ActionBarActivity implements
 					bioTextView.setText(bio);
 					locationTextView.setText(location);
 					iv.setImageBitmap(bmp);
-				} else {
+				} else
+				{
 					// Fail
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		// Set up the edit button and image view
 		b = (Button) findViewById(R.id.editProfilePhotoButton);
 		b.setOnClickListener(this);
-		if(iv == null)
+		if (iv == null)
 		{
 			iv = (ImageView) findViewById(R.id.profilePhoto);
 		}
-		
+
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout) {
+		if (id == R.id.action_logout)
+		{
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
+		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	// Button Listener for submit changes. It the profile in the database.
 	// This executes the
-	public void submitButton(View view) {
+	public void submitButton(View view)
+	{
 		// error checking
 
 		// bio no more than
 		TextView bioTextView = (TextView) findViewById(R.id.bioEditTextEPA);
 		String bio = bioTextView.getText().toString();
-		if (bio.length() > 100) {
+		if (bio.length() > 100)
+		{
 			TextView errorTextView = (TextView) findViewById(R.id.errorTextViewEPA);
 			errorTextView.setText("Bio is too many characters.");
 			errorTextView.setVisibility(0);
-		} else {
+		} else
+		{
 			new setProfileTask()
 					.execute("http://98.213.107.172/android_connect/update_profile.php");
 			Intent intent = new Intent(this, UserActivity.class);
@@ -281,20 +303,24 @@ public class EditProfileActivity extends ActionBarActivity implements
 	 * Set profile executes update_profile.php. It uses the current users email
 	 * address to update the users name, age, and bio.
 	 */
-	private class setProfileTask extends AsyncTask<String, Void, String> {
+	private class setProfileTask extends AsyncTask<String, Void, String>
+	{
 
-		protected String doInBackground(String... urls) {
+		protected String doInBackground(String... urls)
+		{
 
 			return readJSONFeed(urls[0]);
 		}
 
-		public String readJSONFeed(String URL) {
+		public String readJSONFeed(String URL)
+		{
 
 			StringBuilder stringBuilder = new StringBuilder();
 			HttpClient httpClient = new DefaultHttpClient();
 			// kaboom
 			HttpPost httpPost = new HttpPost(URL);
-			try {
+			try
+			{
 				Global global = ((Global) getApplicationContext());
 				String email = global.getCurrentUser();
 				TextView nameTextView = (TextView) findViewById(R.id.nameEditTextEPA);
@@ -313,15 +339,16 @@ public class EditProfileActivity extends ActionBarActivity implements
 				String bio = bioTextView.getText().toString();
 
 				String location = locationTextView.getText().toString();
-				
-				MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-				
+
+				MultipartEntityBuilder builder = MultipartEntityBuilder
+						.create();
+
 				builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-				
+
 				byte[] data;
-				
-				//process photo if set and add it to builder
-				if(bmp != null)
+
+				// process photo if set and add it to builder
+				if (bmp != null)
 				{
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
 					bmp.compress(CompressFormat.JPEG, 100, bos);
@@ -332,70 +359,76 @@ public class EditProfileActivity extends ActionBarActivity implements
 					bab = null;
 					bos.close();
 				}
-				
-				//add remaining fields to builder, then execute
+
+				// add remaining fields to builder, then execute
 				builder.addTextBody("first", firstName, ContentType.TEXT_PLAIN);
 				builder.addTextBody("last", lastName, ContentType.TEXT_PLAIN);
 				builder.addTextBody("age", age, ContentType.TEXT_PLAIN);
 				builder.addTextBody("bio", bio, ContentType.TEXT_PLAIN);
-				builder.addTextBody("location", location, ContentType.TEXT_PLAIN);
+				builder.addTextBody("location", location,
+						ContentType.TEXT_PLAIN);
 				builder.addTextBody("email", email, ContentType.TEXT_PLAIN);
-				
-				
+
 				httpPost.setEntity(builder.build());
 
 				HttpResponse response = httpClient.execute(httpPost);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
+				if (statusCode == 200)
+				{
 					HttpEntity entity = response.getEntity();
 					InputStream inputStream = entity.getContent();
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(inputStream));
 					String line;
-					while ((line = reader.readLine()) != null) {
+					while ((line = reader.readLine()) != null)
+					{
 						stringBuilder.append(line);
 					}
-					//cleanup
+					// cleanup
 					inputStream.close();
 					reader.close();
 					bmp = null;
 					builder = null;
-				} else {
+				} else
+				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
 			return stringBuilder.toString();
 		}
 
-		protected void onPostExecute(String result) {
-			try {
+		protected void onPostExecute(String result)
+		{
+			try
+			{
 				JSONObject jsonObject = new JSONObject(result);
 				// System.out.println(jsonObject.getString("success"));
-				if (jsonObject.getString("success").toString().equals("1")) {
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
 					// Success
 					System.out.println("Success");
-				} else {
+				} else
+				{
 					// Fail
 					System.out.println("Fail");
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
 	}
 
-	public void startLoginActivity(View view) {
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-	}
-
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v)
+	{
 		// TODO Auto-generated method stub
-		switch (v.getId()) {
+		switch (v.getId())
+		{
 		case R.id.editProfilePhotoButton:
 			i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(i, CAMERA_DATA);
@@ -403,12 +436,14 @@ public class EditProfileActivity extends ActionBarActivity implements
 
 		}
 	}
-	
+
 	@Override
-	protected void onActivityResult(int reqCode, int resCode, Intent d) {
+	protected void onActivityResult(int reqCode, int resCode, Intent d)
+	{
 		// TODO Auto-generated method stub
 		super.onActivityResult(reqCode, resCode, d);
-		if(resCode == RESULT_OK){
+		if (resCode == RESULT_OK)
+		{
 			Bundle extras = d.getExtras();
 			bmp = (Bitmap) extras.get("data");
 			iv.setImageBitmap(bmp);

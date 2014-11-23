@@ -48,12 +48,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class CurrentFriendsActivity extends ActionBarActivity {
+public class CurrentFriendsActivity extends ActionBarActivity
+{
 	BroadcastReceiver broadcastReceiver;
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_current_friends);
 		ActionBar ab = getSupportActionBar();
@@ -75,11 +77,14 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
+		broadcastReceiver = new BroadcastReceiver()
+		{
 			@Override
-			public void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent)
+			{
 				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
 					Log.d("app666", "we killin the login it");
 					// System.exit(1);
 					finish();
@@ -92,14 +97,16 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
+
 	@Override
-	public Intent getSupportParentActivityIntent() {
+	public Intent getSupportParentActivityIntent()
+	{
 		Intent parentIntent = getIntent();
 		String className = parentIntent.getStringExtra("ParentClassName"); // getting
 																			// the
@@ -108,17 +115,20 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 																			// name
 
 		Intent newIntent = null;
-		try {
+		try
+		{
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e)
+		{
 			e.printStackTrace();
 		}
 		return newIntent;
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
@@ -126,73 +136,94 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_logout) {
+		if (id == R.id.action_logout)
+		{
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
 		}
+		if (id == R.id.action_home)
+		{
+			Intent intent = new Intent(this, HomeActivity.class);
+			startActivity(intent);
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public String readGetFriendsJSONFeed(String URL) {
+	public String readGetFriendsJSONFeed(String URL)
+	{
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URL);
-		try {
+		try
+		{
 			HttpResponse response = httpClient.execute(httpGet);
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
+			if (statusCode == 200)
+			{
 				HttpEntity entity = response.getEntity();
 				InputStream inputStream = entity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream));
 				String line;
-				while ((line = reader.readLine()) != null) {
+				while ((line = reader.readLine()) != null)
+				{
 					System.out.println("New line: " + line);
 					stringBuilder.append(line);
 				}
 				inputStream.close();
-			} else {
+			} else
+			{
 				Log.d("JSON", "Failed to download file");
 			}
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
 		}
 		return stringBuilder.toString();
 	}
 
-	private class getFriendsTask extends AsyncTask<String, Void, String> {
-		protected String doInBackground(String... urls) {
+	private class getFriendsTask extends AsyncTask<String, Void, String>
+	{
+		protected String doInBackground(String... urls)
+		{
 			return readGetFriendsJSONFeed(urls[0]);
 		}
 
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(String result)
+		{
 			LayoutInflater li = getLayoutInflater();
-			try {
+			try
+			{
 				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1")) {
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
 					ArrayList<String> friends = new ArrayList<String>();
 					JSONArray jsonFriends = (JSONArray) jsonObject
 							.getJSONArray("friends");
 
-					if (jsonFriends != null) {
+					if (jsonFriends != null)
+					{
 						System.out.println(jsonFriends.toString() + "\n"
 								+ jsonFriends.length());
 						LinearLayout currentFriendsRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 						Bundle extras = getIntent().getExtras();
 						// looping thru json and adding to an array
-						for (int i = 0; i < jsonFriends.length(); i++) {
+						for (int i = 0; i < jsonFriends.length(); i++)
+						{
 							String firstraw = jsonFriends.getJSONObject(i)
 									.getString("first");
 							String lastraw = jsonFriends.getJSONObject(i)
@@ -221,13 +252,15 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 							// friends.add(row);
 
 							GridLayout rowView;
-							if (extras.getString("mod").equals("true")) {
+							if (extras.getString("mod").equals("true"))
+							{
 								rowView = (GridLayout) li.inflate(
 										R.layout.listitem_friend, null);
 								Button removeFriendButton = (Button) rowView
 										.findViewById(R.id.removeFriendButton);
 								removeFriendButton.setId(i);
-							} else {
+							} else
+							{
 								rowView = (GridLayout) li.inflate(
 										R.layout.listitem_friends_friend, null);
 
@@ -248,7 +281,8 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 					}
 				}
 				// user has no friends
-				if (jsonObject.getString("success").toString().equals("2")) {
+				if (jsonObject.getString("success").toString().equals("2"))
+				{
 					LinearLayout currentFriendsRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 
 					View row = li.inflate(R.layout.listitem_friend, null);
@@ -265,13 +299,15 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 					currentFriendsRL.addView(row);
 					// int y = 100*(0+1);
 					// rowRL.setY(y);
-				} else {
+				} else
+				{
 					// failed
 					// TextView loginFail = (TextView)
 					// findViewById(R.id.loginFailTextViewLA);
 					// loginFail.setVisibility(0);
 				}
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
@@ -285,48 +321,48 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 	 */
 
 	/* Start activity function for going back and logging out */
-	public void startFriendsActivity(View view) {
+	public void startFriendsActivity(View view)
+	{
 		Intent intent = new Intent(this, FriendsActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
-	public void startLoginActivity(View view) {
-		Intent intent = new Intent(this, LoginActivity.class);
-		startActivity(intent);
-		finish();
+	public void removeFriendButton(View view)
+	{
+
+		final int idz = view.getId(); // Email of user
+		final String friendEmail = friendsEmailList.get(idz); // Email of friend
+																// to remove
+		new AlertDialog.Builder(this)
+				.setMessage("Are you sure you want to remove that friend?")
+				.setCancelable(true)
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int id)
+					{
+
+						new deleteFriendTask()
+								.execute(
+										"http://98.213.107.172/android_connect/delete_friend.php",
+										friendEmail);
+
+						// refreshing the current friends layout
+						Bundle extras = getIntent().getExtras();
+						String email = extras.getString("email");
+						// removing all views
+						LinearLayout currentFriendsLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
+						currentFriendsLayout.removeAllViews();
+						// calling getFriends to repopulate view
+						new getFriendsTask()
+								.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
+										+ email);
+					}
+				}).setNegativeButton("Cancel", null).show();
 	}
 
-	public void removeFriendButton(View view) {
-		
-		  final int idz = view.getId();  //Email of user
-		  final String friendEmail = friendsEmailList.get(idz); // Email of friend to remove
-		  new AlertDialog.Builder(this)
-		           .setMessage("Are you sure you want to remove that friend?")
-		           .setCancelable(true)
-		           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int id) {
-		           		
-		           		new deleteFriendTask()
-		           		.execute("http://98.213.107.172/android_connect/delete_friend.php", friendEmail);
-		           		
-		           		// refreshing the current friends layout
-		           		Bundle extras = getIntent().getExtras();
-		           		String email = extras.getString("email");
-		           		// removing all views
-		           		LinearLayout currentFriendsLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
-		           		currentFriendsLayout.removeAllViews();
-		           		// calling getFriends to repopulate view
-		           		new getFriendsTask()
-		           				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
-		           						+ email);
-		               }
-		           })
-		           .setNegativeButton("Cancel", null)
-		           .show();
-	}
-	
-	public String deleteFriendJSONFeed(String URL, String friendEmail) {
+	public String deleteFriendJSONFeed(String URL, String friendEmail)
+	{
 		// Get all the fields and store locally
 		Global global = ((Global) getApplicationContext());
 		String sender = global.getCurrentUser();
@@ -334,10 +370,11 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(URL);
-		try {
+		try
+		{
 			// Add your data
-			System.out.println("Receiver Email: " + friendEmail + "Sender Email: "
-					+ sender);
+			System.out.println("Receiver Email: " + friendEmail
+					+ "Sender Email: " + sender);
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", friendEmail));
@@ -346,62 +383,67 @@ public class CurrentFriendsActivity extends ActionBarActivity {
 			HttpResponse response = httpClient.execute(httpPost);
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
+			if (statusCode == 200)
+			{
 				HttpEntity entity = response.getEntity();
 				InputStream inputStream = entity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream));
 				String line;
-				while ((line = reader.readLine()) != null) {
+				while ((line = reader.readLine()) != null)
+				{
 					stringBuilder.append(line);
 				}
 				inputStream.close();
-			} else {
+			} else
+			{
 				Log.d("JSON", "Failed to download file");
 			}
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
 		}
 		return stringBuilder.toString();
 	}
 
-	private class deleteFriendTask extends AsyncTask<String, Void, String> {
-		protected String doInBackground(String... urls) {
+	private class deleteFriendTask extends AsyncTask<String, Void, String>
+	{
+		protected String doInBackground(String... urls)
+		{
 			return deleteFriendJSONFeed(urls[0], urls[1]);
 		}
 
-		protected void onPostExecute(String result) {
-			try {
+		protected void onPostExecute(String result)
+		{
+			try
+			{
 				JSONObject jsonObject = new JSONObject(result);
 
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// success: friend has been deleted
 					Log.d("dbmsg", jsonObject.getString("message"));
-				} 
-				else if(jsonObject.getString("success").toString().equals("2"))
+				} else if (jsonObject.getString("success").toString()
+						.equals("2"))
 				{
-					//friend was not found in database
+					// friend was not found in database
 					Log.d("dbmsg", jsonObject.getString("message"));
-				}
-				else
+				} else
 				{
-					//sql error
+					// sql error
 					Log.d("dbmsg", jsonObject.getString("message"));
 				}
 
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
 	}
-	
-	
-	
-	
 
 	public void startFriendProfileActivity(View view)
-			throws InterruptedException {
+			throws InterruptedException
+	{
 		// need to get access to this friends email
 		// launches friendProfileActivity and loads content based on that email
 		int id = view.getId();
