@@ -6,5 +6,6 @@ bin/
 gen/
 *.apk
 *.dex
+*.DS_STORE
 *.class
 proguard/
