@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cs460.grouple.grouple"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".Global"
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@style/AppBaseTheme" 
+       	android:icon="@drawable/grouple_icon"
+        android:largeHeap="true">
+        <activity
+            android:name=".LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".UserActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_user"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".GroupsActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_groups"
+            android:screenOrientation="portrait" >
+
+        </activity>
+        <activity
+            android:name=".EventsActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_events"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".FriendsActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_friends"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".AddFriendActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_add_friend"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.FriendsActivity" />
+        </activity>
+        <activity
+            android:name=".CurrentFriendsActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_current_friends"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".FriendRequestsActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_friend_requests"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.FriendsActivity" />
+        </activity>
+        <activity
+            android:name=".Resources"
+            android:label="@string/title_activity_resources" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".MessagesActivity"
+            android:label="@string/title_activity_messages" >
+        </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="@string/title_activity_edit_profile" >
+        </activity>
+        <activity
+            android:name=".FriendProfileActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_friend_profile" >
+        </activity>
+    </application>
+
+</manifest>
