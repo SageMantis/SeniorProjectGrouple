@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Grouple</string>
+    <string name="currentUser"></string>
+    <string name="loginTextView">Login</string>
+    <string name="registerTextView">Register</string>
+    <string name="homeTextView">Grouple</string>
+    <string name="userTextView">User Profile</string>
+    <string name="groupsTextView">Groups</string>
+    <string name="emailEditText">Enter email</string>
+    <string name="passwordEditText">Enter password</string>
+    <string name="rePasswordEditText">Re-Enter Password</string>
+    <string name="fNameEditText">Enter First Name</string>
+    <string name="lNameEditText">Enter Last Name</string>
+    <string name="loginButton">Login</string>
+    <string name="registerButton">Register</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_home">Grouple Home</string>
+    <string name="eventsTextView">Events</string>
+    <string name="eventsButton">Events</string>
+    <string name="groupsButton">Groups</string>
+    <string name="backButton">Back</string>
+    <string name="logoutButton">Logout</string>
+    <string name="createGroupButton">Create Group</string>
+    <string name="yourGroupsButton">Your Current Groups (8)</string>
+    <string name="pendingGroupsButton">Pending Invites</string>
+    <string name="createEventButton">Create Event</string>
+    <string name="unconfirmedEventsButton">Unconfirmed Events (2)</string>
+    <string name="upcomingEventsButton">Upcoming Events (3)</string>
+    <string name="pastEventsButton">Past Events (22)</string>
+    <string name="userButton">User</string>
+    <string name="noFriendRequestsTextView">No friend requests to display!</string>
+    <string name="homeButton">Home</string>
+    <string name="title_activity_user">User Profile</string>
+    <string name="title_activity_groups">Groups</string>
+    <string name="title_activity_events">Events</string>
+    <string name="title_activity_register">Registery</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="loginFailString">Incorrect Email or Password!</string>
+    <string name="title_activity_friends">Friends</string>
+    <string name="title_activity_add_friend">Add Friend</string>
+    <string name="title_activity_current_friends">Friends</string>
+    <string name="title_activity_friend_requests">Friend Requests</string>
+    <string name="title_activity_resources">Resources</string>
+    <string name="title_activity_global">Global</string>
+    <string name="editProfilePhotoButton">Edit Photo</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_messages">Messages</string>
+
+    <color name="background_color">#292933</color>
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name="button_background_color">#292933</color>
+    <color name="button_border_color">#FFFFFF</color>
+
+    <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="title_activity_friend_profile">FriendProfileActivity</string>
+
+</resources>
