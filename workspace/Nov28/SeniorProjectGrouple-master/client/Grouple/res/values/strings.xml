@@ -56,5 +56,7 @@
 
     <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="title_activity_friend_profile">FriendProfileActivity</string>
+    <string name="AddGroup">Add to Group</string>
+    <string name="Confirm">Create this Group</string>
 
 </resources>

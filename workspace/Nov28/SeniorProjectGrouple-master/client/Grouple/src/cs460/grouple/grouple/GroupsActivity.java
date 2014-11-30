@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,7 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GroupsActivity extends ActionBarActivity
@@ -31,8 +35,6 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
-		System.out.println("gggroup");
-		Log.d("app203", "inside group");
 		// Action bar setup
 		// ActionBar ab = getActionBar();
 
@@ -47,7 +49,6 @@ public class GroupsActivity extends ActionBarActivity
 		actionbarTitle.setText("Groups");
 		// ImageView view = (ImageView)findViewById(android.R.id.home);
 		// view.setPadding(15, 20, 5, 40);
-
 		
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -154,8 +155,6 @@ public class GroupsActivity extends ActionBarActivity
 	/* Start activity methods for group sub-activities */
 	public void startGroupCreateActivity(View view)
 	{
-		System.out.println("what");
-		Log.d("app203", "starting up");
 		Intent intent = new Intent(this, GroupCreateActivity.class);
 		startActivity(intent);
 	}

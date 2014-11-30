@@ -4,11 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 
 public class GroupCreateActivity extends ActionBarActivity {
 
@@ -18,6 +23,9 @@ public class GroupCreateActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_create);
+		
+		
+		
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -72,4 +80,39 @@ public class GroupCreateActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
+	private class GroupMembers extends AsyncTask<String, Void, String>
+	{
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String param){
+
+			/* beginning building the interface */
+			
+			LinearLayout membersToAdd = (LinearLayout)findViewById(R.id.groupCreateLayout);
+			String[] members = {"Bobby Hill", "Peggy Hill", "Hank Hill"};
+			
+			for(int i = 0; i < 3; i++){
+				GridLayout gridView;
+				LayoutInflater inflater = getLayoutInflater();
+				gridView = (GridLayout)inflater.inflate(R.layout.listitem_friend, null);
+				Button removeFriendButton = (Button)gridView.findViewById(R.id.removeFriendButton);
+				removeFriendButton.setId(2000 + i);
+				Button friendNameButton = (Button)gridView.findViewById(R.id.friendNameButton);
+				friendNameButton.setText(members[i]);
+				friendNameButton.setId(2000 + i);
+				membersToAdd.addView(gridView);
+			}
+			
+			/* end building the interface */
+		}
+	}
+	
 }
