@@ -3,7 +3,7 @@
    	android:id="@+id/friendsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-            android:padding="5dp"
+    android:padding="5dp"
 
     android:background="@color/background_color" >
 
@@ -19,7 +19,6 @@
 	   	android:textColor="@color/text_color"
 	    android:onClick="startAddFriendActivity"
 	    android:text="Add Friend"
-
 	    android:textSize="20sp" />
 
 	<Button
@@ -32,7 +31,7 @@
 	    android:background="@drawable/button_border"
 	    android:fontFamily="sans-serif-condensed"
 	    android:onClick="startCurrentFriendsActivity"
-	    android:text="Current Friends"
+	    android:text="My Friends"
 	    android:textColor="@color/text_color"
 	    android:textSize="20sp" />
 
