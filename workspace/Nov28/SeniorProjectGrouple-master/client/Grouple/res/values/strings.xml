@@ -61,5 +61,11 @@
     <string name="introMessage">Tap a friend\'s name to add to the group</string>
     <color name="white">#FFFFFF</color>
     <string name="isAdmin">Give person Admin privileges</string>
+    <string name="groupNameMessage">Give your group a name</string>
+    <string name="bioMessage">Group bio:</string>
+    <string name="groupBioMessage">Tell people about this group</string>
+    <string name="confirm">Confirm Create Group</string>
+    <color name="groupCreateBlue">#31698a</color>
+    <color name="groupCreateGrey">#3a3a3a</color>
 
 </resources>
