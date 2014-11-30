@@ -31,7 +31,8 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
-
+		System.out.println("gggroup");
+		Log.d("app203", "inside group");
 		// Action bar setup
 		// ActionBar ab = getActionBar();
 
@@ -47,6 +48,7 @@ public class GroupsActivity extends ActionBarActivity
 		// ImageView view = (ImageView)findViewById(android.R.id.home);
 		// view.setPadding(15, 20, 5, 40);
 
+		
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -149,4 +151,24 @@ public class GroupsActivity extends ActionBarActivity
 		finish();
 	}
 
+	/* Start activity methods for group sub-activities */
+	public void startGroupCreateActivity(View view)
+	{
+		System.out.println("what");
+		Log.d("app203", "starting up");
+		Intent intent = new Intent(this, GroupCreateActivity.class);
+		startActivity(intent);
+	}
+	
+	public void startGroupInvitesActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupInvitesActivity.class);
+		startActivity(intent);
+	}
+	
+	public void startGroupsCurrentActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsCurrentActivity.class);
+		startActivity(intent);
+	}
 }

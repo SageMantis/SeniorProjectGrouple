@@ -47,7 +47,45 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_groups"
             android:screenOrientation="portrait" >
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".GroupCreateActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_groups"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.GroupsActivity" />
+        </activity>
+        <activity
+            android:name=".GroupsCurrentActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_groups"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.GroupsActivity" />
+        </activity>
+        <activity
+            android:name=".GroupInvitesActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_groups"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.GroupsActivity" />
+        </activity>
+        <activity
+            android:name=".GroupProfileActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_groups"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.GroupsCurrentActivity" />
         </activity>
         <activity
             android:name=".EventsActivity"
@@ -83,6 +121,9 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_current_friends"
             android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
             android:name=".FriendRequestsActivity"
@@ -99,15 +140,21 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".MessagesActivity"
-            android:label="@string/title_activity_messages" >
+            android:label="@string/title_activity_messages" 
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
             android:name=".EditProfileActivity"
-            android:label="@string/title_activity_edit_profile" >
+            android:label="@string/title_activity_edit_profile" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".FriendProfileActivity"
