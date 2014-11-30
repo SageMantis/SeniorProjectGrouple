@@ -1,72 +1,73 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cs460.grouple.grouple.GroupCreateActivity"
     android:id="@+id/groupCreateLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding="0dp" >
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:id="@+id/linearLayoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical" >
+
+        
+        
+        <TextView
+            android:id="@+id/createIntroMessage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="@string/introMessage" />
+    </RelativeLayout>
     
     <ScrollView
         android:id="@+id/scrollViewPickMembers"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="10"
         android:padding="0dp" >
 
         <LinearLayout
             android:id="@+id/linearLayoutNested1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
+            android:orientation="vertical" />
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutAddMembers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/scrollViewPickMembers"
-        android:orientation="vertical" >
+<LinearLayout
+    android:id="@+id/linearLayoutAddMembers"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_weight="10"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/AddGroup" />
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scrollViewPickedMembers"
-        android:layout_width="fill_parent"
+    <CheckBox
+        android:id="@+id/checkAdmin"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:padding="0dp" >
-
-        <LinearLayout
-            android:id="@+id/linearLayoutNested2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
-    </ScrollView>
-    
-    <LinearLayout
-        android:id="@+id/linearLayoutFinalize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/scrollViewPickedMembers"
-        android:orientation="vertical" >
+   		android:textColor="@color/white"
+        android:text="@string/isAdmin" />
         
-        <Button 
-            android:id="@+id/button2" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:text="@string/Confirm"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/addMemberButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/AddGroup" />
+</LinearLayout>
        
-</RelativeLayout>
+</LinearLayout>

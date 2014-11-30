@@ -58,5 +58,8 @@
     <string name="title_activity_friend_profile">FriendProfileActivity</string>
     <string name="AddGroup">Add to Group</string>
     <string name="Confirm">Create this Group</string>
+    <string name="introMessage">Tap a friend\'s name to add to the group</string>
+    <color name="white">#FFFFFF</color>
+    <string name="isAdmin">Give person Admin privileges</string>
 
 </resources>

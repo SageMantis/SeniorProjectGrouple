@@ -156,6 +156,10 @@ public class GroupsActivity extends ActionBarActivity
 	public void startGroupCreateActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupCreateActivity.class);
+		intent.putExtra("ParentClassName", "GroupsActivity");
+		Global global = (Global)getApplicationContext();
+		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("mod", "true");
 		startActivity(intent);
 	}
 	
