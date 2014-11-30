@@ -39,6 +39,14 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
 	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
