@@ -6,7 +6,7 @@
     android:background="@color/background_color"
     android:orientation="vertical" >
     
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/linearLayoutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,24 +16,57 @@
         android:layout_marginTop="15dp"
         android:orientation="vertical" >
 
-        
-        
-        <TextView
-            android:id="@+id/createIntroMessage"
+        <EditText
+            android:id="@+id/groupName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+        	android:layout_marginLeft="35dp"
+        	android:layout_marginRight="35dp"
             android:textColor="@color/white"
             android:gravity="center"
-            android:text="@string/introMessage" />
-    </RelativeLayout>
+            android:hint="@string/groupNameMessage" />
+        
+        <TextView
+            android:id="@+id/createbioMessage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+        	android:layout_marginTop="15dp"
+        	android:layout_marginLeft="15dp"
+        	android:layout_marginRight="15dp"
+    		android:gravity="left"
+            android:text="@string/bioMessage"
+            android:textColor="@color/white" />
+        
+        <EditText
+            android:id="@+id/groupBio"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+        	android:layout_weight="2"
+            android:textColor="@color/white"
+            android:background="@color/groupCreateGrey"
+            android:gravity="left"
+            android:maxLength="999"
+            android:minLines="3"
+            android:maxLines="3"
+            android:hint="@string/groupBioMessage" />
     
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/createIntroMessage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/introMessage"
+        android:textColor="@color/white" />
+        
     <ScrollView
         android:id="@+id/scrollViewPickMembers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_weight="10"
+        android:layout_weight="2"
         android:padding="0dp" >
 
         <LinearLayout
@@ -42,32 +75,46 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
-
-<LinearLayout
-    android:id="@+id/linearLayoutAddMembers"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    android:layout_weight="10"
-    android:gravity="center_horizontal"
-    android:orientation="vertical" >
-
-    <CheckBox
-        android:id="@+id/checkAdmin"
-        android:layout_width="wrap_content"
+    
+    <LinearLayout
+        android:id="@+id/linearLayoutAddMembers"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-   		android:textColor="@color/white"
-        android:text="@string/isAdmin" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="2"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
         
-    <Button
-        android:id="@+id/addMemberButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="@string/AddGroup" />
-</LinearLayout>
-       
+        <CheckBox
+            android:id="@+id/checkAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        	android:layout_marginRight="5dp"
+            android:text="@string/isAdmin"
+            android:textColor="@color/white"
+            android:background="@color/groupCreateBlue" />
+
+        <Button
+            android:id="@+id/addMemberButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/AddGroup"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/confirm"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </LinearLayout>
