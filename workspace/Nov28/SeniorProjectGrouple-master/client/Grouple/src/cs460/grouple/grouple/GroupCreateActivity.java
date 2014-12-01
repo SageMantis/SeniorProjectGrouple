@@ -47,6 +47,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	BroadcastReceiver broadcastReceiver;
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
 	private ArrayList<Boolean> isAdmin = new ArrayList<Boolean>();
+	private ArrayList<String> alreadyAdded = new ArrayList<String>();
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
@@ -280,8 +281,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 						System.out.println(jsonFriends.toString() + "\n"
 								+ jsonFriends.length());
 						LinearLayout membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested1);
-						final LinearLayout membersToAdd2 = (LinearLayout) findViewById(R.id.linearLayoutNested2);/////////////////////
-						
+						final LinearLayout membersToAdd2 = (LinearLayout) findViewById(R.id.linearLayoutNested2);
+						//final Button removeFriendButton2 = (Button) findViewById(R.id.removeFriendButtonNoAccess);///////////////////
 						
 						
 						Bundle extras = getIntent().getExtras();
@@ -327,8 +328,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 										}
 									}
 								});
-								
 								removeFriendButton.setId(i);
+								//removeFriendButton2.setId(i);
 							} else
 							{
 								rowView = (GridLayout) inflater.inflate(R.layout.listitem_friends_friend_noaccess, null);
@@ -339,12 +340,59 @@ public class GroupCreateActivity extends ActionBarActivity {
 							friendNameButton.setOnClickListener(new OnClickListener(){
 								public void onClick(View view){
 									String text = friendNameButton.getLayout().getText().toString();
-									GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_friend_noaccess, null);
-									rowView2.setId(view.getId());
-									((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
-									rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
-									membersToAdd2.addView(rowView2);
-									//this is where layoutinflater2 builds and fills the second scrollview
+									if(alreadyAdded.size() == 0){
+										GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_friend_noaccess, null);
+										Button removeFriendButton2 = (Button) rowView2.findViewById(R.id.removeFriendButtonNoAccess);//////
+										removeFriendButton2.setId(view.getId()); ////////////////
+										if(isAdmin.get(removeFriendButton2.getId())){/////////////view.getId()
+											removeFriendButton2.setText("A");////////////////
+											//isAdmin.set(view.getId(), true);/////////////////
+											removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
+										}
+										else{
+											removeFriendButton2.setText("-");///////
+											//isAdmin.set(view.getId(), false);//////////
+											removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
+										}
+										
+										
+										rowView2.setId(view.getId());
+										((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
+										rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
+										membersToAdd2.addView(rowView2);
+										alreadyAdded.add(text);
+									}
+									else{
+										boolean flag = false;
+										for(int i = 0; i < alreadyAdded.size(); i++){
+											if(alreadyAdded.get(i).equals(text)){
+												flag = true;
+											}
+										}
+										
+										if(!flag){
+											GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_friend_noaccess, null);
+											Button removeFriendButton2 = (Button) rowView2.findViewById(R.id.removeFriendButtonNoAccess);//////
+											removeFriendButton2.setId(view.getId()); ///////////////////
+											if(isAdmin.get(removeFriendButton2.getId())){///////////// view.getId()
+												removeFriendButton2.setText("A");////////////////
+												//isAdmin.set(view.getId(), true);/////////////////
+												removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
+											}
+											else{
+												removeFriendButton2.setText("-");///////
+												//isAdmin.set(view.getId(), false);//////////
+												removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
+											}
+											
+											
+											rowView2.setId(view.getId());
+											((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
+											rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
+											membersToAdd2.addView(rowView2);
+											alreadyAdded.add(text);
+										}
+									}
 								}
 							});
 							friendNameButton.setText(row);
@@ -387,7 +435,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				}
 			} catch (Exception e)
 			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				Log.d("ReadatherJSONFeedTask", "" + e.getLocalizedMessage());
 			}
 		
 		
