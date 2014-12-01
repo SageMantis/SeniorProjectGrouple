@@ -67,5 +67,8 @@
     <string name="confirm">Confirm Create Group</string>
     <color name="groupCreateBlue">#31698a</color>
     <color name="groupCreateGrey">#3a3a3a</color>
+    <string name="introMessage2">Current members in this group</string>
+    <color name="wiseGuyEh">#000033</color>
+    <color name="tryThis">#319337</color>
 
 </resources>

@@ -3,17 +3,18 @@
     android:id="@+id/groupCreateLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/tryThis"
     android:orientation="vertical" >
     
     <LinearLayout
         android:id="@+id/linearLayoutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+    	android:background="@color/background_color"
         android:orientation="vertical" >
 
         <EditText
@@ -22,6 +23,9 @@
             android:layout_height="wrap_content"
         	android:layout_marginLeft="35dp"
         	android:layout_marginRight="35dp"
+            android:maxLength="20"
+            android:minLines="1"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:gravity="center"
             android:hint="@string/groupNameMessage" />
@@ -30,20 +34,19 @@
             android:id="@+id/createbioMessage"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-        	android:layout_marginTop="15dp"
-        	android:layout_marginLeft="15dp"
-        	android:layout_marginRight="15dp"
+        	android:layout_marginTop="5dp"
     		android:gravity="left"
             android:text="@string/bioMessage"
+        	android:background="@color/groupCreateGrey"
             android:textColor="@color/white" />
         
         <EditText
             android:id="@+id/groupBio"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-        	android:layout_weight="2"
+        	android:layout_weight="1"
             android:textColor="@color/white"
-            android:background="@color/groupCreateGrey"
+    		android:background="@color/background_color"
             android:gravity="left"
             android:maxLength="999"
             android:minLines="3"
@@ -57,16 +60,20 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text="@string/introMessage"
+        android:background="@color/groupCreateGrey"
         android:textColor="@color/white" />
         
     <ScrollView
         android:id="@+id/scrollViewPickMembers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="2"
+    	android:background="@color/background_color"
         android:padding="0dp" >
 
         <LinearLayout
@@ -76,45 +83,51 @@
             android:orientation="vertical" />
     </ScrollView>
     
-    <LinearLayout
-        android:id="@+id/linearLayoutAddMembers"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/createIntroMessage2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/introMessage2"
+        android:background="@color/groupCreateGrey"
+        android:textColor="@color/white" />
+    
+    <ScrollView
+        android:id="@+id/scrollViewPickMembers2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="2"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" >
-        
-        <CheckBox
-            android:id="@+id/checkAdmin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-        	android:layout_marginRight="5dp"
-            android:text="@string/isAdmin"
-            android:textColor="@color/white"
-            android:background="@color/groupCreateBlue" />
+    	android:background="@color/background_color"
+        android:padding="0dp" >
 
-        <Button
-            android:id="@+id/addMemberButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayoutNested2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/AddGroup"
-            android:textColor="@color/white" />
-    </LinearLayout>
+            android:orientation="vertical" />
+    </ScrollView>
     
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content" >
         
         <Button
             android:id="@+id/confirmButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:text="@string/confirm"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+	        android:background="@drawable/button_border"
+	        android:onClick="createGroupButton"
+        	android:layout_marginLeft="35dp"
+        	android:layout_marginRight="35dp" />
     </LinearLayout>
 </LinearLayout>

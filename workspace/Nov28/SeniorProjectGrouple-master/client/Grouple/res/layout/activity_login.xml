@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-    android:background="@color/background_color" >
+    android:background="@color/tryThis" >
 
     <Button
         android:id="@+id/loginButtonLA"
@@ -62,7 +62,7 @@
         android:layout_below="@+id/loginTextViewLA"
         android:layout_marginTop="29dp"
                 android:layout_marginBottom="5dp"
-        android:background="@drawable/border"
+        android:background="@drawable/button_border"
         android:ems="10"
         android:fontFamily="sans-serif"
         android:hint="@string/emailEditText"
