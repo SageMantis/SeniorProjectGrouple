@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -34,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -44,6 +46,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 	BroadcastReceiver broadcastReceiver;
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
+	private ArrayList<Boolean> isAdmin = new ArrayList<Boolean>();
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
@@ -57,7 +60,16 @@ public class GroupCreateActivity extends ActionBarActivity {
 		TextView actionBarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionBarTitle.setText("Groups");
 		Global global = (Global)getApplicationContext();
-		
+		/*
+		final Button toggle = (Button)findViewById(R.id.removeFriendButtonNoAccess);
+		toggle.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg){
+				//toggle.setText("+");
+				//toggle.setTextColor(Color.parseColor("#FFFFFF"));
+			}
+		});
+		*/
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
 		
@@ -251,6 +263,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 			/* beginning building the interface */
 			Log.d("message", "This is the resultt: " + result);
 			LayoutInflater inflater = getLayoutInflater();
+			
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -288,23 +301,40 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 							System.out.println("Idx: " + i + " Email: "
 									+ friendEmail + "\n" + row + "\n");
-
+							
 							GridLayout rowView;
 							if (extras.getString("mod").equals("true"))
 							{
 								rowView = (GridLayout) inflater.inflate(
-										R.layout.listitem_friend, null);
-								Button removeFriendButton = (Button) rowView
-										.findViewById(R.id.removeFriendButton);
+										R.layout.listitem_friend_noaccess, null);
+								
+								isAdmin.add(false);
+								
+								final Button removeFriendButton = (Button) rowView.findViewById(R.id.removeFriendButtonNoAccess);
+								removeFriendButton.setOnClickListener(new OnClickListener(){
+									public void onClick(View view){
+										if(removeFriendButton.getText().toString().equals("-")){
+											removeFriendButton.setText("A");
+											isAdmin.set(view.getId(), true);
+											removeFriendButton.setTextColor(Color.parseColor("#7fff00"));
+										}
+										else{
+											removeFriendButton.setText("-");
+											isAdmin.set(view.getId(), false);
+											removeFriendButton.setTextColor(Color.parseColor("#ffcc0000"));
+										}
+									}
+								});
+								
 								removeFriendButton.setId(i);
 							} else
 							{
 								rowView = (GridLayout) inflater.inflate(
-										R.layout.listitem_friends_friend, null);
+										R.layout.listitem_friends_friend_noaccess, null);
 
 							}
 							Button friendNameButton = (Button) rowView
-									.findViewById(R.id.friendNameButton);
+									.findViewById(R.id.friendNameButtonNoAccess);
 
 							friendNameButton.setText(row);
 
@@ -324,16 +354,16 @@ public class GroupCreateActivity extends ActionBarActivity {
 				{
 					LinearLayout membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested1);
 
-					View row = inflater.inflate(R.layout.listitem_friend, null);
+					View row = inflater.inflate(R.layout.listitem_friend_noaccess, null);
 
 					// GridLayout rowRL =
 					// (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
 					// rowRL.setId(0);//(newIDStr);
 
 					String message = jsonObject.getString("message").toString();
-					((Button) row.findViewById(R.id.friendNameButton))
+					((Button) row.findViewById(R.id.friendNameButtonNoAccess))
 							.setText(message);
-					row.findViewById(R.id.removeFriendButton).setVisibility(1);
+					row.findViewById(R.id.removeFriendButtonNoAccess).setVisibility(1);
 					// ((TextView)rowRL.findViewById(R.id.friendTextView)).setText(message);
 					membersToAdd.addView(row);
 					// int y = 100*(0+1);
@@ -385,8 +415,20 @@ public class GroupCreateActivity extends ActionBarActivity {
 	
 	
 	
+	public void toggleAdmin(View view){
+		
+		//button.setText("+");
+		//button.setTextColor(Color.parseColor("#FFFFFF"));
+		//final int idz = view.getId();
+		//final String 
+		Button button = (Button)findViewById(R.id.removeFriendButtonNoAccess);
+		Log.d("message", "toggle the Admin " + button);
+		view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+	}
 	
-	
+	public void addToGroupTable(View view){
+		
+	}
 	
 	/* Start activity function for going back and logging out */
 	public void startFriendsActivity(View view)
