@@ -263,7 +263,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 			/* beginning building the interface */
 			Log.d("message", "This is the resultt: " + result);
 			LayoutInflater inflater = getLayoutInflater();
-			
+			final LayoutInflater inflater2 = getLayoutInflater();
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -280,7 +280,10 @@ public class GroupCreateActivity extends ActionBarActivity {
 						System.out.println(jsonFriends.toString() + "\n"
 								+ jsonFriends.length());
 						LinearLayout membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested1);
-						//LinearLayout membersToAdd2 = (LinearLayout) findViewById(R.id.linearLayoutNested2);/////////////////////
+						final LinearLayout membersToAdd2 = (LinearLayout) findViewById(R.id.linearLayoutNested2);/////////////////////
+						
+						
+						
 						Bundle extras = getIntent().getExtras();
 						// looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
@@ -305,8 +308,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 							GridLayout rowView;
 							if (extras.getString("mod").equals("true"))
 							{
-								rowView = (GridLayout) inflater.inflate(
-										R.layout.listitem_friend_noaccess, null);
+								rowView = (GridLayout) inflater.inflate(R.layout.listitem_friend_noaccess, null);
 								
 								isAdmin.add(false);
 								
@@ -329,19 +331,28 @@ public class GroupCreateActivity extends ActionBarActivity {
 								removeFriendButton.setId(i);
 							} else
 							{
-								rowView = (GridLayout) inflater.inflate(
-										R.layout.listitem_friends_friend_noaccess, null);
+								rowView = (GridLayout) inflater.inflate(R.layout.listitem_friends_friend_noaccess, null);
 
 							}
-							Button friendNameButton = (Button) rowView
-									.findViewById(R.id.friendNameButtonNoAccess);
-
+							//Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
+							final Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
+							friendNameButton.setOnClickListener(new OnClickListener(){
+								public void onClick(View view){
+									String text = friendNameButton.getLayout().getText().toString();
+									GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_friend_noaccess, null);
+									rowView2.setId(view.getId());
+									((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
+									rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
+									membersToAdd2.addView(rowView2);
+									//this is where layoutinflater2 builds and fills the second scrollview
+								}
+							});
 							friendNameButton.setText(row);
 
 							friendNameButton.setId(i);
 							rowView.setId(i);
 							membersToAdd.addView(rowView);
-							//membersToAdd2.addView(rowView);////////////////////
+							//membersToAdd2.addView(rowView);
 							// System.out.println("Row: " + row +"\nCount: " +
 							// i);
 
@@ -361,8 +372,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 					// rowRL.setId(0);//(newIDStr);
 
 					String message = jsonObject.getString("message").toString();
-					((Button) row.findViewById(R.id.friendNameButtonNoAccess))
-							.setText(message);
+					((Button) row.findViewById(R.id.friendNameButtonNoAccess)).setText(message);
 					row.findViewById(R.id.removeFriendButtonNoAccess).setVisibility(1);
 					// ((TextView)rowRL.findViewById(R.id.friendTextView)).setText(message);
 					membersToAdd.addView(row);
@@ -421,9 +431,9 @@ public class GroupCreateActivity extends ActionBarActivity {
 		//button.setTextColor(Color.parseColor("#FFFFFF"));
 		//final int idz = view.getId();
 		//final String 
-		Button button = (Button)findViewById(R.id.removeFriendButtonNoAccess);
-		Log.d("message", "toggle the Admin " + button);
-		view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+		//Button button = (Button)findViewById(R.id.removeFriendButtonNoAccess);
+		//Log.d("message", "toggle the Admin " + button);
+		//view.setBackgroundColor(Color.parseColor("#FFFFFF"));
 	}
 	
 	public void addToGroupTable(View view){
