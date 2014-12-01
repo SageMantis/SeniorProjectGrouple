@@ -3,7 +3,7 @@
     android:id="@+id/currentFriendsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+	android:background="@color/tryThis"
     android:padding="0dp" >
     
     <ScrollView

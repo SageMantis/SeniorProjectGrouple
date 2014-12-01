@@ -35,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 	BroadcastReceiver broadcastReceiver;
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
+	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -152,9 +154,29 @@ public class GroupCreateActivity extends ActionBarActivity {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URL);
+		HttpPost httpPost = new HttpPost(URL);
+		HttpResponse response;
+		Log.d("message", "This is the URL used: " + URL);
+		
 		try
 		{
-			HttpResponse response = httpClient.execute(httpGet);
+			if(URL == "http://98.213.107.172/android_connect/create_group.php"){
+				EditText groupNameEditText = (EditText)findViewById(R.id.groupName);
+				EditText groupBioEditText = (EditText)findViewById(R.id.groupBio);
+				String groupname = groupNameEditText.getText().toString();
+				String groupbio = groupBioEditText.getText().toString();
+
+				Log.d("message2", "Group Name: " + groupname + '\n' + "Group Bio: " + groupbio);
+
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("gname", groupname));
+				nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				response = httpClient.execute(httpPost);
+			}
+			else{
+				response = httpClient.execute(httpGet);
+			}
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
 			if (statusCode == 200)
@@ -170,16 +192,49 @@ public class GroupCreateActivity extends ActionBarActivity {
 					stringBuilder.append(line);
 				}
 				inputStream.close();
-			} else
+			} 
+			else
 			{
 				Log.d("JSON", "Failed to download file");
 			}
+			
 		} catch (Exception e)
 		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
 		}
+		
+		Log.d("message", "stringBuilder has: " + stringBuilder.toString());
 		return stringBuilder.toString();
 	}
+	
+	///////////
+	public void createGroupButton(View view){
+		
+		new GroupMembers().execute("http://98.213.107.172/" +
+						"android_connect/create_group.php");
+	}
+	///////////
+	
+	
+	///////////
+	/*
+	private class createGroup extends AsyncTask<String, Void, String>
+	{
+
+		//Override
+		protected String doInBackground(String... urls) {
+			// TODO Auto-generated method stub
+			return readGetFriendsJSONFeed(urls[0]);
+		}
+		
+		//Override
+		protected void onPostExecute(String result){
+
+		}
+		
+	}
+	*/
+	///////////
 	
 	private class GroupMembers extends AsyncTask<String, Void, String>
 	{
@@ -194,11 +249,13 @@ public class GroupCreateActivity extends ActionBarActivity {
 		protected void onPostExecute(String result){
 
 			/* beginning building the interface */
-
+			Log.d("message", "This is the resultt: " + result);
 			LayoutInflater inflater = getLayoutInflater();
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
+				Log.d("messagefinal", "what's this? " + jsonObject.getString("success").toString());
+				
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					ArrayList<String> friends = new ArrayList<String>();
@@ -210,6 +267,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 						System.out.println(jsonFriends.toString() + "\n"
 								+ jsonFriends.length());
 						LinearLayout membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested1);
+						//LinearLayout membersToAdd2 = (LinearLayout) findViewById(R.id.linearLayoutNested2);/////////////////////
 						Bundle extras = getIntent().getExtras();
 						// looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
@@ -253,6 +311,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 							friendNameButton.setId(i);
 							rowView.setId(i);
 							membersToAdd.addView(rowView);
+							//membersToAdd2.addView(rowView);////////////////////
 							// System.out.println("Row: " + row +"\nCount: " +
 							// i);
 
@@ -292,14 +351,9 @@ public class GroupCreateActivity extends ActionBarActivity {
 			}
 		
 		
-		
-		
-		
-		
-		
-		
-		/*
-			LinearLayout membersToAdd = (LinearLayout)findViewById(R.id.groupCreateLayout);
+			/* begin building the interface */
+			/*
+			LinearLayout membersToAdd = (LinearLayout)findViewById(R.id.linearLayoutNested2);
 			String[] members = {"Bobby Hill", "Peggy Hill", "Hank Hill"};
 			
 			for(int i = 0; i < 3; i++){
@@ -317,8 +371,9 @@ public class GroupCreateActivity extends ActionBarActivity {
 				gridView.setId(i);
 				membersToAdd.addView(gridView);
 			}
-		*/
+			*/
 			/* end building the interface */
+		
 		}
 	}
 	
