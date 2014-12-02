@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:background="@color/tryThis" >
+
+    <Button
+        android:id="@+id/loginButtonLA"
+        android:layout_width="600dp"
+           android:fontFamily="sans-serif-condensed"
+	   	android:textColor="@color/text_color"
+        android:layout_height="70dp"
+                	    android:background="@drawable/button_border"
+        android:layout_alignLeft="@+id/passwordEditTextLA"
+        android:layout_below="@+id/passwordEditTextLA"
+        android:onClick="loginButton"
+        android:text="@string/loginButton" />
+
+    <Button
+        android:id="@+id/registerButtonLA"
+        android:layout_width="600dp"
+                	    android:background="@drawable/button_border"
+        android:layout_height="70dp"
+        android:layout_alignLeft="@+id/loginButtonLA"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+           android:fontFamily="sans-serif-condensed"
+	   	android:textColor="@color/text_color"
+        android:onClick="startRegisterActivity"
+        android:text="@string/registerButton" />
+
+    <TextView
+        android:id="@+id/addFriendMessageTextViewAFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        	   	android:textColor="@color/text_color"
+        	   	                android:layout_marginBottom="5dp"
+           android:fontFamily="sans-serif-condensed"
+        android:layout_above="@+id/registerButtonLA"
+        android:layout_centerHorizontal="true"
+        android:text="Don&apos;t have a Grouple account?"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/loginTextViewLA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/loginTextView"
+        android:textColor="@color/text_color"
+        android:textSize="40sp" />
+
+    <EditText
+        android:id="@+id/emailEditTextLA"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/passwordEditTextLA"
+        android:layout_below="@+id/loginTextViewLA"
+        android:layout_marginTop="29dp"
+                android:layout_marginBottom="5dp"
+        android:background="@drawable/button_border"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="@string/emailEditText"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color" />
+
+    <EditText
+        android:id="@+id/passwordEditTextLA"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/emailEditTextLA"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_border"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="@string/passwordEditText"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/loginFailTextViewLA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButtonLA"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/loginFailString"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible" />
+
+</RelativeLayout>
