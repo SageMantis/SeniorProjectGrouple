@@ -48,6 +48,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
 	private ArrayList<Boolean> isAdmin = new ArrayList<Boolean>();
 	private ArrayList<String> alreadyAdded = new ArrayList<String>();
+	private ArrayList<String> added = new ArrayList<String>();
+	private ArrayList<Boolean> role = new ArrayList<Boolean>();
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
@@ -176,14 +178,27 @@ public class GroupCreateActivity extends ActionBarActivity {
 			if(URL == "http://98.213.107.172/android_connect/create_group.php"){
 				EditText groupNameEditText = (EditText)findViewById(R.id.groupName);
 				EditText groupBioEditText = (EditText)findViewById(R.id.groupBio);
+				
 				String groupname = groupNameEditText.getText().toString();
 				String groupbio = groupBioEditText.getText().toString();
-
+				
 				Log.d("message2", "Group Name: " + groupname + '\n' + "Group Bio: " + groupbio);
 
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-				nameValuePairs.add(new BasicNameValuePair("gname", groupname));
-				nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+				
+				for(int i = 0; i < added.size(); i++){
+					Log.d("message3", "How many of these are there? " + i);
+					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
+					nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+					nameValuePairs.add(new BasicNameValuePair("mem", added.get(i)));
+					if(role.get(i)){
+						nameValuePairs.add(new BasicNameValuePair("role", "true"));
+					}
+					else{
+						nameValuePairs.add(new BasicNameValuePair("role", "false"));
+					}
+				}
+				
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				response = httpClient.execute(httpPost);
 			}
@@ -267,6 +282,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 			final LayoutInflater inflater2 = getLayoutInflater();
 			try
 			{
+				Log.i("tagconvertstr", "["+result+"]");
 				JSONObject jsonObject = new JSONObject(result);
 				Log.d("messagefinal", "what's this? " + jsonObject.getString("success").toString());
 				
@@ -348,11 +364,13 @@ public class GroupCreateActivity extends ActionBarActivity {
 											removeFriendButton2.setText("A");////////////////
 											//isAdmin.set(view.getId(), true);/////////////////
 											removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
+											added.add(text); role.add(true);//
 										}
 										else{
 											removeFriendButton2.setText("-");///////
 											//isAdmin.set(view.getId(), false);//////////
 											removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
+											added.add(text); role.add(false);//
 										}
 										
 										
@@ -378,11 +396,13 @@ public class GroupCreateActivity extends ActionBarActivity {
 												removeFriendButton2.setText("A");////////////////
 												//isAdmin.set(view.getId(), true);/////////////////
 												removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
+												added.add(text); role.add(true);//
 											}
 											else{
 												removeFriendButton2.setText("-");///////
 												//isAdmin.set(view.getId(), false);//////////
 												removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
+												added.add(text); role.add(false);//
 											}
 											
 											
