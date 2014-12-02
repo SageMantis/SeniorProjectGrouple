@@ -50,6 +50,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 	private ArrayList<String> alreadyAdded = new ArrayList<String>();
 	private ArrayList<String> added = new ArrayList<String>();
 	private ArrayList<Boolean> role = new ArrayList<Boolean>();
+	private ArrayList<HttpResponse> response = new ArrayList<HttpResponse>();
+	private int increment = 0;
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
@@ -170,7 +172,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URL);
 		HttpPost httpPost = new HttpPost(URL);
-		HttpResponse response;
+		///////HttpResponse response;
 		Log.d("message", "This is the URL used: " + URL);
 		
 		try
@@ -184,10 +186,11 @@ public class GroupCreateActivity extends ActionBarActivity {
 				
 				Log.d("message2", "Group Name: " + groupname + '\n' + "Group Bio: " + groupbio);
 
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 				
 				for(int i = 0; i < added.size(); i++){
 					Log.d("message3", "How many of these are there? " + i);
+					nameValuePairs.add(new BasicNameValuePair("index", "" + i));
 					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
 					nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
 					nameValuePairs.add(new BasicNameValuePair("mem", added.get(i)));
@@ -197,35 +200,37 @@ public class GroupCreateActivity extends ActionBarActivity {
 					else{
 						nameValuePairs.add(new BasicNameValuePair("role", "false"));
 					}
+					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+					response.add(httpClient.execute(httpPost));
 				}
-				
-				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-				response = httpClient.execute(httpPost);
+
 			}
 			else{
-				response = httpClient.execute(httpGet);
+				response.add(httpClient.execute(httpGet));
 			}
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
+
+			for(; increment < response.size(); increment++){//////////////////////
+				StatusLine statusLine = response.get(increment).getStatusLine();
+				int statusCode = statusLine.getStatusCode();
+				if (statusCode == 200)
 				{
-					System.out.println("New line: " + line);
-					stringBuilder.append(line);
+					HttpEntity entity = response.get(increment).getEntity();
+					InputStream inputStream = entity.getContent();
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(inputStream));
+					String line;
+					while ((line = reader.readLine()) != null)
+					{
+						System.out.println("New line: " + line);
+						stringBuilder.append(line);
+					}
+					inputStream.close();
+				} 
+				else
+				{
+					Log.d("JSON", "Failed to download file");
 				}
-				inputStream.close();
-			} 
-			else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-			
+			}////////////////////////////////////////////
 		} catch (Exception e)
 		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
