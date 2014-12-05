@@ -5,12 +5,14 @@
     android:padding="5dp"
     android:background="@color/background_color" >
 
+
+     
     <Button
         android:id="@+id/loginButtonLA"
-        android:layout_width="600dp"
+        android:layout_width="match_parent"
            android:fontFamily="sans-serif-condensed"
-	   	android:textColor="@color/text_color"
-        android:layout_height="70dp"
+	   	android:textColor="@color/button_text_color"
+        android:layout_height="50sp"
                 	    android:background="@drawable/button_border"
         android:layout_alignLeft="@+id/passwordEditTextLA"
         android:layout_below="@+id/passwordEditTextLA"
@@ -19,14 +21,14 @@
 
     <Button
         android:id="@+id/registerButtonLA"
-        android:layout_width="600dp"
+        android:layout_width="match_parent"
                 	    android:background="@drawable/button_border"
-        android:layout_height="70dp"
+        android:layout_height="50sp"
         android:layout_alignLeft="@+id/loginButtonLA"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
            android:fontFamily="sans-serif-condensed"
-	   	android:textColor="@color/text_color"
+	   	android:textColor="@color/button_text_color"
         android:onClick="startRegisterActivity"
         android:text="@string/registerButton" />
 
@@ -52,13 +54,13 @@
         android:fontFamily="sans-serif-condensed"
         android:text="@string/loginTextView"
         android:textColor="@color/text_color"
-        android:textSize="40sp" />
+        android:textSize="50sp" />
 
-    <EditText
+    <EditText 
         android:id="@+id/emailEditTextLA"
+       
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignLeft="@+id/passwordEditTextLA"
+        android:layout_height="50sp"
         android:layout_below="@+id/loginTextViewLA"
         android:layout_marginTop="29dp"
                 android:layout_marginBottom="5dp"
@@ -69,16 +71,17 @@
         android:inputType="textEmailAddress"
         android:padding="10dp"
         android:textColor="@color/text_color"
-        android:textColorHint="@color/text_color" />
+        android:textColorHint="@color/hint_text_color" >
+                 <requestFocus/></EditText>
 
     <EditText
         android:id="@+id/passwordEditTextLA"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="50sp"
                         android:layout_marginBottom="5dp"
         android:layout_below="@+id/emailEditTextLA"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_border"
+        android:background="@drawable/border"
         android:ems="10"
         android:fontFamily="sans-serif"
         android:hint="@string/passwordEditText"
@@ -87,7 +90,7 @@
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color" >
 
-        <requestFocus />
+
     </EditText>
 
     <TextView
@@ -99,7 +102,7 @@
         android:layout_marginTop="5dp"
         android:fontFamily="sans-serif-condensed"
         android:text="@string/loginFailString"
-        android:textColor="@android:color/holo_red_dark"
+        android:textColor="@color/red"
         android:visibility="invisible" />
 
 </RelativeLayout>

@@ -3,32 +3,49 @@
    	android:id="@+id/groupsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp" >
-
-   	<Button
-   	    android:id="@+id/pendingGroupsButton"
-   	    android:layout_width="600dp"
-   	    android:layout_height="70dp"
-   	    android:layout_alignParentLeft="true"
-   	    android:layout_below="@+id/yourGroupsButton"
-   	    android:text="@string/pendingGroupsButton" />
+    android:padding="5dp"
+    android:background="@color/background_color" >
 
    	<Button
    	    android:id="@+id/yourGroupsButton"
-   	    android:layout_width="600dp"
-   	    android:layout_height="70dp"
-   	    android:layout_alignParentLeft="true"
-   	    android:layout_alignParentTop="true"
-   	    android:layout_marginTop="174dp"
-   	    android:text="@string/yourGroupsButton" />
+	    android:onClick="startGroupsCurrentActivity"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="80sp"
+   	    android:layout_alignLeft="@+id/pendingGroupsButton"
+	    android:layout_marginTop="14dp"
+	    android:layout_below="@+id/createGroupButton"
+   	    android:background="@drawable/button_border"
+   	    android:fontFamily="sans-serif-condensed"
+   	    android:text="@string/yourGroupsButton"
+   	    android:textColor="@color/button_text_color"
+   	    android:textSize="20sp" />
+
+   	<Button
+   	    android:id="@+id/pendingGroupsButton"
+	    android:onClick="startGroupInvitesActivity"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="80sp"
+   	    android:layout_alignParentRight="true"
+   	    android:layout_below="@+id/yourGroupsButton"
+	    android:layout_marginTop="16dp"
+   	    android:background="@drawable/button_border"
+   	    android:fontFamily="sans-serif-condensed"
+   	    android:text="@string/pendingGroupsButton"
+   	    android:textColor="@color/button_text_color"
+   	    android:textSize="20sp" />
 
    	<Button
    	    android:id="@+id/createGroupButton"
-   	    android:layout_width="600dp"
-   	    android:layout_height="70dp"
-   	    android:layout_alignBottom="@+id/yourGroupsButton"
-   	    android:layout_alignParentLeft="true"
-   	    android:layout_marginBottom="70dp"
-   	    android:text="@string/createGroupButton" />
+	    android:onClick="startGroupCreateActivity"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="80dp"
+   	    android:layout_alignLeft="@+id/yourGroupsButton"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="97dp"
+   	    android:background="@drawable/button_border"
+   	    android:fontFamily="sans-serif-condensed"
+   	    android:text="@string/createGroupButton"
+   	    android:textColor="@color/button_text_color"
+   	    android:textSize="20sp" />
 
 </RelativeLayout>

@@ -46,32 +46,19 @@ public class HomeActivity extends ActionBarActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		//ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 
 		Global global = ((Global) getApplicationContext());
 
 		actionbarTitle.setText("Welcome, " + global.getName() + "!");
 
-		Handler handler = new Handler();
 		View home = findViewById(R.id.homeLayout);
-		// do anything
-
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
 		friendRequests = global.getNumFriendRequests();
 		global.setNotifications(home);
 
-		/*
-		 * handler.postDelayed(new Runnable() { View home =
-		 * findViewById(R.id.homeLayout);
-		 * 
-		 * @Override public void run() {
-		 * System.out.println("In Home Main run()"); Global global =
-		 * ((Global)getApplicationContext()); global.fetchNumFriendRequests();
-		 * if (friendRequests != global.getNumFriendRequests()) {
-		 * global.setNotifications(home); } } }, 1000);
-		 */
 
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();

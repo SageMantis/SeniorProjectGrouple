@@ -1,10 +1,8 @@
 package cs460.grouple.grouple;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -12,11 +10,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
-
 import android.support.v7.app.ActionBarActivity;
-
 import android.support.v4.app.Fragment;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -27,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +45,8 @@ public class LoginActivity extends Activity
 		ActionBar ab = getActionBar();
 		ab.hide();
 		Log.d("app666", "we created");
+
+		//todo auto capitalize first / last names.
 
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
@@ -93,38 +89,7 @@ public class LoginActivity extends Activity
 		startActivity(intent);
 	}
 
-	public String readJSONFeed(String URL)
-	{
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL);
-		try
-		{
-			HttpResponse response = httpClient.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
+
 
 	public void loginButton(View view)
 	{
@@ -134,7 +99,8 @@ public class LoginActivity extends Activity
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
 		String email = emailEditText.getText().toString();
 		String password = passwordEditText.getText().toString();
-
+		//String email = "mierze@gmail.com";
+		//String password="pass";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
 		new getLoginTask()
@@ -146,7 +112,8 @@ public class LoginActivity extends Activity
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readJSONFeed(urls[0]);
+			Global global = ((Global) getApplicationContext());
+			return global.readJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result)
@@ -162,7 +129,7 @@ public class LoginActivity extends Activity
 					global.fetchNumFriendRequests(global.getCurrentUser());
 					// Sets this users name.
 					global.fetchName();
-					Thread.sleep(500); // Sleeping to let home activity start up
+					Thread.sleep(1000); // Sleeping to let home activity start up
 					startHomeActivity();
 					finish(); // Finishing login (possibly save some memory)
 				} else

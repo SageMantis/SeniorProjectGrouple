@@ -23,15 +23,16 @@
 
     <Button
         android:id="@+id/loginButtonRA"
-        android:layout_width="600dp"
-        android:layout_height="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
 		android:background="@drawable/button_border"
 		android:fontFamily="sans-serif-condensed"
-		android:textColor="@color/text_color"
+		android:textColor="@color/button_text_color"
 
         android:onClick="loginButton"
-        android:text="@string/loginButton" />
+        android:text="@string/loginButton"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/passwordEditTextRA"
@@ -98,14 +99,15 @@
 
     <Button
         android:id="@+id/registerButtonRA"
-        android:layout_width="600dp"
-        android:layout_height="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         		android:fontFamily="sans-serif-condensed"
-		android:textColor="@color/text_color"
+		android:textColor="@color/button_text_color"
 		android:background="@drawable/button_border"
         android:layout_alignLeft="@+id/lNameEditText"
         android:layout_below="@+id/lNameEditText"
         android:onClick="registerButton"
+        android:textSize="20sp"
         android:text="@string/registerButton" />
 
     <TextView
@@ -124,12 +126,11 @@
         android:id="@+id/registerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        		android:fontFamily="sans-serif-condensed"
-		android:textColor="@color/text_color"
-        android:layout_alignLeft="@+id/errorMessageTextView"
+        android:layout_alignLeft="@+id/noFriendRequestsTextView"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="14dp"
+        android:fontFamily="sans-serif-condensed"
         android:text="@string/registerTextView"
-        android:textSize="40sp" />
+        android:textColor="@color/text_color"
+        android:textSize="50sp" />
 
 </RelativeLayout>

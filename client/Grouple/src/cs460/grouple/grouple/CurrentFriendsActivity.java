@@ -162,45 +162,12 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	public String readGetFriendsJSONFeed(String URL)
-	{
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL);
-		try
-		{
-			HttpResponse response = httpClient.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					System.out.println("New line: " + line);
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
-
 	private class getFriendsTask extends AsyncTask<String, Void, String>
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readGetFriendsJSONFeed(urls[0]);
+			Global global = ((Global) getApplicationContext());
+			return global.readJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result)
@@ -240,16 +207,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 
 							System.out.println("Idx: " + i + " Email: "
 									+ friendEmail + "\n" + row + "\n");
-							// Do not need to replace out double quotes or
-							// brackets
-							// String raw =
-							// jsonFriends.get(i).toString().replace("\"","").replace("]",
-							// "").replace("[", "");
-
-							// String raw = jsonFriends.get(i).toString();
-							// String row = raw.substring(0,1).toUpperCase() +
-							// raw.substring(1);
-							// friends.add(row);
 
 							GridLayout rowView;
 							if (extras.getString("mod").equals("true"))
@@ -273,8 +230,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 							friendNameButton.setId(i);
 							rowView.setId(i);
 							currentFriendsRL.addView(rowView);
-							// System.out.println("Row: " + row +"\nCount: " +
-							// i);
 
 						}
 
@@ -287,18 +242,12 @@ public class CurrentFriendsActivity extends ActionBarActivity
 
 					View row = li.inflate(R.layout.listitem_friend, null);
 
-					// GridLayout rowRL =
-					// (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
-					// rowRL.setId(0);//(newIDStr);
-
 					String message = jsonObject.getString("message").toString();
 					((Button) row.findViewById(R.id.friendNameButton))
 							.setText(message);
 					row.findViewById(R.id.removeFriendButton).setVisibility(1);
-					// ((TextView)rowRL.findViewById(R.id.friendTextView)).setText(message);
 					currentFriendsRL.addView(row);
-					// int y = 100*(0+1);
-					// rowRL.setY(y);
+
 				} else
 				{
 					// failed
@@ -333,7 +282,9 @@ public class CurrentFriendsActivity extends ActionBarActivity
 
 		final int idz = view.getId(); // Email of user
 		final String friendEmail = friendsEmailList.get(idz); // Email of friend
-																// to remove
+							// to remove
+		
+		//delete confirmation
 		new AlertDialog.Builder(this)
 				.setMessage("Are you sure you want to remove that friend?")
 				.setCancelable(true)

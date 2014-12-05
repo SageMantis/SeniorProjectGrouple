@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-   	android:background="@color/background_color" >
+	android:background="@color/tryThis" >
 
    	<GridLayout
      	android:id="@+id/navigationBarGridLayout"
@@ -89,7 +89,7 @@
 		    android:onClick="startCurrentFriendsActivity"
 		    android:text="Friends\n"
 		    android:textColor="@color/button_text_color"
-		    android:textSize="10sp" />
+		    android:textSize="12sp" />
 	
 	   	<Button
 	   	    android:id="@+id/groupsButtonFPA"
@@ -103,7 +103,7 @@
 	   	    android:onClick="startGroupsActivity"
 	   	    android:text="Groups\n"
 	   	    android:textColor="@color/button_text_color"
-	   	    android:textSize="10sp" />
+	   	    android:textSize="12sp" />
 
 	   	<Button
 	   	    android:id="@+id/eventsButtonFPA"
@@ -118,7 +118,7 @@
 	   	    android:onClick="startEventsActivity"
 	   	    android:text="Events\n"
 	   	    android:textColor="@color/button_text_color"
-	   	    android:textSize="10sp" />
+	   	    android:textSize="12sp" />
   
 	</GridLayout>
 
