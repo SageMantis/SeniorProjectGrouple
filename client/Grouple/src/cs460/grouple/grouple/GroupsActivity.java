@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,7 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GroupsActivity extends ActionBarActivity
@@ -31,7 +35,6 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
-
 		// Action bar setup
 		// ActionBar ab = getActionBar();
 
@@ -46,7 +49,7 @@ public class GroupsActivity extends ActionBarActivity
 		actionbarTitle.setText("Groups");
 		// ImageView view = (ImageView)findViewById(android.R.id.home);
 		// view.setPadding(15, 20, 5, 40);
-
+		
 		// START KILL SWITCH LISTENER
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("CLOSE_ALL");
@@ -81,12 +84,8 @@ public class GroupsActivity extends ActionBarActivity
 	public Intent getSupportParentActivityIntent()
 	{
 		Intent parentIntent = getIntent();
-		String className = parentIntent.getStringExtra("ParentClassName"); // getting
-																			// the
-																			// parent
-																			// class
-																			// name
-
+		//getting parent class name
+		String className = parentIntent.getStringExtra("ParentClassName"); 
 		Intent newIntent = null;
 		try
 		{
@@ -130,13 +129,7 @@ public class GroupsActivity extends ActionBarActivity
 		}
 		if (id == R.id.action_home)
 		{
-			Intent intent = new Intent(this, HomeActivity.class);
-			startActivity(intent);
-		}
-		if (id == R.id.action_home)
-		{
-			Intent intent = new Intent(this, HomeActivity.class);
-			startActivity(intent);
+			startHomeActivity(null);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -149,4 +142,29 @@ public class GroupsActivity extends ActionBarActivity
 		finish();
 	}
 
+	/* Start activity methods for group sub-activities */
+	public void startGroupCreateActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupCreateActivity.class);
+		intent.putExtra("ParentClassName", "GroupsActivity");
+		Global global = (Global)getApplicationContext();
+		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("mod", "true");
+		startActivity(intent);
+	}
+	
+	public void startGroupInvitesActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupInvitesActivity.class);
+		startActivity(intent);
+	}
+	
+	public void startGroupsCurrentActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsCurrentActivity.class);
+		Global global = ((Global) getApplicationContext());
+		intent.putExtra("email", global.getCurrentUser());//specifies which email for the list of groups
+		intent.putExtra("mod", "true");//gives user ability admin in the current groups screen
+		startActivity(intent);
+	}
 }

@@ -280,8 +280,6 @@ public class FriendProfileActivity extends ActionBarActivity
 
 					TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 					actionbarTitle.setText(name + "'s Profile");
-					// TextView nameTextView = (TextView)
-					// findViewById(R.id.nameEditTextEPA);
 					TextView ageTextView = (TextView) findViewById(R.id.ageTextViewFPA);
 					TextView locationTextView = (TextView) findViewById(R.id.locationTextViewFPA);
 					TextView bioTextView = (TextView) findViewById(R.id.bioTextViewFPA);

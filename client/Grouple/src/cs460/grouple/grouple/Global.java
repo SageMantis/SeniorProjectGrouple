@@ -25,6 +25,12 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * 
+ *@author Brett
+ *TODO: make one function, fetchNotifications that calls all of the various phps, and returns everything nicely / updates activities
+ */
+
 public class Global extends Application {
 	private String currentUser;
 	private String acceptEmail;
@@ -96,17 +102,6 @@ public class Global extends Application {
 																	// in their
 																	// profile
 		{
-			// TextView userNotification =
-			// (TextView)view.findViewById(R.id.userNotificationTextView);
-			// userNotification.setText(Integer.toString(userNotificationNum));
-			// userNotification.setVisibility(1); //PANDA Invisible
-
-			// FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-			// FrameLayout.LayoutParams.FILL_PARENT,
-			// FrameLayout.LayoutParams.WRAP_CONTENT);
-			// params.setMargins(0, -10, 0, 0);
-			// friendsButton.setLayoutParams(params);
-			// friendsButton.requestLayout();
 
 			if (numFriendRequests == 1) {
 				friendsButton.setText("Friends \n(" + numFriendRequests
@@ -123,12 +118,9 @@ public class Global extends Application {
 					+ Integer.toString(numFriendRequests) + " new)");
 		} else if (numFriendRequests == 0
 				&& view.findViewById(R.id.friendsButton) != null) {
-			// TextView userNotification =
-			// (TextView)view.findViewById(R.id.userNotificationTextView);
 			System.out.println("Are we here?");
 			friendsButton.setText("Friends");
-			// userNotification.setVisibility(1);
-			// userNotification.setText("0");
+
 		}
 
 		// else do nothing, keep that invisible
@@ -136,59 +128,32 @@ public class Global extends Application {
 
 	public void fetchNumFriendRequests(String email) // Should take in email
 	{
-		new getFriendRequestsTask()
-				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
+		new getNumFriendRequestsTask()
+				.execute("http://98.213.107.172/android_connect/get_count_friend_requests.php?email="
 						+ email);
 	}
 
-	public String readFriendRequestsJSONFeed(String URL) {
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL);
-		try {
-			HttpResponse response = httpClient.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					System.out.println("New line: " + line);
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else {
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e) {
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
 
-	private class getFriendRequestsTask extends AsyncTask<String, Void, String> {
+	private class getNumFriendRequestsTask extends AsyncTask<String, Void, String> {
 		protected String doInBackground(String... urls) {
-			return readFriendRequestsJSONFeed(urls[0]);
+			return readJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result) {
 			try {
 				JSONObject jsonObject = new JSONObject(result);
+
 				if (jsonObject.getString("success").toString().equals("1")) {
-					JSONArray jsonSenders = (JSONArray) jsonObject
-							.getJSONArray("senders").getJSONArray(0);
-					if (jsonSenders != null) {
-						setNumFriendRequests(jsonSenders.length());
-						System.out.println("updating friend requests!!!!!!\n");
-					} else {
-						setNumFriendRequests(0);
-						System.out.println("updating friend requeststo 0\n");
-					}
+					System.out.println("Just success on json return");
+					String numRequests =  jsonObject.getString("numRequests");
+					System.out.println("Set it to " + numRequests);
+						//setNumFriendRequests((Integer)numRequests);
+					System.out.println("Number of Friend Requests: " + numRequests);
+					
 					// successful
 				} else {
+					//fetching from server failed
+					Log.d("DB Error", "Error fetching num requests from server");
 					setNumFriendRequests(0);
 				}
 			} catch (Exception e) {
@@ -200,68 +165,29 @@ public class Global extends Application {
 	// Get numFriends
 	public void fetchNumFriends(String email) {
 		new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
+				.execute("http://98.213.107.172/android_connect/get_count_friends.php?email="
 						+ email);
-	}
-
-	public String readGetFriendsJSONFeed(String URL) {
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL);
-		try {
-			HttpResponse response = httpClient.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					System.out.println("New line: " + line);
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else {
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e) {
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
 	}
 
 	private class getFriendsTask extends AsyncTask<String, Void, String> {
 		protected String doInBackground(String... urls) {
-			return readGetFriendsJSONFeed(urls[0]);
+			return readJSONFeed(urls[0]);
 		}
-
 		protected void onPostExecute(String result) {
 
 			try {
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1")) {
-					JSONArray jsonFriends = (JSONArray) jsonObject
-							.getJSONArray("friends");
+					String numFriends = jsonObject.getString("numFriends").toString();
 					System.out
-							.println("Should be setting the num friends here.");
-
-					if (jsonFriends != null) {
-						System.out.println("Setting it to"
-								+ jsonFriends.length());
-						setNumFriends(jsonFriends.length());
-					}
+							.println("Should be setting the num friends to " + numFriends);
+	
 				}
 				// user has no friends
 				if (jsonObject.getString("success").toString().equals("2")) {
 					setNumFriends(0);
 				} else {
-					// setNumFriends(0);
-					// failed
-					// TextView loginFail = (TextView)
-					// findViewById(R.id.loginFailTextViewLA);
-					// loginFail.setVisibility(0);
+					setNumFriends(0);
 				}
 			} catch (Exception e) {
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
@@ -269,6 +195,42 @@ public class Global extends Application {
 		}
 	}
 
+	public void fetchNumGroupInvites(String email) // Should take in email
+	{
+		new getNumGroupInvitesTask()
+				.execute("http://98.213.107.172/android_connect/get_count_group_invites.php?email="
+						+ email);
+	}
+	
+	private class getNumGroupInvitesTask extends AsyncTask<String, Void, String> {
+		protected String doInBackground(String... urls) {
+			return readJSONFeed(urls[0]);
+		}
+
+		protected void onPostExecute(String result) {
+			try {
+				JSONObject jsonObject = new JSONObject(result);
+
+				if (jsonObject.getString("success").toString().equals("1")) {
+					System.out.println("Just success on json return");
+					String numRequests =  jsonObject.getString("numGroups");
+					System.out.println("Set it to " + numRequests);
+						//setNumFriendRequests((Integer)numRequests);
+					System.out.println("Number of Friend Requests: " + numRequests);
+					
+					// successful
+				} else {
+					//fetching from server failed
+					Log.d("DB Error", "Error fetching num requests from server");
+					setNumFriendRequests(0);
+				}
+			} catch (Exception e) {
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
+	}
+	
+	
 	// Get name, should change to take in email
 	public void fetchName() {
 		new getNameTask()
@@ -276,37 +238,10 @@ public class Global extends Application {
 						+ getCurrentUser());
 	}
 
-	public String readNamesJSONFeed(String URL) {
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL);
-		try {
-			HttpResponse response = httpClient.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					System.out.println("New line: " + line);
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else {
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e) {
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
 
 	private class getNameTask extends AsyncTask<String, Void, String> {
 		protected String doInBackground(String... urls) {
-			return readNamesJSONFeed(urls[0]);
+			return readJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result) {
@@ -332,5 +267,32 @@ public class Global extends Application {
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
+	}
+	public String readJSONFeed(String URL) {
+		StringBuilder stringBuilder = new StringBuilder();
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(URL);
+		try {
+			HttpResponse response = httpClient.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					System.out.println("New line: " + line);
+					stringBuilder.append(line);
+				}
+				inputStream.close();
+			} else {
+				Log.d("JSON", "Failed to download file");
+			}
+		} catch (Exception e) {
+			Log.d("readJSONFeed", e.getLocalizedMessage());
+		}
+		return stringBuilder.toString();
 	}
 }
