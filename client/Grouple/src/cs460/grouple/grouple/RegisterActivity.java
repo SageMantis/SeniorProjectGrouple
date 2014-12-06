@@ -16,7 +16,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,11 +23,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -41,22 +36,7 @@ public class RegisterActivity extends Activity {
 		setContentView(R.layout.activity_register);
 
 		getActionBar().hide();
-
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL")) {
-					finish();
-				}
-
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 	
 	@Override
@@ -96,12 +76,12 @@ public class RegisterActivity extends Activity {
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextRA);
 		EditText fNameEditText = (EditText) findViewById(R.id.fNameEditText);
 		EditText lNameEditText = (EditText) findViewById(R.id.lNameEditText);
-		EditText rePasswordEditText = (EditText) findViewById(R.id.rePasswordEditTextRA);
+		//EditText rePasswordEditText = (EditText) findViewById(R.id.rePasswordEditTextRA);
 		String email = emailEditText.getText().toString();
 		String fName = fNameEditText.getText().toString();
 		String lName = lNameEditText.getText().toString();
 		String password = passwordEditText.getText().toString();
-		String rePassword = rePasswordEditText.getText().toString();
+		//String rePassword = rePasswordEditText.getText().toString();
 
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
@@ -222,4 +202,27 @@ public class RegisterActivity extends Activity {
 		startActivity(intent);
 	}
 
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
 }

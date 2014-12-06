@@ -54,7 +54,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	private ArrayList<String> added = new ArrayList<String>();
 	private ArrayList<Boolean> role = new ArrayList<Boolean>();
 	private ArrayList<HttpResponse> response = new ArrayList<HttpResponse>();
-	private ArrayList<String> addedEmailAddress = new ArrayList<String>();
+	//private ArrayList<String> addedEmailAddress = new ArrayList<String>();
 	private int increment = 0;
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
@@ -68,7 +68,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionBarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionBarTitle.setText("Groups");
-		Global global = (Global)getApplicationContext();
+		//Global global = (Global)getApplicationContext();
 		/*
 		final Button toggle = (Button)findViewById(R.id.removeFriendButtonNoAccess);
 		toggle.setOnClickListener(new OnClickListener(){
@@ -86,26 +86,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		new GroupMembers().execute("http://98.213.107.172/" +
 				"android_connect/get_friends_firstlast.php?email=" + email);
 		
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -303,7 +284,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					ArrayList<String> friends = new ArrayList<String>();
+					//ArrayList<String> friends = new ArrayList<String>();
 					JSONArray jsonFriends = (JSONArray) jsonObject
 							.getJSONArray("friends");
 
@@ -660,5 +641,27 @@ public class GroupCreateActivity extends ActionBarActivity {
 		startActivity(intent);
 
 	}
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 	
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
+	}
 }

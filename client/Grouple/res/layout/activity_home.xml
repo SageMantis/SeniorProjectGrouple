@@ -30,7 +30,8 @@
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Friends"
-      	        android:textColor="@color/text_color"
+      	        android:textColor="@color/orange"
+      	        android:textStyle="bold"
       	        android:textSize="16sp" />
 
       	    <Button
@@ -45,7 +46,7 @@
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Messages"
-      	        android:textColor="@color/text_color"
+      	        android:textColor="@color/orange"
       	        android:textSize="16sp" />
 
       	    <Button
@@ -60,7 +61,7 @@
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Settings"
-      	        android:textColor="@color/text_color"
+      	        android:textColor="@color/orange"
       	        android:textSize="16sp" />
       	    
       	    <Button
@@ -90,7 +91,8 @@
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Profile"
-      	        android:textColor="@color/text_color"
+      	        android:textColor="@color/light_green"
+      	        android:textStyle="bold"
       	        android:textSize="16sp" />
 
       	    <!-- TextView
@@ -127,10 +129,10 @@
       	    android:id="@+id/homeIconImageViewHA"
       	    android:layout_width="400dp"
       	    android:layout_height="wrap_content"
-      	    android:layout_gravity="center"
-      	    android:gravity="center"
-      	    android:layout_marginTop="10dp"
+      	    android:layout_alignParentLeft="true"
+      	    android:layout_alignParentTop="true"
       	    android:contentDescription="Home Icon"
+      	    android:gravity="center"
       	    android:src="@drawable/home_logo_update"
       	    android:visibility="visible" />
 
