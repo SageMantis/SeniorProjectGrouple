@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addFriendLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+	android:background="@color/background_color" >
+
+    <EditText
+        android:id="@+id/emailEditTextAFA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color" 
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="164dp"
+        android:ems="10"
+        android:hint="Enter User&apos;s Email"
+        android:inputType="textEmailAddress" >
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/addFriendButtonAFA"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/button_border"
+        android:layout_alignLeft="@+id/emailEditTextAFA"
+        android:textSize="20sp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/button_text_color"
+        android:layout_alignRight="@+id/emailEditTextAFA"
+        android:layout_below="@+id/emailEditTextAFA"
+        android:onClick="addFriendButton"
+        android:text="Add" />
+
+    <TextView
+        android:id="@+id/addFriendMessageTextViewAFA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:layout_below="@+id/addFriendButtonAFA"
+        android:layout_centerHorizontal="true"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible" />
+    
+
+</RelativeLayout>
