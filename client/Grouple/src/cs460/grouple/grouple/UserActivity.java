@@ -45,14 +45,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserActivity extends ActionBarActivity implements
-		View.OnClickListener
+public class UserActivity extends ActionBarActivity 
 {
 
 	private ImageView iv;
-	private final static int CAMERA_DATA = 0;
 	private Bitmap bmp;
-	private Intent i;
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
@@ -61,6 +58,7 @@ public class UserActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
 
+		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -68,41 +66,24 @@ public class UserActivity extends ActionBarActivity implements
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		Global global = ((Global) getApplicationContext());
 		actionbarTitle.setText(global.getName() + "'s Profile");
-
+		
+		/*Notifications*/
+		global.fetchNumFriends(global.getCurrentUser());
+		global.fetchNumFriendRequests(global.getCurrentUser());
 		// Setting num friends on friends button
-		Button friendsButton = (Button) findViewById(R.id.friendsButtonUPA);
+		//Button friendsButton = (Button) findViewById(R.id.friendsButtonUPA);
 		// global.fetchNumFriends();
-		friendsButton.setText("Friends\n(" + global.getNumFriends() + ")");
+		//friendsButton.setText("Friends\n(" + global.getNumFriends() + ")");
 		View user = findViewById(R.id.userLayout);
 
+		global.setNotifications(user);
+		
 		// execute php script, using the current users email address to populate
 		// the textviews
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
-		global.fetchNumFriendRequests(global.getCurrentUser());
-		global.setNotifications(user);
-
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -167,17 +148,6 @@ public class UserActivity extends ActionBarActivity implements
 		return false;
 	}
 
-	@Override
-	public void onClick(View v)
-	{
-		// TODO Auto-generated method stub
-		switch (v.getId())
-		{
-		case R.id.editProfileButton:
-			startEditProfileActivity(v);
-			break;
-		}
-	}
 
 	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
@@ -340,5 +310,29 @@ public class UserActivity extends ActionBarActivity implements
 		startActivity(intent);
 		bmp = null;
 		iv = null;
+	}
+	
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
 	}
 }
