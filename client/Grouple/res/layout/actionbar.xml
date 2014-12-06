@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
-    android:background="@color/dark_green"
+    android:background="@color/actionbar_background_color"
     android:orientation="vertical" >
 
     
@@ -28,8 +28,9 @@
         android:layout_height="wrap_content"
         android:textColor="@color/button_text_color"
         android:fontFamily="sans-serif-condensed"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical|center"
         android:gravity="center_vertical"
+        android:layout_marginTop="5dp"
        	android:layout_marginLeft="20dp"
         android:id="@+id/actionbarTitleTextView"
         android:textSize="24sp" />
