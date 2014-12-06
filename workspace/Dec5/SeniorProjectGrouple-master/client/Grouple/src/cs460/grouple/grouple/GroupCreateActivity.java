@@ -56,6 +56,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	private ArrayList<HttpResponse> response = new ArrayList<HttpResponse>();
 	//private ArrayList<String> addedEmailAddress = new ArrayList<String>();
 	private int increment = 0;
+	private String email = null;
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
@@ -80,7 +81,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		});
 		*/
 		Bundle extras = getIntent().getExtras();
-		String email = extras.getString("email");
+		email = extras.getString("email");
 		
 		//Here I believe we should call get_friends.php. that will return all of your friends by email. which is how we would store it in the db.
 		new GroupMembers().execute("http://98.213.107.172/" +
@@ -174,7 +175,17 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 				
-				for(int i = 0; i < added.size(); i++){
+				for(int i = -1; i < added.size(); i++){
+					
+					if(i == -1){
+						nameValuePairs.add(new BasicNameValuePair("gname", groupname));
+						nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+						nameValuePairs.add(new BasicNameValuePair("mem",email));
+						nameValuePairs.add(new BasicNameValuePair("role", "true"));
+						httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+						response.add(httpClient.execute(httpPost));
+						continue;
+					}
 					Log.d("message3", "How many of these are there? " + i);
 					//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
 					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
@@ -200,7 +211,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				response.add(httpClient.execute(httpGet));
 			}
 
-			for(; increment < response.size(); increment++){//////////////////////
+			for(; increment < response.size() + 1; increment++){//////////////////////
 				StatusLine statusLine = response.get(increment).getStatusLine();
 				int statusCode = statusLine.getStatusCode();
 				if (statusCode == 200)
