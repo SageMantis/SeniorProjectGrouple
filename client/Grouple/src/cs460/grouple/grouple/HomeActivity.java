@@ -60,25 +60,7 @@ public class HomeActivity extends ActionBarActivity
 		global.setNotifications(home);
 
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the home");
-					// System.exit(1);
-					finish();
-				}
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -148,49 +130,71 @@ public class HomeActivity extends ActionBarActivity
 		return false;
 	}
 
-	/* Start activity functions for main navigation */
-	public void startHomeActivity(View view)
+	
+	public void navigate(View view)
 	{
-		Intent intent = new Intent(this, HomeActivity.class);
-		startActivity(intent);
+		Intent intent;
+		switch (view.getId())
+		{
+		case R.id.friendsButtonHA:
+			intent = new Intent(this, FriendsActivity.class);
+			intent.putExtra("ParentClassName", "HomeActivity");
+			startActivity(intent);
+			break;
+		case R.id.settingsButtonHA:
+			intent = new Intent(this, SettingsActivity.class);
+			intent.putExtra("ParentClassName", "HomeActivity");
+			startActivity(intent);
+			break;
+		case R.id.eventsButtonHA:
+			intent = new Intent(this, EventsActivity.class);
+			intent.putExtra("ParentClassName", "HomeActivity");
+			startActivity(intent);
+			break;
+		case R.id.messagesButtonHA:
+			intent = new Intent(this, MessagesActivity.class);
+			intent.putExtra("ParentClassName", "HomeActivity");
+			startActivity(intent);
+			break;
+		case R.id.groupsButtonHA:
+			intent = new Intent(this, GroupsActivity.class);
+			intent.putExtra("ParentClassName", "HomeActivity");
+			startActivity(intent);
+			break;
+		case R.id.userButtonHA:
+			intent = new Intent(this, UserActivity.class);
+			intent.putExtra("ParentClassName", "HomeActivity");
+			startActivity(intent);
+			break;
+		default:
+				break;
+		}
 	}
 
-	public void startUserActivity(View view)
-	{
-		Intent intent = new Intent(this, UserActivity.class);
-		startActivity(intent);
-	}
 
-	public void startGroupsActivity(View view)
-	{
-		Intent intent = new Intent(this, GroupsActivity.class);
-		intent.putExtra("ParentClassName", "HomeActivity");
-		startActivity(intent);
-	}
 
-	public void startMessagesActivity(View view)
+	public void initKillswitchListener()
 	{
-		Intent intent = new Intent(this, MessagesActivity.class);
-		startActivity(intent);
-	}
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
 
-	public void startFriendsActivity(View view)
-	{
-		Intent intent = new Intent(this, FriendsActivity.class);
-		startActivity(intent);
-	}
-
-	public void startSettingsActivity(View view)
-	{
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
-	}
-
-	public void startEventsActivity(View view)
-	{
-		Intent intent = new Intent(this, EventsActivity.class);
-		intent.putExtra("ParentClassName", "HomeActivity");
-		startActivity(intent);
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
 	}
 
 }

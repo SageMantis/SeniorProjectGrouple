@@ -1,17 +1,6 @@
 package cs460.grouple.grouple;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+
 import org.json.JSONObject;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -21,12 +10,8 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -99,8 +84,8 @@ public class LoginActivity extends Activity
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
 		String email = emailEditText.getText().toString();
 		String password = passwordEditText.getText().toString();
-		//String email = "mierze@gmail.com";
-		//String password="pass";
+		//String email = "test001@gmail.com";
+		//String password="password";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
 		new getLoginTask()

@@ -19,80 +19,79 @@
       	    android:rowCount="3" >
 
       	    <Button
-      	        android:id="@+id/friendsButton"
+      	        android:id="@+id/friendsButtonHA"
       	        android:layout_width="100dp"
       	        android:layout_height="100dp"
-      			android:textSize="16sp"
-      	        android:text="Friends"
-      	        android:gravity="bottom|center_horizontal"
-      	        android:fontFamily="sans-serif-condensed"
-      	        android:textColor="@color/text_color"
       	        android:layout_column="0"
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/friends_button_border"
-      	      	android:onClick="startFriendsActivity" />
+      	        android:fontFamily="sans-serif-condensed"
+      	        android:gravity="bottom|center_horizontal"
+      	        android:onClick="navigate"
+      	        android:text="Friends"
+      	        android:textColor="@color/text_color"
+      	        android:textSize="16sp" />
 
       	    <Button
-      	        android:id="@+id/messagesButton"
-      	                   	android:fontFamily="sans-serif-condensed"
+      	        android:id="@+id/messagesButtonHA"
       	        android:layout_width="100dp"
       	        android:layout_height="100dp"
-      	              	        android:textColor="@color/text_color"
-      			android:textSize="16sp"
-      	        android:text="Messages"
-      	              	        android:gravity="bottom|center_horizontal"
       	        android:layout_column="1"
-      	   		android:layout_margin="8dp"
+      	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/messages_button_border"
-      	        android:onClick="startMessagesActivity" />
+      	        android:fontFamily="sans-serif-condensed"
+      	        android:gravity="bottom|center_horizontal"
+      	        android:onClick="navigate"
+      	        android:text="Messages"
+      	        android:textColor="@color/text_color"
+      	        android:textSize="16sp" />
 
       	    <Button
-      	        android:id="@+id/settingsButton"
-      	                   	android:fontFamily="sans-serif-condensed"
+      	        android:id="@+id/settingsButtonHA"
       	        android:layout_width="100dp"
-      	              	        android:gravity="bottom|center_horizontal"
-      	              	        android:textColor="@color/text_color"
       	        android:layout_height="100dp"
-      			android:textSize="16sp"
-      	       	android:text="Settings"
       	        android:layout_column="2"
-      	       	android:layout_margin="8dp"
+      	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/settings_button_border"
-      	        android:onClick="startSettingsActivity" />
+      	        android:fontFamily="sans-serif-condensed"
+      	        android:gravity="bottom|center_horizontal"
+      	        android:onClick="navigate"
+      	        android:text="Settings"
+      	        android:textColor="@color/text_color"
+      	        android:textSize="16sp" />
       	    
-
       	    <Button
-      	        android:id="@+id/groupsButton"
-      	              	        android:textColor="@color/text_color"
+      	        android:id="@+id/groupsButtonHA"
       	        android:layout_width="100dp"
       	        android:layout_height="100dp"
-      	                   	android:fontFamily="sans-serif-condensed"
-      			android:textSize="16sp"
-      	   		android:text="Groups"
-      	   		      	        android:gravity="bottom|center_horizontal"
       	        android:layout_column="1"
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/groups_button_border"
-      	        android:onClick="startGroupsActivity" />
+      	        android:fontFamily="sans-serif-condensed"
+      	        android:gravity="bottom|center_horizontal"
+      	        android:onClick="navigate"
+      	        android:text="Groups"
+      	        android:textColor="@color/text_color"
+      	        android:textSize="16sp" />
 
       	    <Button
-      	        android:id="@+id/userButton"
+      	        android:id="@+id/userButtonHA"
       	        android:layout_width="100dp"
-      	              	        android:gravity="bottom|center_horizontal"
       	        android:layout_height="100dp"
-      	              	        android:textColor="@color/text_color"
-      	        android:textSize="16sp"
-      	        android:text="Profile"
       	        android:layout_column="0"
-      	                   	android:fontFamily="sans-serif-condensed"
       	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/user_button_border"
-      	        android:onClick="startUserActivity" />
+      	        android:fontFamily="sans-serif-condensed"
+      	        android:gravity="bottom|center_horizontal"
+      	        android:onClick="navigate"
+      	        android:text="Profile"
+      	        android:textColor="@color/text_color"
+      	        android:textSize="16sp" />
 
       	    <!-- TextView
       	        android:id="@+id/userNotificationTextView"
@@ -108,19 +107,19 @@
       	        android:visibility="invisible" /> -->
 
       	    <Button
-      	        android:id="@+id/eventsButton"
+      	        android:id="@+id/eventsButtonHA"
       	        android:layout_width="100dp"
-      	              	        android:gravity="bottom|center_horizontal"
       	        android:layout_height="100dp"
-      			android:textSize="16sp"
-      			           	android:fontFamily="sans-serif-condensed"
-      	    	android:text="Events"
-      	    	      	        android:textColor="@color/text_color"
       	        android:layout_column="2"
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/events_button_border"
-      	        android:onClick="startEventsActivity" />
+      	        android:fontFamily="sans-serif-condensed"
+      	        android:gravity="bottom|center_horizontal"
+      	        android:onClick="navigate"
+      	        android:text="Events"
+      	        android:textColor="@color/text_color"
+      	        android:textSize="16sp" />
 
       	</GridLayout>
 

@@ -15,6 +15,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +42,7 @@ public class Global extends Application {
 	private String name;
 	private int numFriendRequests;
 	private int numFriends;
-	private ArrayList<View> views; // All of our views
+
 
 	public String getCurrentUser() {
 		return currentUser;
@@ -92,17 +96,41 @@ public class Global extends Application {
 	}
 
 	public void setNotifications(View view) {
+		//todo: think if I can pass an email in here and skip other steps
 		int numFriendRequests = getNumFriendRequests();
-		// View homeRL = findViewById(R.id.homeRelativeLayout);
-		Button friendsButton = (Button) view.findViewById(R.id.friendsButton);
+		int numFriends = getNumFriends();
+		Button friendsButton = (Button) view.findViewById(R.id.friendsButtonHA);
 
-		if (numFriendRequests > 0
-				&& view.findViewById(R.id.friendsButton) != null) // user has
-																	// notifications
-																	// in their
-																	// profile
+		//Friends Activity
+		if (view.findViewById(R.id.friendRequestsButtonFA) != null && view.findViewById(R.id.currentFriendsButtonFA) != null) {
+			Button friendRequestsButton = (Button) view
+					.findViewById(R.id.friendRequestsButtonFA);
+			friendRequestsButton.setText("Friend Requests ("
+					+ Integer.toString(numFriendRequests) + " new)");
+			Button currentFriendsButton = (Button) view
+					.findViewById(R.id.currentFriendsButtonFA);
+			currentFriendsButton.setText("My Friends ("
+					+ getNumFriends() + ")");
+		} 
+		
+		//User Profile Buttons
+		if ((view.findViewById(R.id.friendsButtonUPA) != null) && (view.findViewById(R.id.groupsButtonUPA) != null) && (view.findViewById(R.id.eventsButtonUPA) != null))
 		{
-
+			((Button)view.findViewById(R.id.friendsButtonUPA)).setText("Friends\n(" + numFriends + ")");
+			
+			//set numfriends, numgroups, and numevents
+		}
+		
+		//User Profile Buttons
+		if ((view.findViewById(R.id.friendsButtonFPA) != null) && (view.findViewById(R.id.groupsButtonFPA) != null) && (view.findViewById(R.id.eventsButtonFPA) != null))
+		{
+			//set numfriends, numgroups, and numevents
+		}
+		
+		//Friends button
+		if (numFriendRequests > 0
+				&& view.findViewById(R.id.friendsButtonHA) != null) 
+		{
 			if (numFriendRequests == 1) {
 				friendsButton.setText("Friends \n(" + numFriendRequests
 						+ " request)");
@@ -110,15 +138,8 @@ public class Global extends Application {
 				friendsButton.setText("Friends \n(" + numFriendRequests
 						+ " requests)");
 			}
-		}
-		if (view.findViewById(R.id.friendRequestsButtonFA) != null) {
-			Button friendRequestsButton = (Button) view
-					.findViewById(R.id.friendRequestsButtonFA);
-			friendRequestsButton.setText("Friend Requests ("
-					+ Integer.toString(numFriendRequests) + " new)");
-		} else if (numFriendRequests == 0
-				&& view.findViewById(R.id.friendsButton) != null) {
-			System.out.println("Are we here?");
+		}else if (numFriendRequests == 0
+				&& view.findViewById(R.id.friendsButtonHA) != null) {
 			friendsButton.setText("Friends");
 
 		}
@@ -126,7 +147,9 @@ public class Global extends Application {
 		// else do nothing, keep that invisible
 	}
 
-	public void fetchNumFriendRequests(String email) // Should take in email
+	/* Takes in email of user, and sets the friend requests */
+	//Should switch this to return the number
+	public void fetchNumFriendRequests(String email) 
 	{
 		new getNumFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_count_friend_requests.php?email="
@@ -147,13 +170,13 @@ public class Global extends Application {
 					System.out.println("Just success on json return");
 					String numRequests =  jsonObject.getString("numRequests");
 					System.out.println("Set it to " + numRequests);
-						//setNumFriendRequests((Integer)numRequests);
+					setNumFriendRequests(Integer.parseInt(numRequests));
 					System.out.println("Number of Friend Requests: " + numRequests);
 					
 					// successful
 				} else {
 					//fetching from server failed
-					Log.d("DB Error", "Error fetching num requests from server");
+					Log.d("DB Error", "Error fetching number of requests from server");
 					setNumFriendRequests(0);
 				}
 			} catch (Exception e) {
@@ -162,7 +185,7 @@ public class Global extends Application {
 		}
 	}
 
-	// Get numFriends
+	// Get numFriends, TODO: work on returning the integer
 	public void fetchNumFriends(String email) {
 		new getFriendsTask()
 				.execute("http://98.213.107.172/android_connect/get_count_friends.php?email="
@@ -181,6 +204,7 @@ public class Global extends Application {
 					String numFriends = jsonObject.getString("numFriends").toString();
 					System.out
 							.println("Should be setting the num friends to " + numFriends);
+					setNumFriends(Integer.parseInt(numFriends));
 	
 				}
 				// user has no friends
@@ -295,4 +319,6 @@ public class Global extends Application {
 		}
 		return stringBuilder.toString();
 	}
+	
+
 }

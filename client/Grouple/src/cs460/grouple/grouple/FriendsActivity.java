@@ -41,6 +41,7 @@ public class FriendsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		View friends = findViewById(R.id.friendsLayout);
 		global.fetchNumFriendRequests(global.getCurrentUser());
+		global.fetchNumFriends(global.getCurrentUser());
 		friendRequests = global.getNumFriendRequests();
 		global.setNotifications(friends);
 
