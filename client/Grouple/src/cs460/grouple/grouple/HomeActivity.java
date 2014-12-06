@@ -2,32 +2,22 @@ package cs460.grouple.grouple;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-
-import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.GridLayout;
 import android.widget.TextView;
 
 public class HomeActivity extends ActionBarActivity
 {
 	LayoutInflater li;
-	int friendRequests;
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
@@ -43,20 +33,20 @@ public class HomeActivity extends ActionBarActivity
 		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		//Actionbar settings
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		//ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-
 		Global global = ((Global) getApplicationContext());
-
 		actionbarTitle.setText("Welcome, " + global.getName() + "!");
 
+		//Updating notifications
 		View home = findViewById(R.id.homeLayout);
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
-		friendRequests = global.getNumFriendRequests();
 		global.setNotifications(home);
 
 
@@ -115,6 +105,7 @@ public class HomeActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		View home = findViewById(R.id.homeLayout);
 		global.fetchNumFriendRequests(global.getCurrentUser());
+		global.fetchNumFriends(global.getCurrentUser());
 		// friendRequests = global.getNumFriendRequests();
 
 		global.setNotifications(home);

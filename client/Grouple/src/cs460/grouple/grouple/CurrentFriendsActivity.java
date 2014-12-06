@@ -12,40 +12,29 @@ import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class CurrentFriendsActivity extends ActionBarActivity
@@ -64,7 +53,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friends");
-		Global global = ((Global) getApplicationContext());
+		//Global global = ((Global) getApplicationContext());
 
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
@@ -74,26 +63,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
 						+ email);
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -178,7 +148,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					ArrayList<String> friends = new ArrayList<String>();
+					//ArrayList<String> friends = new ArrayList<String>();
 					JSONArray jsonFriends = (JSONArray) jsonObject
 							.getJSONArray("friends");
 
@@ -410,4 +380,27 @@ public class CurrentFriendsActivity extends ActionBarActivity
 
 	}
 
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
 }

@@ -6,14 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -23,10 +21,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-//import cs460.grouple.grouple.RegisterActivity.getRegisterTask;
 import android.support.v7.app.ActionBarActivity;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +38,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,26 +67,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 		TextView errorTextView = (TextView) findViewById(R.id.errorTextViewEPA);
 		errorTextView.setVisibility(1);
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					// Log.d("app666","we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-			}
-		};
+		initKillswitchListener();
 
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
 
 		// execute php script, using the current users email address to populate
 		// the textviews
@@ -450,4 +426,27 @@ public class EditProfileActivity extends ActionBarActivity implements
 		}
 	}
 
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
 }

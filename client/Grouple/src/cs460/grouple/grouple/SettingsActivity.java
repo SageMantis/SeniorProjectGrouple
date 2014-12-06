@@ -1,19 +1,23 @@
 package cs460.grouple.grouple;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 public class SettingsActivity extends Activity
 {
-
+	BroadcastReceiver broadcastReceiver;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		initKillswitchListener();
 		setContentView(R.layout.activity_settings);
 	}
 
@@ -51,4 +55,29 @@ public class SettingsActivity extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
+
 }

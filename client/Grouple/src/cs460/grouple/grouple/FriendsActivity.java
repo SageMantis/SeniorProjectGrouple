@@ -1,28 +1,21 @@
 package cs460.grouple.grouple;
 
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class FriendsActivity extends ActionBarActivity
 {
-	int friendRequests;
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
@@ -31,6 +24,7 @@ public class FriendsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
 
+		//Actionbar settings
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -42,44 +36,11 @@ public class FriendsActivity extends ActionBarActivity
 		View friends = findViewById(R.id.friendsLayout);
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
-		friendRequests = global.getNumFriendRequests();
 		global.setNotifications(friends);
 
-		/*
-		 * Handler handler = new Handler(); handler.postDelayed(new Runnable() {
-		 * View friends = findViewById(R.id.friendsLayout); View home = ((View)
-		 * friends.getParent());
-		 * 
-		 * @Override public void run() {
-		 * System.out.println("In Friends main run()");
-		 * 
-		 * Global global = ((Global)getApplicationContext());
-		 * global.fetchNumFriendRequests(global.getCurrentUser()); if
-		 * (friendRequests != global.getNumFriendRequests()) {
-		 * global.setNotifications(friends); global.setNotifications(home); } }
-		 * }, 1000);
-		 */
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
 
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -185,5 +146,29 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
 		startActivity(intent);
+	}
+	
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
+	
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }

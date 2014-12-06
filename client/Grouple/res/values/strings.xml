@@ -54,7 +54,7 @@
     <color name="button_text_color">#FFFFFF</color>
     <color name="background_color">#127BE055</color>
     <color name="layout_background_color">#247BE055</color>
-    <color name="button_border_color">#B812654D</color>
+    <color name="button_border_color">#7BE055</color>
    	<color name="button_background_color">#12654D</color>
 	<color name="dark_green">#12654D</color>
     <color name="dark_green_opacity">#7012654D</color>

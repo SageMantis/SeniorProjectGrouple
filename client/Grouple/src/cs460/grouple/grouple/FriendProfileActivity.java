@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -17,33 +16,23 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import cs460.grouple.grouple.R;
-//import cs460.grouple.grouple.EditProfileActivity.getProfileTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,8 +56,8 @@ public class FriendProfileActivity extends ActionBarActivity
 		// Global global = ((Global)getApplicationContext());
 		// actionbarTitle.setText(global.getName()+"'s Profile");
 		// This where we add our friends email. not ours.
-		Bundle extras = getIntent().getExtras();
-		String email = extras.getString("email");
+		//Bundle extras = getIntent().getExtras();
+		//String email = extras.getString("email");
 
 		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
 		Global global = ((Global) getApplicationContext());
@@ -83,26 +72,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		// global.fetchNumFriendRequests();
 		// global.setNotifications(user);
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -346,4 +316,27 @@ public class FriendProfileActivity extends ActionBarActivity
 		iv = null;
 	}
 
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
 }

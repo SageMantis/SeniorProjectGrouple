@@ -33,25 +33,7 @@ public class LoginActivity extends Activity
 
 		//todo auto capitalize first / last names.
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -143,4 +125,29 @@ public class LoginActivity extends Activity
 		}
 		return false;
 	}
+	
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
+
 }

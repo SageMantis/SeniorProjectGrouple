@@ -25,7 +25,7 @@
   	    android:gravity="center_vertical"
   	    android:onClick="startFriendProfileActivity"
   	    android:text="lkasjdf"
-  	    android:textColor="@color/black" />
+  	    android:textColor="@color/text_color" />
 
   	<Button
   	    android:id="@+id/removeGroupButton"

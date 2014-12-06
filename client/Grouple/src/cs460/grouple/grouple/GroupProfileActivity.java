@@ -19,26 +19,7 @@ public class GroupProfileActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_profile);
 
-		// START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		broadcastReceiver = new BroadcastReceiver()
-		{
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				// close activity
-				if (intent.getAction().equals("CLOSE_ALL"))
-				{
-					Log.d("app666", "we killin the login it");
-					// System.exit(1);
-					finish();
-				}
-
-			}
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		// End Kill switch listener
+		initKillswitchListener();
 	}
 
 	@Override
@@ -80,5 +61,29 @@ public class GroupProfileActivity extends ActionBarActivity {
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
+				{
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
+	
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }
