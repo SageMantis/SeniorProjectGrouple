@@ -1,77 +1,70 @@
 package cs460.grouple.grouple;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-
-import android.support.v4.app.Fragment;
-import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 
 public class GroupsActivity extends ActionBarActivity
 {
+	BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
-		
-		//Action bar setup
-		//ActionBar ab = getActionBar();
+		// Action bar setup
+		// ActionBar ab = getActionBar();
 
-		//ab.setIcon(
-				 //  new ColorDrawable(getResources().getColor(android.R.color.transparent)));  
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
-		getSupportActionBar().setCustomView(R.layout.actionbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
+		// ab.setIcon(
+		// new
+		// ColorDrawable(getResources().getColor(android.R.color.transparent)));
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Groups");
-		//ImageView view = (ImageView)findViewById(android.R.id.home);
-		//view.setPadding(15, 20, 5, 40);
+		// ImageView view = (ImageView)findViewById(android.R.id.home);
+		// view.setPadding(15, 20, 5, 40);
 		
-		
-		Global global = ((Global)getApplicationContext());
-		View groups = findViewById(R.id.groupsLayout);
-		try {
-			global.fetchNumFriendRequests();
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
+		initKillswitchListener();
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
+	}
+
+	@Override
+	public Intent getSupportParentActivityIntent()
+	{
+		Intent parentIntent = getIntent();
+		//getting parent class name
+		String className = parentIntent.getStringExtra("ParentClassName"); 
+		Intent newIntent = null;
+		try
+		{
+			// you need to define the class with package name
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
 			e.printStackTrace();
 		}
-		global.setNotifications(groups);
-		//START KILL SWITCH LISTENER
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("CLOSE_ALL");
-		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		  @Override
-		  public void onReceive(Context context, Intent intent) {
-		    // close activity
-			  if(intent.getAction().equals("CLOSE_ALL"))
-			  {
-				  Log.d("app666","we killin the login it");
-				  //System.exit(1);
-				  finish();
-			  }
-			  
-		  }
-		};
-		registerReceiver(broadcastReceiver, intentFilter);
-		//End Kill switch listener
+		return newIntent;
 	}
 
 	@Override
@@ -92,37 +85,79 @@ public class GroupsActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global)getApplicationContext());
+			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
-			startLoginActivity(null);
+			Intent login = new Intent(this, LoginActivity.class);
+			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
 			this.sendBroadcast(intent);
 			return true;
 		}
+		if (id == R.id.action_home)
+		{
+			startHomeActivity(null);
+		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{
-	    if(keyCode == KeyEvent.KEYCODE_BACK)
-	    {
-	        startHomeActivity(null);
-	    }
-	    return false;
-	}
 
-	/*Start activity functions for going back to home and logging out*/
+	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
+		finish();
 	}
-	public void startLoginActivity(View view)
+
+	/* Start activity methods for group sub-activities */
+	public void startGroupCreateActivity(View view)
 	{
-		Intent intent = new Intent(this, LoginActivity.class);
+		Intent intent = new Intent(this, GroupCreateActivity.class);
+		intent.putExtra("ParentClassName", "GroupsActivity");
+		Global global = (Global)getApplicationContext();
+		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("mod", "true");
 		startActivity(intent);
 	}
+	
+	public void startGroupInvitesActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupInvitesActivity.class);
+		startActivity(intent);
+	}
+	
+	public void startGroupsCurrentActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsCurrentActivity.class);
+		Global global = ((Global) getApplicationContext());
+		intent.putExtra("email", global.getCurrentUser());//specifies which email for the list of groups
+		intent.putExtra("mod", "true");//gives user ability admin in the current groups screen
+		startActivity(intent);
+	}
+	
+	public void initKillswitchListener()
+	{
+		// START KILL SWITCH LISTENER
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction("CLOSE_ALL");
+				broadcastReceiver = new BroadcastReceiver()
+				{
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						// close activity
+						if (intent.getAction().equals("CLOSE_ALL"))
+						{
+							Log.d("app666", "we killin the login it");
+							// System.exit(1);
+							finish();
+						}
+
+					}
+				};
+				registerReceiver(broadcastReceiver, intentFilter);
+				// End Kill switch listener
+	}
+
 }

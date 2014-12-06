@@ -17,7 +17,7 @@
         android:textSize="12sp" />
 
     <Button
-        android:id="@+id/userButton"
+        android:id="@+id/userButtonHA"
         android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginTop="370dp"
@@ -26,7 +26,7 @@
         android:textSize="12sp" />
 
     <Button
-        android:id="@+id/groupsButton"
+        android:id="@+id/groupsButtonHA"
         android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginTop="370dp"
@@ -35,7 +35,7 @@
         android:textSize="12sp" />
 
     <Button
-        android:id="@+id/eventsButton"
+        android:id="@+id/eventsButtonHA"
         android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginTop="370dp"
