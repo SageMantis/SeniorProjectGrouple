@@ -36,7 +36,6 @@
     <string name="title_activity_groups">Groups</string>
     <string name="title_activity_events">Events</string>
     <string name="title_activity_register">Register</string>
-    <string name="hello_world">Hello world!</string>
     <string name="loginFailString">Incorrect Email or Password!</string>
     <string name="title_activity_friends">Friends</string>
     <string name="title_activity_add_friend">Add Friend</string>
@@ -54,7 +53,7 @@
     <color name="button_text_color">#FCF9F0</color>
     <color name="background_color">#FCF9F0</color>
     <color name="layout_background_color">#2855B1D5</color>
-    <color name="actionbar_background_color">#7BE055</color>
+    <color name="actionbar_background_color">#55B1D5</color>
     <color name="button_border_color">#FBDD4B</color>
     <color name="header_text_color">#22252A</color>
     <color name="border_color">#55B1D5</color>
@@ -83,10 +82,8 @@
     <string name="bioMessage">About Group</string>
     <string name="groupBioMessage">Tell people a little about this group</string>
     <string name="confirm">Confirm Create Group</string>
-    <color name="groupCreateBlue">#31698a</color>
-    <color name="groupCreateGrey">#3a3a3a</color>
+
     <string name="introMessage2">Current members in this group</string>
-    <color name="wiseGuyEh">#000033</color>
-    <color name="tryThis">#55319337</color>
+
 
 </resources>

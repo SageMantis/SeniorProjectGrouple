@@ -108,58 +108,21 @@ public class AddFriendActivity extends ActionBarActivity
 				.execute("http://98.213.107.172/android_connect/add_friend.php");
 	}
 
-	public String readJSONFeed(String URL)
-	{
-		// Get all the fields and store locally
-		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
-		Global global = ((Global) getApplicationContext());
-		String sender = global.getCurrentUser();
-		String receiver = emailEditText.getText().toString();
-
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(URL);
-		try
-		{
-			// Add your data
-			System.out.println("Receiver Email: " + receiver + "Sender Email: "
-					+ sender);
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			HttpResponse response = httpClient.execute(httpPost);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
+	
 
 	private class getAddFriendTask extends AsyncTask<String, Void, String>
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readJSONFeed(urls[0]);
+			EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
+			Global global = ((Global) getApplicationContext());
+			String sender = global.getCurrentUser();
+			String receiver = emailEditText.getText().toString();
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
+				
+			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
 		protected void onPostExecute(String result)
@@ -174,18 +137,22 @@ public class AddFriendActivity extends ActionBarActivity
 				TextView addFriendMessage = (TextView) findViewById(R.id.addFriendMessageTextViewAFA);
 				addFriendMessage.setText(jsonObject.getString("message"));
 
-				if (jsonObject.getString("success").toString().equals("1")
-						|| jsonObject.getString("success").toString()
-								.equals("2"))
+				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// friend added or already friends (user's goal)
 					System.out.println("success!");
-					addFriendMessage.setTextColor(Color.GREEN);
-				} else
+					addFriendMessage.setTextColor(getResources().getColor(R.color.light_green));
+				} 
+				else if (jsonObject.getString("success").toString()
+								.equals("2"))
+				{
+					addFriendMessage.setTextColor(getResources().getColor(R.color.orange));
+				}
+				else
 				{
 					// user does not exist, self request, or sql error
 					System.out.println("fail!");
-					addFriendMessage.setTextColor(Color.RED);
+					addFriendMessage.setTextColor(getResources().getColor(R.color.red));
 				}
 				addFriendMessage.setVisibility(0);
 

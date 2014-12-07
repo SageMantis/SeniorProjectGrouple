@@ -80,40 +80,42 @@
 	  	
 		<Button
 		    android:id="@+id/friendsButtonUPA"
-		    android:layout_width="100dp"
+		    android:layout_width="120dp"
 		    android:layout_height="60dp"
 		    android:layout_column="0"
 		    android:layout_gravity="center"
 		    android:layout_margin="0dp"
 		    android:layout_row="4"
+		    		    android:background="@drawable/button_border"
 		    android:fontFamily="sans-serif-condensed"
 		    android:onClick="startCurrentFriendsActivity"
 		    android:text="Friends\n"
 		    android:textColor="@color/button_text_color"
-	   	    android:background="@drawable/button_border"
 		    android:textSize="12sp" />
 	
 	   	<Button
 	   	    android:id="@+id/groupsButtonUPA"
-	   	    android:layout_width="100dp"
+	   	    android:layout_width="120dp"
 	   	    android:layout_height="60dp"
 	   	    android:layout_column="1"
 	   	    android:layout_gravity="center"
+	   	    		    android:background="@drawable/button_border"
 	   	    android:layout_margin="0dp"
 	   	    android:layout_row="4"
 	   	    android:fontFamily="sans-serif-condensed"
 	   	    android:onClick="startGroupsActivity"
 	   	    android:text="Groups\n"
 	   	    android:textColor="@color/button_text_color"
-	   	    android:background="@drawable/button_border"
+
 	   	    android:textSize="12sp" />
 
 	   	<Button
 	   	    android:id="@+id/eventsButtonUPA"
-	   	    android:layout_width="100dp"
+	   	    android:layout_width="120dp"
 	   	    android:layout_height="60dp"
 	   	    android:layout_column="2"
 	   	    android:layout_gravity="left"
+	   	    		    android:background="@drawable/button_border"
 	   	    android:layout_margin="0dp"
 	   	    android:layout_marginRight="0dp"
 	   	    android:layout_row="4"
@@ -121,7 +123,6 @@
 	   	    android:onClick="startEventsActivity"
 	   	    android:text="Events\n"
 	   	    android:textColor="@color/button_text_color"
-	   	    android:background="@drawable/button_border"
 	   	    android:textSize="12sp" />
   
 	</GridLayout>

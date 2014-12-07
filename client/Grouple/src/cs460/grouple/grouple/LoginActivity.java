@@ -30,7 +30,6 @@ public class LoginActivity extends Activity
 		ActionBar ab = getActionBar();
 		ab.hide();
 		Log.d("app666", "we created");
-
 		//todo auto capitalize first / last names.
 
 		initKillswitchListener();
@@ -64,10 +63,10 @@ public class LoginActivity extends Activity
 		// activity.
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
-		//String email = emailEditText.getText().toString();
-		//String password = passwordEditText.getText().toString();
-		String email = "test001@gmail.com";
-		String password="password";
+		String email = emailEditText.getText().toString();
+		String password = passwordEditText.getText().toString();
+		//String email = "test001@gmail.com";
+		//String password="password";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
 		new getLoginTask()
@@ -80,7 +79,7 @@ public class LoginActivity extends Activity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0]);
+			return global.readJSONFeed(urls[0], null);
 		}
 
 		protected void onPostExecute(String result)

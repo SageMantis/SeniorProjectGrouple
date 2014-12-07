@@ -68,75 +68,30 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	public String readJSONFeed(String URL) {
-		// Get all the fields and store locally
+	
+	private class getRegisterTask extends AsyncTask<String, Void, String> {
 
-		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextRA);
-		System.out.println("i made it1!");
-		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextRA);
-		EditText fNameEditText = (EditText) findViewById(R.id.fNameEditText);
-		EditText lNameEditText = (EditText) findViewById(R.id.lNameEditText);
-		//EditText rePasswordEditText = (EditText) findViewById(R.id.rePasswordEditTextRA);
-		String email = emailEditText.getText().toString();
-		String fName = fNameEditText.getText().toString();
-		String lName = lNameEditText.getText().toString();
-		String password = passwordEditText.getText().toString();
-		//String rePassword = rePasswordEditText.getText().toString();
+		protected String doInBackground(String... urls) {
+			Global global = ((Global) getApplicationContext());
 
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(URL);
-		try {
-
-			// Add your data
-			System.out.println("email: " + email + " " + fName + " " + lName
-					+ " pass:" + password);
+			EditText emailEditText = (EditText) findViewById(R.id.emailEditTextRA);
+			System.out.println("i made it1!");
+			EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextRA);
+			EditText fNameEditText = (EditText) findViewById(R.id.fNameEditText);
+			EditText lNameEditText = (EditText) findViewById(R.id.lNameEditText);
+			//EditText rePasswordEditText = (EditText) findViewById(R.id.rePasswordEditTextRA);
+			String email = emailEditText.getText().toString();
+			String fName = fNameEditText.getText().toString();
+			String lName = lNameEditText.getText().toString();
+			String password = passwordEditText.getText().toString();
+	
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 			nameValuePairs.add(new BasicNameValuePair("email", email));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			nameValuePairs.add(new BasicNameValuePair("first", fName));
 			nameValuePairs.add(new BasicNameValuePair("last", lName));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-			HttpResponse response = httpClient.execute(httpPost);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else {
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e) {
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
-
-	// public void loginButton(View view)
-	// {
-	// Create helper and if successful, will bring the correct home activity.
-	// EditText usernameEditText = (EditText)
-	// findViewById(R.id.emailEditTextRA);
-	// EditText passwordEditText = (EditText)
-	// findViewById(R.id.passwordEditText);
-
-	// new
-	// getRegisterTask().execute("http://98.213.107.172/android_connect/get_login.php?email="+usernameEditText.getText().toString()+"&password="+passwordEditText.getText().toString());
-	// }
-
-	private class getRegisterTask extends AsyncTask<String, Void, String> {
-
-		protected String doInBackground(String... urls) {
-
-			return readJSONFeed(urls[0]);
+			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
 		protected void onPostExecute(String result) {

@@ -9,9 +9,11 @@
         android:id="@+id/emailEditTextRA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+                android:background="@drawable/border"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="3dp"
         		android:fontFamily="sans-serif-condensed"
-        		                android:textColorHint="@color/text_color"
+        		                android:textColorHint="@color/hint_text_color"
 		android:textColor="@color/text_color"
         android:layout_marginTop="70dp"
         android:ems="10"
@@ -36,10 +38,12 @@
 
     <EditText
         android:id="@+id/passwordEditTextRA"
+                android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/emailEditTextRA"
-                android:textColorHint="@color/text_color"
+        android:layout_marginBottom="3dp"
+                android:textColorHint="@color/hint_text_color"
         android:layout_alignRight="@+id/emailEditTextRA"
         		android:fontFamily="sans-serif-condensed"
 		android:textColor="@color/text_color"
@@ -50,7 +54,9 @@
 
     <EditText
         android:id="@+id/rePasswordEditTextRA"
-                android:textColorHint="@color/text_color"
+                android:textColorHint="@color/hint_text_color"
+                        android:background="@drawable/border"
+                                android:layout_marginBottom="3dp"
                 		android:fontFamily="sans-serif-condensed"
 		android:textColor="@color/text_color"
         android:layout_width="match_parent"
@@ -64,27 +70,32 @@
 
     <EditText
         android:id="@+id/fNameEditText"
-                android:textColorHint="@color/text_color"
+                android:background="@drawable/border"
+                android:textColorHint="@color/hint_text_color"
+                android:textColor="@color/text_color"
         android:layout_width="match_parent"
+                android:layout_marginBottom="3dp"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/rePasswordEditTextRA"
         android:layout_below="@+id/rePasswordEditTextRA"
         android:ems="10"
         android:hint="@string/fNameEditText"
-        android:inputType="textPersonName" />
+		android:inputType="textCapSentences"/>
 
     <EditText
         android:id="@+id/lNameEditText"
-                android:textColorHint="@color/text_color"
+                android:textColorHint="@color/hint_text_color"
+                android:textColor="@color/text_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/border"
         android:layout_alignLeft="@+id/fNameEditText"
         android:layout_below="@+id/fNameEditText"
         		android:fontFamily="sans-serif-condensed"
-		android:textColor="@color/text_color"
         android:ems="10"
         android:hint="@string/lNameEditText"
-        android:inputType="textPersonName" />
+		android:inputType="textCapSentences" />
 
     <TextView
         android:id="@+id/noFriendRequestsTextView"
@@ -101,6 +112,7 @@
         android:id="@+id/registerButtonRA"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+                android:layout_marginBottom="5dp"
         		android:fontFamily="sans-serif-condensed"
 		android:textColor="@color/button_text_color"
 		android:background="@drawable/button_border"
@@ -119,7 +131,7 @@
         android:layout_centerHorizontal="true"
         android:text="Passwords must match!"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/holo_red_dark"
+        android:textColor="@color/red"
         android:visibility="invisible" />
 
     <TextView
