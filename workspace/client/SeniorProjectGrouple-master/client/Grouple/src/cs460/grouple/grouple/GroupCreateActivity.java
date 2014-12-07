@@ -174,18 +174,18 @@ public class GroupCreateActivity extends ActionBarActivity {
 				Log.d("message2", "Group Name: " + groupname + '\n' + "Group Bio: " + groupbio);
 
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-				
-				//Add yourself to this group. You are a forced admin for now..
+				//Add yourself to the group.
 				nameValuePairs.add(new BasicNameValuePair("gname", groupname));
 				nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
-				nameValuePairs.add(new BasicNameValuePair("mem", email));
-				//setting role as true makes you the admin.
+				nameValuePairs.add(new BasicNameValuePair("mem",email));
+				//Setting role as true makes you the admin.
 				nameValuePairs.add(new BasicNameValuePair("role", "true"));
-				//Submit these NameValuePairs to the database.
+				//Submit these namevalue pairs to the database.
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				response.add(httpClient.execute(httpPost));
 				
 				for(int i = 0; i < added.size(); i++){
+					
 					Log.d("message3", "How many of these are there? " + i);
 					//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
 					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
@@ -205,7 +205,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 					response.add(httpClient.execute(httpPost));
 				}
-				//Here we will return to the group main page.
+				//Here we will return to the Group main page.
 				startGroupsActivity(null);
 				finish();
 
@@ -247,6 +247,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	
 	///////////Create Group pops up a confirm box to make sure the user wants to create the group.
 	public void createGroupButton(View view){
+		
 		new AlertDialog.Builder(this)
 		.setMessage("Are you sure you want to create this group?")
 		.setCancelable(true)
@@ -258,7 +259,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 						"android_connect/create_group.php");
 			}
 		}).setNegativeButton("Cancel", null).show();
-
 	}
 	///////////
 	
@@ -533,6 +533,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		startActivity(intent);
 		finish();
 	}
+	
 	public void startGroupsActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsActivity.class);

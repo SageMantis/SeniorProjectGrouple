@@ -1,10 +1,136 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cs460.grouple.grouple.GroupProfileActivity"
+   	android:id="@+id/groupProfileLayout"
+   	tools:context="cs460.grouple.grouple.GroupProfileActivity"
     android:layout_width="match_parent"
-    android:background="@color/background_color"
     android:layout_height="match_parent"
+    android:padding="5dp"
     android:orientation="vertical" >
-    
+
+   <LinearLayout
+        android:id="@+id/linearLayoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayoutTitle3"
+    	android:background="@color/layout_background_color"
+        android:orientation="vertical" >
+
+       <LinearLayout
+        android:id="@+id/linearLayoutTitleR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    	android:background="@color/layout_background_color"
+        android:orientation="horizontal" >
+        
+       <ImageView
+	  	    android:id="@+id/profilePhoto"
+	  	    android:layout_width="130dp"
+	  	    android:layout_height="130dp"
+	  	    android:layout_gravity="left"
+	  	    android:background="@drawable/border"
+	  	    android:padding="4dp"
+	  	    android:cropToPadding="true"
+	  	    android:src="@drawable/abc_ab_bottom_solid_light_holo" />
+       
+       <TextView
+	  	    android:id="@+id/bioTextViewR"
+	  	    android:layout_width="match_parent"
+           	android:textColor="@color/text_color"
+           	android:fontFamily="sans-serif-condensed"
+	  	    android:layout_height="wrap_content"
+   			android:layout_marginLeft="5dp"
+   			android:layout_gravity="center"
+   			android:gravity="center"
+   			android:padding="5dp"
+	  	    android:text="Stuff."
+	  	    android:textAppearance="?android:attr/textAppearanceMedium"
+            android:maxLength="999"
+            android:minLines="6"
+            android:maxLines="6"
+	  	    android:textSize="14sp" />
+       </LinearLayout>
+      
+       <TextView
+        android:id="@+id/createIntroMessage1"
+   		android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:gravity="left"
+        android:text="@string/bioMessage"
+        android:background="@color/groupCreateGrey"
+        android:textColor="@color/white" />
+       
+	  	<TextView
+	  	    android:id="@+id/bioTextView"
+	  	    android:layout_width="match_parent"
+           	android:textColor="@color/text_color"
+           	android:fontFamily="sans-serif-condensed"
+	  	    android:layout_height="wrap_content"
+	  	    android:background="@drawable/top_bottom_border"
+   			android:layout_marginBottom="5dp"
+   			android:padding="5dp"
+	  	    android:text="This is the group profile. Write a bio for the group here."
+	  	    android:textAppearance="?android:attr/textAppearanceMedium"
+            android:maxLength="999"
+            android:minLines="3"
+            android:maxLines="3"
+	  	    android:textSize="14sp" />
+
+       <LinearLayout
+           android:id="@+id/linearLayoutTitle2"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:background="@color/layout_background_color"
+           android:gravity="center"
+           android:orientation="horizontal" >
+  
+       </LinearLayout>
+       
+       <TextView
+        android:id="@+id/createIntroMessage2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="center"
+        android:text="@string/introMessage2"
+        android:background="@color/groupCreateGrey"
+        android:textColor="@color/white" />
+       
+       <ScrollView
+            android:id="@+id/scrollViewPickMembers2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@color/background_color"
+            android:padding="0dp" >
+
+            <LinearLayout
+                android:id="@+id/linearLayoutNested2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+   		</ScrollView>
+   </LinearLayout>
+   
+   <LinearLayout
+        android:id="@+id/linearLayoutTitle3"
+   		android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/layout_background_color" >
+
+        <Button
+            android:id="@+id/editGroupButton"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:background="@drawable/button_border"
+            android:onClick="editGroupButton"
+            android:text="@string/editGroup"
+            android:textColor="@color/button_text_color"
+            android:textSize="20sp" />
+    </LinearLayout>
 
 </RelativeLayout>

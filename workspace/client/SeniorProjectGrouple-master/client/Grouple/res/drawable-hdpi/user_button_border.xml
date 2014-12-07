@@ -1,9 +1,9 @@
 
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/user_icon">
-<shape android:shape="rectangle" android:padding="10dp">
-    <solid android:color="@color/background_color" />
+    <item android:drawable="@drawable/user_icon" android:layout_height="60dp" android:layout_width="60dp">
+<shape android:shape="rectangle" android:padding="10dp" android:background="@color/black">
+    <solid android:color="@color/black" />
     <stroke android:width="2dip" android:color="@color/button_border_color" />
     <corners
      android:bottomRightRadius="5dp"

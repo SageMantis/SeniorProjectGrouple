@@ -26,12 +26,13 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/friends_button_border"
-      	        android:fontFamily="sans-serif-condensed"
+
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Friends"
-      	        android:textColor="@color/orange"
+      	        android:textColor="@color/header_text_color"
       	        android:textStyle="bold"
+      	              	        android:fontFamily="sans-serif"
       	        android:textSize="16sp" />
 
       	    <Button
@@ -42,11 +43,12 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/messages_button_border"
-      	        android:fontFamily="sans-serif-condensed"
+      	        android:textStyle="bold"
+      	              	        android:fontFamily="sans-serif"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Messages"
-      	        android:textColor="@color/orange"
+      	        android:textColor="@color/header_text_color"
       	        android:textSize="16sp" />
 
       	    <Button
@@ -57,11 +59,12 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/settings_button_border"
-      	        android:fontFamily="sans-serif-condensed"
+      	        android:textStyle="bold"
+      	              	        android:fontFamily="sans-serif"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Settings"
-      	        android:textColor="@color/orange"
+      	        android:textColor="@color/header_text_color"
       	        android:textSize="16sp" />
       	    
       	    <Button
@@ -72,11 +75,12 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/groups_button_border"
-      	        android:fontFamily="sans-serif-condensed"
+      	        android:textStyle="bold"
+      	              	        android:fontFamily="sans-serif"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Groups"
-      	        android:textColor="@color/text_color"
+      	        android:textColor="@color/header_text_color"
       	        android:textSize="16sp" />
 
       	    <Button
@@ -87,12 +91,13 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/user_button_border"
-      	        android:fontFamily="sans-serif-condensed"
+      	        android:textStyle="bold"
+      	              	        android:fontFamily="sans-serif"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Profile"
-      	        android:textColor="@color/light_green"
-      	        android:textStyle="bold"
+      	        android:textColor="@color/white"
+
       	        android:textSize="16sp" />
 
       	    <!-- TextView
@@ -116,11 +121,12 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/events_button_border"
-      	        android:fontFamily="sans-serif-condensed"
+        	        android:textStyle="bold"
+      	              	        android:fontFamily="sans-serif"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Events"
-      	        android:textColor="@color/text_color"
+      	        android:textColor="@color/header_text_color"
       	        android:textSize="16sp" />
 
       	</GridLayout>
@@ -133,7 +139,7 @@
       	    android:layout_alignParentTop="true"
       	    android:contentDescription="Home Icon"
       	    android:gravity="center"
-      	    android:src="@drawable/home_logo_update"
+      	    android:src="@drawable/home_logo_blue"
       	    android:visibility="visible" />
 
 </RelativeLayout>
