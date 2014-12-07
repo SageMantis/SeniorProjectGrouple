@@ -1,19 +1,9 @@
 package cs460.grouple.grouple;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -253,7 +243,9 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		final int idz = view.getId(); // Email of user
 		final String friendEmail = friendsEmailList.get(idz); // Email of friend
 							// to remove
-		
+		// refreshing the current friends layout
+		Bundle extras = getIntent().getExtras();
+		final String email = extras.getString("email");
 		//delete confirmation
 		new AlertDialog.Builder(this)
 				.setMessage("Are you sure you want to remove that friend?")
@@ -266,12 +258,8 @@ public class CurrentFriendsActivity extends ActionBarActivity
 						new deleteFriendTask()
 								.execute(
 										"http://98.213.107.172/android_connect/delete_friend.php",
-										friendEmail);
-
-						// refreshing the current friends layout
-						Bundle extras = getIntent().getExtras();
-						String email = extras.getString("email");
-						// removing all views
+										email, friendEmail);
+						//removing all of the views
 						LinearLayout currentFriendsLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 						currentFriendsLayout.removeAllViews();
 						// calling getFriends to repopulate view
@@ -282,56 +270,17 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				}).setNegativeButton("Cancel", null).show();
 	}
 
-	public String deleteFriendJSONFeed(String URL, String friendEmail)
-	{
-		// Get all the fields and store locally
-		Global global = ((Global) getApplicationContext());
-		String sender = global.getCurrentUser();
-
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(URL);
-		try
-		{
-			// Add your data
-			System.out.println("Receiver Email: " + friendEmail
-					+ "Sender Email: " + sender);
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			nameValuePairs.add(new BasicNameValuePair("receiver", friendEmail));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			HttpResponse response = httpClient.execute(httpPost);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
 
 	private class deleteFriendTask extends AsyncTask<String, Void, String>
 	{
 		protected String doInBackground(String... urls)
 		{
-			return deleteFriendJSONFeed(urls[0], urls[1]);
+			//urls 1, 2 are the emails
+			Global global = ((Global) getApplicationContext());
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("sender", urls[1]));
+			nameValuePairs.add(new BasicNameValuePair("receiver", urls[2]));
+			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
 		protected void onPostExecute(String result)
@@ -372,6 +321,10 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		// to the activity
 		String friendEmail = friendsEmailList.get(id);
 		Intent intent = new Intent(this, FriendProfileActivity.class);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		Bundle extras = getIntent().getExtras();
+		String email = extras.getString("email");
+		intent.putExtra("ParentEmail", email);
 		Global global = ((Global) getApplicationContext());
 		global.fetchNumFriends(friendEmail);
 		Thread.sleep(500);
@@ -397,7 +350,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 							// System.exit(1);
 							finish();
 						}
-
 					}
 				};
 				registerReceiver(broadcastReceiver, intentFilter);

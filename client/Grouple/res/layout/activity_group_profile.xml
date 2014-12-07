@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-   	android:background="@color/background_color"
     android:orientation="vertical" >
 
    <LinearLayout
         android:id="@+id/linearLayoutTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayoutTitle3"
     	android:background="@color/layout_background_color"
         android:orientation="vertical" >
 
@@ -54,6 +54,7 @@
         android:id="@+id/createIntroMessage1"
    		android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
+       android:fontFamily="sans-serif-condensed"
         android:layout_height="wrap_content"
 		android:padding="5dp"
         android:gravity="left"
@@ -91,6 +92,7 @@
         android:id="@+id/createIntroMessage2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
 		android:padding="5dp"
         android:gravity="center"
         android:text="@string/introMessage2"
@@ -111,7 +113,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-    </ScrollView>
+   		</ScrollView>
    </LinearLayout>
+   
+   <LinearLayout
+        android:id="@+id/linearLayoutTitle3"
+   		android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/layout_background_color" >
+
+        <Button
+            android:id="@+id/editGroupButton"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:background="@drawable/button_border"
+            android:onClick="editGroupButton"
+            android:text="Edit Group"
+            android:textColor="@color/button_text_color"
+            android:textSize="20sp" />
+    </LinearLayout>
 
 </RelativeLayout>

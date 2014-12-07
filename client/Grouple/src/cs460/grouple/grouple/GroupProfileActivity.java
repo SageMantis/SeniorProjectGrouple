@@ -14,6 +14,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import cs460.grouple.grouple.R;
 import android.support.v7.app.ActionBar;
@@ -23,22 +24,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GroupProfileActivity extends ActionBarActivity 
 {
+
 	private ImageView iv;
 	private Bitmap bmp;
 	BroadcastReceiver broadcastReceiver;
 	private String gname = "";
+	private String bio = "";
+	private int gcount = 0;
+	private int index = 0;
+	private LayoutInflater inflater;
+	private LinearLayout membersToAdd;;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -52,14 +67,37 @@ public class GroupProfileActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		//Global global = ((Global) getApplicationContext());
+		Global global = ((Global) getApplicationContext());
 		Bundle extras = getIntent().getExtras();
 		gname = extras.getString("gname");
 		actionbarTitle.setText(gname);
-
-		new getProfileTask().execute("http://98.213.107.172/" +
-				"android_connect/get_group_members.php");
+		Log.d("message", "00000000000000001");
+		
+		inflater = getLayoutInflater();
+		membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested2);
+		
+		getGroupCount();
+		
 		initKillswitchListener();
+	}
+	
+	public void getGroupCount(){
+		new getProfileTask().execute("http://98.213.107.172/" +
+				"android_connect/count_group_members.php");
+	}
+	
+	public void getGroupContents(){
+		if(index < gcount){//for(; index < gcount; index++){
+			Log.d("hello", "hellohello1 " + ";index = " + index + ";gcount = " + gcount);
+			new getProfileTask().execute("http://98.213.107.172/" +
+					"android_connect/get_group_contents.php");
+			//index++;
+		}
+		else{
+
+			TextView tv = (TextView)findViewById(R.id.bioTextView);
+			tv.setText(bio);
+		}
 	}
 	
 	@Override
@@ -143,30 +181,28 @@ public class GroupProfileActivity extends ActionBarActivity
 		iv = null;
 	}
 
-	/*
-	 * Get profile executes get_profile.php.
-	 */
-	private class getProfileTask extends AsyncTask<String, Void, String>
+	public String readGetFriendsJSONFeed(String URL)
 	{
 
-		protected String doInBackground(String... urls)
+		Log.d("message", "00000000000000002");
+		StringBuilder stringBuilder = new StringBuilder();
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(URL);
+		try
 		{
-
-			return readJSONFeed(urls[0]);
-		}
-
-		public String readJSONFeed(String URL)
-		{
-
-			StringBuilder stringBuilder = new StringBuilder();
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(URL);
-			try
-			{
+			if(URL.equals("http://98.213.107.172/android_connect/count_group_members.php")){
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 				nameValuePairs.add(new BasicNameValuePair("gname", gname));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
+			}
+			else if(URL.equals("http://98.213.107.172/android_connect/get_group_contents.php")){
+				Log.d("hello", "hellohello2");
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("gname", gname));
+				nameValuePairs.add(new BasicNameValuePair("index", "" + index));
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				index++;
+			}
 				HttpResponse response = httpClient.execute(httpPost);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
@@ -179,6 +215,7 @@ public class GroupProfileActivity extends ActionBarActivity
 					String line;
 					while ((line = reader.readLine()) != null)
 					{
+						Log.d("whatis", "The response is: " + line);
 						stringBuilder.append(line);
 					}
 					inputStream.close();
@@ -187,22 +224,79 @@ public class GroupProfileActivity extends ActionBarActivity
 				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e)
-			{
-				Log.d("readJSONFeed", e.getLocalizedMessage());
-			}
-			return stringBuilder.toString();
+			
+			
+		} catch (Exception e)
+		{
+			Log.d("readJSONFeed", e.getLocalizedMessage());
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	/*
+	 * Get profile executes get_profile.php.
+	 */
+	private class getProfileTask extends AsyncTask<String, Void, String>
+	{
+
+		protected String doInBackground(String... urls)
+		{
+			Log.d("message", "00000000000000003 " + urls[0]);
+			return readGetFriendsJSONFeed(urls[0]);
 		}
 
 		protected void onPostExecute(String result)
 		{
 			try
 			{
+				Log.d("message", "00000000000000004");
 				JSONObject jsonObject = new JSONObject(result);
-				System.out.println(jsonObject.getString("success"));
+				
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
+					String gnumTemp = (jsonObject.getString("gcount"));
+					gcount = Integer.parseInt(gnumTemp);
+					Log.d("count group members", "There are " + gnumTemp + " gmembers.");
+					getGroupContents();
+				}
+				else if(jsonObject.getString("success").toString().equals("2")){
+					String grow = (jsonObject.getString("grow"));
+					//JSONArray grow = (JSONArray) jsonObject.getJSONArray("grow");
+					String tokens = ",";
+					String[] contents = grow.split(tokens);
+					for(int i = 0; i < contents.length; i++){
+						if(contents[i].contains("\"")){
+							contents[i] = contents[i].replaceAll("\"", "");
+						}
+					}
 					
+					bio = contents[2];
+					String role = contents[5];
+					String member = contents[6];
+					Log.d("count group members", "The contents of this row is:\n" + 
+							contents[6] + ".");
+					
+					//<<<<<<<<<< here >>>>>>>>>>//
+					GridLayout rowView = (GridLayout) inflater.inflate(R.layout.listitem_friend_noaccess, null);
+					Button removeFriendButton = (Button) rowView.findViewById(R.id.removeFriendButtonNoAccess);
+					Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
+					friendNameButton.setText(member);
+					if(role.equals("false")){
+						removeFriendButton.setText("-");
+						removeFriendButton.setTextColor(getResources().getColor(R.color.light_blue));
+					}
+					else{
+						removeFriendButton.setText("A");
+						removeFriendButton.setTextColor(getResources().getColor(R.color.light_green));
+					}
+					removeFriendButton.setId(index);
+					friendNameButton.setId(index);
+					rowView.setId(index);
+					membersToAdd.addView(rowView);
+					
+					getGroupContents();
+				}
 					/*
 					// Success
 					JSONArray jsonProfileArray = (JSONArray) jsonObject
@@ -236,7 +330,7 @@ public class GroupProfileActivity extends ActionBarActivity
 					TextView bioTextView = (TextView) findViewById(R.id.bioTextView);
 					bioTextView.setText(bio);
 					*/
-				} else
+				else
 				{
 					// Fail
 				}
@@ -247,6 +341,14 @@ public class GroupProfileActivity extends ActionBarActivity
 		}
 	}
 	
+	public void addToGroupTable(View view){
+		
+	}
+	
+	public void toggleAdmin(View view){
+		
+	}
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
