@@ -6,17 +6,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-public class MessagesActivity extends Activity {
+public class MessagesActivity extends ActionBarActivity {
 	BroadcastReceiver broadcastReceiver;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_messages);
-		
+		/*Action bar*/
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+
+		actionbarTitle.setText("Messages");
 		initKillswitchListener();
 	}
 

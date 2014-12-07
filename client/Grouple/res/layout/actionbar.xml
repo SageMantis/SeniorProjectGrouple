@@ -30,7 +30,7 @@
         android:fontFamily="sans-serif-condensed"
         android:layout_gravity="center_vertical|center"
         android:gravity="center_vertical"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
        	android:layout_marginLeft="20dp"
         android:id="@+id/actionbarTitleTextView"
         android:textSize="24sp" />

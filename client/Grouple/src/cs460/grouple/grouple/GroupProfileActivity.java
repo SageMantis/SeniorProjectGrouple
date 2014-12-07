@@ -14,7 +14,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import cs460.grouple.grouple.R;
 import android.support.v7.app.ActionBar;
@@ -24,23 +23,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GroupProfileActivity extends ActionBarActivity 
 {
-
 	private ImageView iv;
 	private Bitmap bmp;
 	BroadcastReceiver broadcastReceiver;
@@ -58,7 +52,7 @@ public class GroupProfileActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		Global global = ((Global) getApplicationContext());
+		//Global global = ((Global) getApplicationContext());
 		Bundle extras = getIntent().getExtras();
 		gname = extras.getString("gname");
 		actionbarTitle.setText(gname);

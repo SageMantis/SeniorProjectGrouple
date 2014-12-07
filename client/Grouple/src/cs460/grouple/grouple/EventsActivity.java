@@ -23,12 +23,16 @@ public class EventsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
+		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+
 		actionbarTitle.setText("Events");
+		
+
 
 		initKillswitchListener();
 	}

@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-public class SettingsActivity extends Activity
+public class SettingsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
 	@Override
@@ -19,6 +22,14 @@ public class SettingsActivity extends Activity
 		super.onCreate(savedInstanceState);
 		initKillswitchListener();
 		setContentView(R.layout.activity_settings);
+		/*Action bar*/
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+
+		actionbarTitle.setText("Settings");
 	}
 
 	@Override

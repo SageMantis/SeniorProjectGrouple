@@ -87,7 +87,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0]);
+			return global.readJSONFeed(urls[0], null);
 		}
 
 		protected void onPostExecute(String result)
