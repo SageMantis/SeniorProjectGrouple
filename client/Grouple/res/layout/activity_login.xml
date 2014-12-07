@@ -51,9 +51,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
-        android:fontFamily="sans-serif-condensed"
+        android:fontFamily="sans-serif"
         android:text="@string/loginTextView"
-        android:textColor="@color/text_color"
+        android:textColor="@color/header_text_color"
+        android:textStyle="bold"
         android:textSize="50sp" />
 
     <EditText 
@@ -88,7 +89,7 @@
         android:inputType="textPassword"
         android:padding="10dp"
         android:textColor="@color/text_color"
-        android:textColorHint="@color/text_color" >
+        android:textColorHint="@color/hint_text_color" >
 
 
     </EditText>

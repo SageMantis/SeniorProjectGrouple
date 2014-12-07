@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/friendGridLayout"
+    android:id="@+id/groupGridLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/top_bottom_border"
@@ -8,7 +8,7 @@
     android:columnCount="2"
     android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp"
-    android:onClick="startFriendProfileActivity"
+    android:onClick="addToGroupTable"
     android:rowCount="1" >
 
   	<Button
@@ -23,9 +23,10 @@
   	    android:background="@android:color/transparent"
   	    android:fontFamily="sans-serif-condensed"
   	    android:gravity="center_vertical"
-  	    android:onClick="startFriendProfileActivity"
+  	    android:onClick="addToGroupTable"
   	    android:text="lkasjdf"
-  	    android:textColor="@color/text_color" />
+  	    android:textColor="@color/text_color" 
+  	    android:textStyle="bold"/>
 
   	<Button
   	    android:id="@+id/removeGroupButton"

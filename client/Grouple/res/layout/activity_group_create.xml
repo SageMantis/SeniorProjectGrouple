@@ -21,7 +21,8 @@
             android:maxLength="40"
             android:minLines="1"
             android:maxLines="1"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/hint_text_color"
             android:gravity="center"
             android:hint="@string/groupNameMessage" />
         
@@ -30,9 +31,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
         	android:layout_marginTop="5dp"
+        	android:padding="5dp"
     		android:gravity="left"
             android:text="@string/bioMessage"
-        	android:background="@color/groupCreateGrey"
+        	android:background="@color/black"
             android:textColor="@color/white" />
         
         <EditText
@@ -40,10 +42,11 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
         	android:layout_weight="1"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/hint_text_color"
     		android:background="@color/background_color"
             android:gravity="left"
-            android:maxLength="999"
+            android:maxLength="255"
             android:minLines="3"
             android:maxLines="3"
             android:hint="@string/groupBioMessage" />
@@ -58,7 +61,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:text="@string/introMessage"
-        android:background="@color/groupCreateGrey"
+        android:background="@color/black"
         android:textColor="@color/white" />
         
     <ScrollView
@@ -81,10 +84,10 @@
         android:id="@+id/createIntroMessage2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
+		android:padding="5dp"
         android:gravity="center"
         android:text="@string/introMessage2"
-        android:background="@color/groupCreateGrey"
+        android:background="@color/black"
         android:textColor="@color/white" />
     
     <ScrollView
@@ -114,7 +117,7 @@
             android:background="@drawable/button_border"
             android:onClick="createGroupButton"
             android:text="@string/confirm"
-            android:textColor="@color/white"
+            android:textColor="@color/button_text_color"
             android:textSize="20sp" />
 
     </LinearLayout>
