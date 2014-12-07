@@ -56,6 +56,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	private ArrayList<HttpResponse> response = new ArrayList<HttpResponse>();
 	//private ArrayList<String> addedEmailAddress = new ArrayList<String>();
 	private int increment = 0;
+	private String email = null;
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
 	
 	@Override
@@ -80,7 +81,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		});
 		*/
 		Bundle extras = getIntent().getExtras();
-		String email = extras.getString("email");
+		email = extras.getString("email");
 		
 		//Here I believe we should call get_friends.php. that will return all of your friends by email. which is how we would store it in the db.
 		new GroupMembers().execute("http://98.213.107.172/" +
@@ -174,6 +175,16 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
 				
+				//Add yourself to this group. You are a forced admin for now..
+				nameValuePairs.add(new BasicNameValuePair("gname", groupname));
+				nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+				nameValuePairs.add(new BasicNameValuePair("mem", email));
+				//setting role as true makes you the admin.
+				nameValuePairs.add(new BasicNameValuePair("role", "true"));
+				//Submit these NameValuePairs to the database.
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				response.add(httpClient.execute(httpPost));
+				
 				for(int i = 0; i < added.size(); i++){
 					Log.d("message3", "How many of these are there? " + i);
 					//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
@@ -194,13 +205,16 @@ public class GroupCreateActivity extends ActionBarActivity {
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 					response.add(httpClient.execute(httpPost));
 				}
+				//Here we will return to the group main page.
+				startGroupsActivity(null);
+				finish();
 
 			}
 			else{
 				response.add(httpClient.execute(httpGet));
 			}
 
-			for(; increment < response.size(); increment++){//////////////////////
+			for(; increment < response.size() + 1; increment++){//////////////////////
 				StatusLine statusLine = response.get(increment).getStatusLine();
 				int statusCode = statusLine.getStatusCode();
 				if (statusCode == 200)
@@ -231,11 +245,20 @@ public class GroupCreateActivity extends ActionBarActivity {
 		return stringBuilder.toString();
 	}
 	
-	///////////
+	///////////Create Group pops up a confirm box to make sure the user wants to create the group.
 	public void createGroupButton(View view){
-		
-		new GroupMembers().execute("http://98.213.107.172/" +
+		new AlertDialog.Builder(this)
+		.setMessage("Are you sure you want to create this group?")
+		.setCancelable(true)
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int id)
+			{
+				new GroupMembers().execute("http://98.213.107.172/" +
 						"android_connect/create_group.php");
+			}
+		}).setNegativeButton("Cancel", null).show();
+
 	}
 	///////////
 	
@@ -507,6 +530,12 @@ public class GroupCreateActivity extends ActionBarActivity {
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);
+		startActivity(intent);
+		finish();
+	}
+	public void startGroupsActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
 		finish();
 	}
