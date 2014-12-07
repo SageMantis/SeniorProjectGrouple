@@ -121,6 +121,31 @@ public class FriendProfileActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public Intent getSupportParentActivityIntent()
+	{
+		Intent parentIntent = getIntent();
+		String className = parentIntent.getStringExtra("ParentClassName"); // getting
+																			// the
+																			// parent
+																			// class
+																			// name
+
+		Intent newIntent = null;
+		try
+		{
+			// you need to define the class with package name
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			Bundle extras = getIntent().getExtras();
+			String email = extras.getString("ParentEmail");
+			newIntent.putExtra("email", email);
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return newIntent;
+	}
 	/*
 	 * public boolean onKeyDown(int keyCode, KeyEvent event) { if(keyCode ==
 	 * KeyEvent.KEYCODE_BACK) { //startHomeActivity(null); } return false; }

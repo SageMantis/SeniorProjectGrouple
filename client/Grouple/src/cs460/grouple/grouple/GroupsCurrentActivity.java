@@ -31,10 +31,9 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_groups_current);
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");//need to put email in extras when current groups is called
-		System.out.println("EMAIL for GETGROUPS: " + email);
 		//also need to set the mod privs for the current user -> current list of groups
 		new getGroupsTask()
-		.execute("http://98.213.107.172/android_connect/get_groups2.php?email="
+		.execute("http://98.213.107.172/android_connect/get_groups.php?email="
 				+ email);
 		
 		initKillswitchListener();
