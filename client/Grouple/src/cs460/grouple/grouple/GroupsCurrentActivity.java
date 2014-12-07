@@ -1,5 +1,7 @@
 package cs460.grouple.grouple;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import android.content.BroadcastReceiver;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 public class GroupsCurrentActivity extends ActionBarActivity {
 
 	BroadcastReceiver broadcastReceiver;
+	private ArrayList<String> groupsNameList = new ArrayList<String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -120,6 +123,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 							{
 								rowView = (GridLayout) li.inflate(
 										R.layout.listitem_group, null);
+								groupsNameList.add(i, groupname);
 								//Button removeFriendButton = (Button) rowView
 									//	.findViewById(R.id.removeFriendButton);
 								//removeFriendButton.setId(i);
@@ -192,6 +196,21 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 				};
 				registerReceiver(broadcastReceiver, intentFilter);
 				// End Kill switch listener
+	}
+	
+	public void addToGroupTable(View view) throws InterruptedException {
+		// launches GroupProfileActivity, loading the page to its corresponding group
+		int id = view.getId();
+		// got the id, now we need to grab the users email and somehow pass it
+		// to the activity
+		Log.d("message", "Executing the group profile: " + groupsNameList.get(id));
+		String groupsName = groupsNameList.get(id);
+		Intent intent = new Intent(this, GroupProfileActivity.class);
+		Global global = ((Global) getApplicationContext());
+		//global.fetchNumGroupInvites(groupsName);
+		Thread.sleep(500);
+		intent.putExtra("gname", groupsName);
+		startActivity(intent);
 	}
 
 }

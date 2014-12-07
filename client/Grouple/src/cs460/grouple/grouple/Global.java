@@ -94,7 +94,7 @@ public class Global extends Application {
 			Button friendRequestsButton = (Button) view
 					.findViewById(R.id.friendRequestsButtonFA);
 			friendRequestsButton.setText("Friend Requests ("
-					+ Integer.toString(numFriendRequests) + " new)");
+					+ Integer.toString(numFriendRequests) + ")");
 			Button currentFriendsButton = (Button) view
 					.findViewById(R.id.currentFriendsButtonFA);
 			currentFriendsButton.setText("My Friends ("

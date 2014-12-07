@@ -45,7 +45,7 @@
         android:layout_centerHorizontal="true"
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/holo_red_dark"
+        android:textColor="@color/red"
         android:visibility="invisible" />
     
 
