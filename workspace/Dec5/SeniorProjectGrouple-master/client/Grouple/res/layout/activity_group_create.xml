@@ -55,8 +55,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:text="@string/introMessage"
         android:background="@color/groupCreateGrey"
         android:textColor="@color/white" />

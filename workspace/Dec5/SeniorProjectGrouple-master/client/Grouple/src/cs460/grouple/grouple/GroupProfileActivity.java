@@ -44,6 +44,7 @@ public class GroupProfileActivity extends ActionBarActivity
 	private ImageView iv;
 	private Bitmap bmp;
 	BroadcastReceiver broadcastReceiver;
+	private String gname = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -59,15 +60,12 @@ public class GroupProfileActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		Global global = ((Global) getApplicationContext());
 		Bundle extras = getIntent().getExtras();
-		String gname = extras.getString("gname");
+		gname = extras.getString("gname");
 		actionbarTitle.setText(gname);
 
-		initGroupTable();
+		new getProfileTask().execute("http://98.213.107.172/" +
+				"android_connect/get_group_members.php");
 		initKillswitchListener();
-	}
-
-	public void initGroupTable(){
-		final LayoutInflater inflater = getLayoutInflater();
 	}
 	
 	@Override
@@ -171,10 +169,8 @@ public class GroupProfileActivity extends ActionBarActivity
 			HttpPost httpPost = new HttpPost(URL);
 			try
 			{
-				Global global = ((Global) getApplicationContext());
-				String email = global.getCurrentUser();
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-				nameValuePairs.add(new BasicNameValuePair("email", email));
+				nameValuePairs.add(new BasicNameValuePair("gname", gname));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 				HttpResponse response = httpClient.execute(httpPost);

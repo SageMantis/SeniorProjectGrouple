@@ -174,18 +174,18 @@ public class GroupCreateActivity extends ActionBarActivity {
 				Log.d("message2", "Group Name: " + groupname + '\n' + "Group Bio: " + groupbio);
 
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+				//Add yourself to the group.
+				nameValuePairs.add(new BasicNameValuePair("gname", groupname));
+				nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+				nameValuePairs.add(new BasicNameValuePair("mem",email));
+				//Setting role as true makes you the admin.
+				nameValuePairs.add(new BasicNameValuePair("role", "true"));
+				//Submit these namevalue pairs to the database.
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				response.add(httpClient.execute(httpPost));
 				
-				for(int i = -1; i < added.size(); i++){
+				for(int i = 0; i < added.size(); i++){
 					
-					if(i == -1){
-						nameValuePairs.add(new BasicNameValuePair("gname", groupname));
-						nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
-						nameValuePairs.add(new BasicNameValuePair("mem",email));
-						nameValuePairs.add(new BasicNameValuePair("role", "true"));
-						httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-						response.add(httpClient.execute(httpPost));
-						continue;
-					}
 					Log.d("message3", "How many of these are there? " + i);
 					//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
 					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
@@ -205,6 +205,9 @@ public class GroupCreateActivity extends ActionBarActivity {
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 					response.add(httpClient.execute(httpPost));
 				}
+				//Here we will return to the Group main page.
+				startGroupsActivity(null);
+				finish();
 
 			}
 			else{
@@ -242,11 +245,20 @@ public class GroupCreateActivity extends ActionBarActivity {
 		return stringBuilder.toString();
 	}
 	
-	///////////
+	///////////Create Group pops up a confirm box to make sure the user wants to create the group.
 	public void createGroupButton(View view){
 		
-		new GroupMembers().execute("http://98.213.107.172/" +
+		new AlertDialog.Builder(this)
+		.setMessage("Are you sure you want to create this group?")
+		.setCancelable(true)
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int id)
+			{
+				new GroupMembers().execute("http://98.213.107.172/" +
 						"android_connect/create_group.php");
+			}
+		}).setNegativeButton("Cancel", null).show();
 	}
 	///////////
 	
@@ -518,6 +530,13 @@ public class GroupCreateActivity extends ActionBarActivity {
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);
+		startActivity(intent);
+		finish();
+	}
+	
+	public void startGroupsActivity(View view)
+	{
+		Intent intent = new Intent(this, GroupsActivity.class);
 		startActivity(intent);
 		finish();
 	}
