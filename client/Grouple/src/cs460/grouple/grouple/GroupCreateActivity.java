@@ -39,6 +39,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -66,7 +67,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionBarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionBarTitle.setText("Groups");
 		//Global global = (Global)getApplicationContext();
@@ -83,6 +84,16 @@ public class GroupCreateActivity extends ActionBarActivity {
 		Bundle extras = getIntent().getExtras();
 		email = extras.getString("email");
 		
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
+		
 		//Here I believe we should call get_friends.php. that will return all of your friends by email. which is how we would store it in the db.
 		new GroupMembers().execute("http://98.213.107.172/" +
 				"android_connect/get_friends_firstlast.php?email=" + email);
@@ -98,27 +109,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 		super.onDestroy();
 	}
 
-	@Override
-	public Intent getSupportParentActivityIntent()
-	{
-		Intent parentIntent = getIntent();
-		String className = parentIntent.getStringExtra("ParentClassName"); // getting
-																			// the
-																			// parent
-																			// class
-																			// name
-
-		Intent newIntent = null;
-		try
-		{
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		return newIntent;
-	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,6 +143,30 @@ public class GroupCreateActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	public void startParentActivity(View view)
+	{
+		Bundle extras = getIntent().getExtras();
+
+		String className = extras.getString("ParentClassName");
+		Intent newIntent = null;
+		try
+		{
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			if (extras.getString("ParentEmail") != null)
+			{
+				newIntent.putExtra("email", extras.getString("ParentEmail"));
+			}
+			//newIntent.putExtra("email", extras.getString("email"));
+			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("ParentClassName", "GroupCreateActivity");
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		startActivity(newIntent);
+	}
+	
 	public String readGetFriendsJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
@@ -160,7 +174,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 		HttpGet httpGet = new HttpGet(URL);
 		HttpPost httpPost = new HttpPost(URL);
 		///////HttpResponse response;
-		Log.d("message", "This is the URL used: " + URL);
+		Log.d("message", "This" +
+				" is the URL used: " + URL);
 		
 		try
 		{

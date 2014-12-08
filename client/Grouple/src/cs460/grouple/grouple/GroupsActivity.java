@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class GroupsActivity extends ActionBarActivity
@@ -31,11 +33,20 @@ public class GroupsActivity extends ActionBarActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Groups");
 		// ImageView view = (ImageView)findViewById(android.R.id.home);
 		// view.setPadding(15, 20, 5, 40);
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
 		
 		initKillswitchListener();
 	}
@@ -48,25 +59,7 @@ public class GroupsActivity extends ActionBarActivity
 		super.onDestroy();
 	}
 
-	@Override
-	public Intent getSupportParentActivityIntent()
-	{
-		Intent parentIntent = getIntent();
-		//getting parent class name
-		String className = parentIntent.getStringExtra("ParentClassName"); 
-		Intent newIntent = null;
-		try
-		{
-			// you need to define the class with package name
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		return newIntent;
-	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -102,6 +95,30 @@ public class GroupsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	
+	public void startParentActivity(View view)
+	{
+		Bundle extras = getIntent().getExtras();
+
+		String className = extras.getString("ParentClassName");
+		Intent newIntent = null;
+		try
+		{
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			if (extras.getString("ParentEmail") != null)
+			{
+				newIntent.putExtra("email", extras.getString("ParentEmail"));
+			}
+			//newIntent.putExtra("email", extras.getString("email"));
+			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("ParentClassName", "GroupsActivity");
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		startActivity(newIntent);
+	}
 	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
 	{

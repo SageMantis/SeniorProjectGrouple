@@ -39,12 +39,17 @@ public class FriendProfileActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_profile);
+		Bundle extras = getIntent().getExtras();
+		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
+		Global global = ((Global) getApplicationContext());
+		
 		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		actionbarTitle.setText(global.getCurrentUser() + "'s Profile");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
@@ -61,8 +66,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		//Bundle extras = getIntent().getExtras();
 		//String email = extras.getString("email");
 
-		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
-		Global global = ((Global) getApplicationContext());
+
 
 		friendsButton.setText("Friends\n(" + global.getNumFriends() + ")");
 
@@ -283,7 +287,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		Bundle extras = getIntent().getExtras();
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		intent.putExtra("email", extras.getString("email"));
-		intent.putExtra("ParentActivityName", "FriendProfileActivity");
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
 		intent.putExtra("ParentEmail", extras.getString("email"));
 		intent.putExtra("mod", "false");
 		startActivity(intent);
