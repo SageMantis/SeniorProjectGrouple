@@ -335,6 +335,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 									.getString("last");
 							String friendEmail = jsonFriends.getJSONObject(i)
 									.getString("email");
+							Log.d("messilyseparatedbylions", friendEmail);
 							friendsEmailList.add(i, friendEmail);
 							String row = firstraw.substring(0, 1).toUpperCase()
 									+ firstraw.substring(1);

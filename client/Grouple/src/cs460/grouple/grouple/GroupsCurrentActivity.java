@@ -33,15 +33,15 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");//need to put email in extras when current groups is called
-		
+		Log.d("PANDA", "EMAIL: " + email);
 		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		Global global = ((Global) getApplicationContext());
-		actionbarTitle.setText(/*global.getName() + "'s */"Groups");
+		actionbarTitle.setText("Groups");
 		
 		
 		//also need to set the mod privs for the current user -> current list of groups
@@ -131,6 +131,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 									+ groupname + "\n");
 				
 							GridLayout rowView;
+							//same each way for now
 							if (extras.getString("mod").equals("true"))
 							{
 								rowView = (GridLayout) li.inflate(
@@ -139,10 +140,12 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 								//Button removeFriendButton = (Button) rowView
 									//	.findViewById(R.id.removeFriendButton);
 								//removeFriendButton.setId(i);
-							} else
+							} 
+							else
 							{
 								rowView = (GridLayout) li.inflate(
 										R.layout.listitem_group, null);
+								groupsNameList.add(i, groupname);
 
 							}
 							Button groupNameButton = (Button) rowView
@@ -161,12 +164,10 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 					}
 				}
 				// user has no groups
-				if (jsonObject.getString("success").toString().equals("2"))
+				if (jsonObject.getString("success").toString().equals("0"))
 				{
 					LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-
 					View row = li.inflate(R.layout.listitem_group, null);
-
 					String message = jsonObject.getString("message").toString();
 					((Button) row.findViewById(R.id.groupNameButton))
 							.setText(message);
