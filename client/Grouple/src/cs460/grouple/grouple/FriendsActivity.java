@@ -12,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class FriendsActivity extends ActionBarActivity
@@ -28,9 +30,18 @@ public class FriendsActivity extends ActionBarActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friends");
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
 
 		Global global = ((Global) getApplicationContext());
 		View friends = findViewById(R.id.friendsLayout);
@@ -147,6 +158,31 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
 		startActivity(intent);
 	}
+	
+	public void startParentActivity(View view)
+	{
+		Bundle extras = getIntent().getExtras();
+
+		String className = extras.getString("ParentClassName");
+		Intent newIntent = null;
+		try
+		{
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			if (extras.getString("ParentEmail") != null)
+			{
+				newIntent.putExtra("email", extras.getString("ParentEmail"));
+			}
+			//newIntent.putExtra("email", extras.getString("email"));
+			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("ParentClassName", "FriendsActivity");
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		startActivity(newIntent);
+	}
+	
 	
 	public void initKillswitchListener()
 	{

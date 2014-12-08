@@ -50,8 +50,8 @@
 
     <color name="hint_text_color">#7022252A</color>
     <color name="text_color">#22252A</color>
-    <color name="button_text_color">#FCF9F0</color>
-    <color name="background_color">#FCF9F0</color>
+    <color name="button_text_color">#F0F0D8</color>
+    <color name="background_color">#FCFBE3</color>
     <color name="layout_background_color">#2855B1D5</color>
     <color name="actionbar_background_color">#55B1D5</color>
     <color name="button_border_color">#FBDD4B</color>
@@ -59,7 +59,7 @@
     <color name="border_color">#55B1D5</color>
    	<color name="button_background_color">#F18C39</color>
 
-   	<color name="white">#FCF9F0</color>
+   	<color name="white">#FCFBE3</color>
 	<color name="light_blue">#55B1D5</color>
     <color name="light_green">#7BE055</color>
     <color name="light_green_opacity">#A07BE055</color>

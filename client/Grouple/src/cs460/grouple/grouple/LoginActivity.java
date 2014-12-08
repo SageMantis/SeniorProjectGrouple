@@ -63,10 +63,10 @@ public class LoginActivity extends Activity
 		// activity.
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
-		//String email = emailEditText.getText().toString();
-		//String password = passwordEditText.getText().toString();
-		String email = "mierze@gmail.com";
-		String password="pass";
+		String email = emailEditText.getText().toString();
+		String password = passwordEditText.getText().toString();
+		//String email = "mierze@gmail.com";
+		//String password="pass";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
 		new getLoginTask()

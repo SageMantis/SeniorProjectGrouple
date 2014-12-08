@@ -11,6 +11,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class SettingsActivity extends ActionBarActivity
@@ -26,7 +29,16 @@ public class SettingsActivity extends ActionBarActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 
 		actionbarTitle.setText("Settings");
@@ -65,6 +77,30 @@ public class SettingsActivity extends ActionBarActivity
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void startParentActivity(View view)
+	{
+		Bundle extras = getIntent().getExtras();
+
+		String className = extras.getString("ParentClassName");
+		Intent newIntent = null;
+		try
+		{
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			if (extras.getString("ParentEmail") != null)
+			{
+				newIntent.putExtra("email", extras.getString("ParentEmail"));
+			}
+			//newIntent.putExtra("email", extras.getString("email"));
+			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("ParentClassName", "SettingsActivity");
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		startActivity(newIntent);
 	}
 	
 	public void initKillswitchListener()

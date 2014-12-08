@@ -16,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,6 +44,15 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		Global global = ((Global) getApplicationContext());
 		actionbarTitle.setText("Groups");
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
 		
 		
 		//also need to set the mod privs for the current user -> current list of groups
@@ -93,6 +104,26 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	public void startParentActivity(View view)
+	{
+		Bundle extras = getIntent().getExtras();
+
+		String className = extras.getString("ParentClassName");
+		Intent newIntent = null;
+		try
+		{
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			newIntent.putExtra("email", extras.getString("email"));
+			newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("mod", "false");
+			newIntent.putExtra("ParentClassName", "GroupsCurrentActivity");
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		startActivity(newIntent);
+	}
 
 	private class getGroupsTask extends AsyncTask<String, Void, String>
 	{
