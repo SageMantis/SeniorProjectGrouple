@@ -1,7 +1,6 @@
 package cs460.grouple.grouple;
 
 import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import android.content.BroadcastReceiver;
@@ -10,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class GroupsCurrentActivity extends ActionBarActivity {
 
@@ -29,8 +30,20 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups_current);
+		
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");//need to put email in extras when current groups is called
+		
+		/*Action bar*/
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(true);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		Global global = ((Global) getApplicationContext());
+		actionbarTitle.setText(/*global.getName() + "'s */"Groups");
+		
+		
 		//also need to set the mod privs for the current user -> current list of groups
 		new getGroupsTask()
 		.execute("http://98.213.107.172/android_connect/get_groups.php?email="

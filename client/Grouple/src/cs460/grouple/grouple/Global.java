@@ -324,8 +324,6 @@ public class Global extends Application {
 			
 			HttpPost httpPost = new HttpPost(URL);
 			try {
-
-				
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 				HttpResponse response = httpClient.execute(httpPost);
