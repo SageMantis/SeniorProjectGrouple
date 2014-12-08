@@ -179,7 +179,9 @@ public class GroupCreateActivity extends ActionBarActivity {
 				nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
 				nameValuePairs.add(new BasicNameValuePair("mem",email));
 				//Setting role as true makes you the admin.
-				nameValuePairs.add(new BasicNameValuePair("role", "true"));
+				nameValuePairs.add(new BasicNameValuePair("role", "C"));
+				//Add the sender
+				nameValuePairs.add(new BasicNameValuePair("sender", email));
 				//Submit these namevalue pairs to the database.
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				response.add(httpClient.execute(httpPost));
@@ -190,21 +192,24 @@ public class GroupCreateActivity extends ActionBarActivity {
 					//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
 					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
 					nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
-					//use this fucking name to get the index of the fucking friendslistname and use that goddamn index to get the fucking email address ffs
+					//use this name to get the index of the friendslistname and use that index to get the  email address ffs
 					int temp_id = friendsNameList.indexOf(added.get(i));
 					String temp_email = friendsEmailList.get(temp_id);
 					//Add the email address to the mf.
 					nameValuePairs.add(new BasicNameValuePair("mem",temp_email));
 					
 					if(role.get(i)){
-						nameValuePairs.add(new BasicNameValuePair("role", "true"));
+						nameValuePairs.add(new BasicNameValuePair("role", "A"));
 					}
 					else{
-						nameValuePairs.add(new BasicNameValuePair("role", "false"));
+						nameValuePairs.add(new BasicNameValuePair("role", "M"));
 					}
+					//Add the sender. (Yourself)
+					nameValuePairs.add(new BasicNameValuePair("sender", email));
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 					response.add(httpClient.execute(httpPost));
 				}
+				
 				//Here we will return to the Group main page.
 				startGroupsActivity(null);
 				finish();
