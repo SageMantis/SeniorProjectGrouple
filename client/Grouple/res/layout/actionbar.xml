@@ -21,7 +21,20 @@
         android:padding="20dp"
         android:scaleType="fitCenter"
 	/>-->
+<LinearLayout
+        android:id="@+id/linearLayoutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+    	android:background="@color/layout_background_color"
+        android:orientation="horizontal" >
 
+      <ImageButton
+        android:id="@+id/actionbarUpButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:layout_marginLeft="2dp"
+        android:src="@drawable/grouple_icon" />
         
 	   <TextView
 	    android:layout_width="wrap_content"
@@ -35,5 +48,8 @@
         android:id="@+id/actionbarTitleTextView"
         android:textSize="24sp" />
 	   
+       </LinearLayout>
+      
+      
 
 </LinearLayout>

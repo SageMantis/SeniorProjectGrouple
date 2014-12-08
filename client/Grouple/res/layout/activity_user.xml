@@ -103,7 +103,7 @@
 	   	    android:layout_margin="0dp"
 	   	    android:layout_row="4"
 	   	    android:fontFamily="sans-serif-condensed"
-	   	    android:onClick="startGroupsActivity"
+	   	    android:onClick="startGroupsCurrentActivity"
 	   	    android:text="Groups\n"
 	   	    android:textColor="@color/button_text_color"
 

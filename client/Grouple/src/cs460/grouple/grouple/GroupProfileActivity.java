@@ -273,9 +273,9 @@ public class GroupProfileActivity extends ActionBarActivity
 					
 					bio = contents[2];
 					String role = contents[5];
-					String member = contents[6];
+					String member = contents[7];
 					Log.d("count group members", "The contents of this row is:\n" + 
-							contents[6] + ".");
+							contents[7] + ".");
 					
 					//<<<<<<<<<< here >>>>>>>>>>//
 					GridLayout rowView = (GridLayout) inflater.inflate(R.layout.listitem_friend_noaccess, null);

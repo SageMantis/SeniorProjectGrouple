@@ -22,7 +22,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,11 +39,21 @@ public class FriendProfileActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_profile);
-		System.out.println("onCreate FriendProfileActivity");
+		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
 
 		// Global global = ((Global)getApplicationContext());
 		// actionbarTitle.setText(global.getName()+"'s Profile");
@@ -111,30 +123,30 @@ public class FriendProfileActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public Intent getSupportParentActivityIntent()
+	public void startParentActivity(View view)
 	{
-		Intent parentIntent = getIntent();
-		String className = parentIntent.getStringExtra("ParentClassName"); // getting
-																			// the
-																			// parent
-																			// class
-																			// name
-
+		Bundle parentIntent = getIntent().getExtras();
+		String className = parentIntent.getString("ParentClassName");
+		
 		Intent newIntent = null;
 		try
 		{
 			// you need to define the class with package name
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			Bundle extras = getIntent().getExtras();
-			String email = extras.getString("ParentEmail");
-			newIntent.putExtra("email", email);
+			String parentEmail = parentIntent.getString("ParentEmail");
+			String email = parentIntent.getString("email");
+			newIntent.putExtra("email", parentEmail);
+			//todo: check compared to current user first
+			//or pass in a parentMod in the extras
+			newIntent.putExtra("mod", "false");
+			newIntent.putExtra("ParentEmail", email);
+			newIntent.putExtra("ParentClassName", "FriendProfileActivity");
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
 		}
-		return newIntent;
+		startActivity(newIntent);
 	}
 	/*
 	 * public boolean onKeyDown(int keyCode, KeyEvent event) { if(keyCode ==
@@ -266,9 +278,14 @@ public class FriendProfileActivity extends ActionBarActivity
 		}
 	}
 
-	public void startGroupsActivity(View view)
+	public void startGroupsCurrentActivity(View view)
 	{
-		Intent intent = new Intent(this, GroupsActivity.class);
+		Bundle extras = getIntent().getExtras();
+		Intent intent = new Intent(this, GroupsCurrentActivity.class);
+		intent.putExtra("email", extras.getString("email"));
+		intent.putExtra("ParentActivityName", "FriendProfileActivity");
+		intent.putExtra("ParentEmail", extras.getString("email"));
+		intent.putExtra("mod", "false");
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -279,7 +296,9 @@ public class FriendProfileActivity extends ActionBarActivity
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
+		intent.putExtra("ParentEmail", email);
 		intent.putExtra("email", email);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
 		intent.putExtra("mod", "false");
 		startActivity(intent);
 		bmp = null;

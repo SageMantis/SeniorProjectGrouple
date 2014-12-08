@@ -24,6 +24,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,8 +46,18 @@ public class UserActivity extends ActionBarActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
+		//upButton.setOnClickListener
 		Global global = ((Global) getApplicationContext());
 		actionbarTitle.setText(global.getName() + "'s Profile");
 		
@@ -125,14 +137,14 @@ public class UserActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			startHomeActivity(null);
+			startParentActivity(null);
 		}
 		return false;
 	}
 
 
 	/* Start activity functions for going back to home and logging out */
-	public void startHomeActivity(View view)
+	public void startParentActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
@@ -229,10 +241,14 @@ public class UserActivity extends ActionBarActivity
 		}
 	}
 
-	public void startGroupsActivity(View view)
+	public void startGroupsCurrentActivity(View view)
 	{
-		Intent intent = new Intent(this, GroupsActivity.class);
+		Intent intent = new Intent(this, GroupsCurrentActivity.class);
+		Global global = ((Global) getApplicationContext());
 		intent.putExtra("ParentClassName", "UserActivity");
+		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("mod", "true");
+		intent.putExtra("ParentEmail", global.getCurrentUser());
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -241,9 +257,11 @@ public class UserActivity extends ActionBarActivity
 	public void startCurrentFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
-		intent.putExtra("ParentClassName", "UserActivity");
 		Global global = ((Global) getApplicationContext());
-		intent.putExtra("email", global.getCurrentUser());
+		String email = global.getCurrentUser();
+		intent.putExtra("ParentClassName", "UserActivity");
+		intent.putExtra("ParentEmail", email);
+		intent.putExtra("email", email);
 		intent.putExtra("mod", "true");
 		startActivity(intent);
 		bmp = null;
