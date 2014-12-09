@@ -195,7 +195,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					System.out.println("No friends found");
 					GridLayout sadGuy = (GridLayout) li.inflate(
-							R.layout.listitem_sadguy, null);
+					R.layout.listitem_sadguy, null);
+					sadGuy.findViewById(R.id.sadGuyTextView);
 					friendRequestsLayout.addView(sadGuy);
 					// If no friend requests are found, display no friends
 					// message

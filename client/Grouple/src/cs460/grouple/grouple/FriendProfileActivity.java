@@ -298,6 +298,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		intent.putExtra("email", extras.getString("email"));
 		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("ParentParentEmail", extras.getString("ParentEmail"));
 		intent.putExtra("ParentEmail", extras.getString("email"));
 		intent.putExtra("mod", "false");
 		startActivity(intent);

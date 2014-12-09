@@ -134,10 +134,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
-        <activity
-            android:name=".Resources"
-            android:label="@string/title_activity_resources" >
-        </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" 
