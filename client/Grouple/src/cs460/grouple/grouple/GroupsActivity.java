@@ -47,6 +47,11 @@ public class GroupsActivity extends ActionBarActivity
 
 			}
 		});
+
+		Global global = ((Global) getApplicationContext());
+		View groups = findViewById(R.id.groupsLayout);
+		global.fetchNumGroupInvites(global.getCurrentUser());
+		global.setNotifications(groups);
 		
 		initKillswitchListener();
 	}
@@ -130,8 +135,10 @@ public class GroupsActivity extends ActionBarActivity
 	/* Start activity methods for group sub-activities */
 	public void startGroupCreateActivity(View view)
 	{
+		Bundle extras = getIntent().getExtras();
 		Intent intent = new Intent(this, GroupCreateActivity.class);
 		intent.putExtra("ParentClassName", "GroupsActivity");
+		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
 		Global global = (Global)getApplicationContext();
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
@@ -148,6 +155,7 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
+		intent.putExtra("ParentActivity", "GroupsActivity");
 		intent.putExtra("email", global.getCurrentUser());//specifies which email for the list of groups
 		intent.putExtra("mod", "true");//gives user ability admin in the current groups screen
 		startActivity(intent);

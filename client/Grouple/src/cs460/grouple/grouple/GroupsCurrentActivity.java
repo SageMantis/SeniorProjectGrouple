@@ -59,7 +59,6 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		new getGroupsTask()
 		.execute("http://98.213.107.172/android_connect/get_groups.php?email="
 				+ email);
-		
 		initKillswitchListener();
 	}
 
@@ -114,8 +113,11 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		{
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			newIntent.putExtra("ParentEmail", extras.getString("ParentParentEmail"));
-			newIntent.putExtra("email", extras.getString("ParentEmail"));
+			if (extras.getString("ParentParentEmail") != null)
+			{
+				newIntent.putExtra("ParentEmail", extras.getString("ParentParentEmail"));
+			}
+				newIntent.putExtra("email", extras.getString("ParentEmail"));
 			newIntent.putExtra("mod", "false");
 			newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
 		} catch (ClassNotFoundException e)
@@ -198,11 +200,11 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 				if (jsonObject.getString("success").toString().equals("0"))
 				{
 					LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-					View row = li.inflate(R.layout.listitem_group, null);
-					String message = jsonObject.getString("message").toString();
-					((Button) row.findViewById(R.id.groupNameButton))
-							.setText(message);
-					row.findViewById(R.id.removeGroupButton).setVisibility(1);
+					View row = li.inflate(R.layout.listitem_sadguy, null);
+					//String message = jsonObject.getString("message").toString();
+					((TextView) row.findViewById(R.id.sadGuyTextView))
+							.setText("You are not in any groups.");
+					//row.findViewById(R.id.removeGroupButton).setVisibility(1);
 					currentGroupsLayout.addView(row);
 				} else
 				{

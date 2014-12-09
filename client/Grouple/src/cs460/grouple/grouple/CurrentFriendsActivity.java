@@ -224,12 +224,9 @@ public class CurrentFriendsActivity extends ActionBarActivity
 					//inflate the new no friends layout 
 					LinearLayout currentFriendsRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 
-					View row = li.inflate(R.layout.listitem_friend, null);
-
-					String message = jsonObject.getString("message").toString();
-					((Button) row.findViewById(R.id.friendNameButton))
-							.setText(message);
-					row.findViewById(R.id.removeFriendButton).setVisibility(1);
+					View row = li.inflate(R.layout.listitem_sadguy, null);
+					((TextView) row.findViewById(R.id.sadGuyTextView))
+							.setText("You do not have any friends.");
 					currentFriendsRL.addView(row);
 
 				} else

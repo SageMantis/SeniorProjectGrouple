@@ -25,12 +25,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-/**
- * 
- *@author Brett
- *TODO: make one function, fetchNotifications that calls all of the various phps, and returns everything nicely / updates activities
- */
-
 public class Global extends Application {
 	private String currentUser;
 	private String acceptEmail;
@@ -38,6 +32,8 @@ public class Global extends Application {
 	private String name;
 	private int numFriendRequests;
 	private int numFriends;
+	private int numGroupInvites;
+	private int numGroups;
 
 
 	public String getCurrentUser() {
@@ -53,13 +49,33 @@ public class Global extends Application {
 		// System.out.println("Friend requests: " + num);
 		// Setting that userNotification
 	}
+	
+	public void setNumGroupInvites(int num)
+	{
+		numGroupInvites = num;
+	}
+	
+	public void setNumGroups(int num)
+	{
+		numGroups = num;
+	}
 
 	public int getNumFriendRequests() {
 		return numFriendRequests;
 	}
+	
+	public int getNumGroupInvites()
+	{
+		return numGroupInvites;
+	}
 
 	public int getNumFriends() {
 		return numFriends;
+	}
+	
+	public int getNumGroups()
+	{
+		return numGroups;
 	}
 
 	public String getName() {
@@ -95,6 +111,8 @@ public class Global extends Application {
 		//todo: think if I can pass an email in here and skip other steps
 		int numFriendRequests = getNumFriendRequests();
 		int numFriends = getNumFriends();
+		int numGroupInvites = getNumGroupInvites();
+		int numGroups = getNumGroups();
 		Button friendsButton = (Button) view.findViewById(R.id.friendsButtonHA);
 
 		//Friends Activity
@@ -140,6 +158,16 @@ public class Global extends Application {
 
 		}
 
+		//Groups activity
+		if (view.findViewById(R.id.pendingGroupsButton) != null)
+		{
+			((Button) view.findViewById(R.id.pendingGroupsButton)).setText("Group Invites (" + numGroupInvites + ")");
+		}
+		if (view.findViewById(R.id.yourGroupsButton) != null)
+		{
+			((Button) view.findViewById(R.id.yourGroupsButton)).setText("My Groups (" + numGroups + ")");
+		}
+		
 		// else do nothing, keep that invisible
 	}
 
@@ -232,15 +260,15 @@ public class Global extends Application {
 				if (jsonObject.getString("success").toString().equals("1")) {
 					System.out.println("Just success on json return");
 					String numRequests =  jsonObject.getString("numGroups");
-					System.out.println("Set it to " + numRequests);
-						//setNumFriendRequests((Integer)numRequests);
+					System.out.println("Set it to " + numRequests); 
+					setNumGroupInvites(Integer.parseInt(numRequests));
 					System.out.println("Number of Friend Requests: " + numRequests);
 					
 					// successful
 				} else {
 					//fetching from server failed
 					Log.d("DB Error", "Error fetching num requests from server");
-					setNumFriendRequests(0);
+					setNumGroupInvites(0);
 				}
 			} catch (Exception e) {
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
@@ -248,6 +276,40 @@ public class Global extends Application {
 		}
 	}
 	
+	public void fetchNumGroups(String email) // Should take in email
+	{
+		new getNumGroupInvitesTask()
+				.execute("http://98.213.107.172/android_connect/get_count_groups.php?email="
+						+ email);
+	}
+	
+	private class getNumGroupsTask extends AsyncTask<String, Void, String> {
+		protected String doInBackground(String... urls) {
+			return readJSONFeed(urls[0], null);
+		}
+
+		protected void onPostExecute(String result) {
+			try {
+				JSONObject jsonObject = new JSONObject(result);
+
+				if (jsonObject.getString("success").toString().equals("1")) {
+					System.out.println("Just success on json return");
+					String numGroups =  jsonObject.getString("numGroups");
+					System.out.println("Set it to " + numGroups); 
+					setNumGroups(Integer.parseInt(numGroups));
+					System.out.println("Number of Groups " + numGroups);
+					
+					// successful
+				} else {
+					//fetching from server failed
+					Log.d("DB Error", "Error fetching num requests from server");
+					setNumGroupInvites(0);
+				}
+			} catch (Exception e) {
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
+	}
 	
 	// Get name, should change to take in email
 	public void fetchName() {
