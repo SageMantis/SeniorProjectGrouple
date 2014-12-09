@@ -26,7 +26,7 @@
       	        android:layout_margin="8dp"
       	        android:layout_row="1"
       	        android:background="@drawable/friends_button_border"
-
+      	              	        android:paddingBottom="10dp"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Friends"
@@ -40,6 +40,7 @@
       	        android:layout_width="100dp"
       	        android:layout_height="100dp"
       	        android:layout_column="1"
+      	              	              	        android:paddingBottom="10dp"
       	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/messages_button_border"
@@ -56,6 +57,7 @@
       	        android:layout_width="100dp"
       	        android:layout_height="100dp"
       	        android:layout_column="2"
+      	              	              	        android:paddingBottom="10dp"
       	        android:layout_margin="8dp"
       	        android:layout_row="0"
       	        android:background="@drawable/settings_button_border"
@@ -79,6 +81,7 @@
       	              	        android:fontFamily="sans-serif"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
+      	              	              	        android:paddingBottom="10dp"
       	        android:text="Groups"
       	        android:textColor="@color/header_text_color"
       	        android:textSize="16sp" />
@@ -93,10 +96,11 @@
       	        android:background="@drawable/user_button_border"
       	        android:textStyle="bold"
       	              	        android:fontFamily="sans-serif"
+      	              	        android:paddingBottom="10dp"
       	        android:gravity="bottom|center_horizontal"
       	        android:onClick="navigate"
       	        android:text="Profile"
-      	        android:textColor="@color/white"
+      	        android:textColor="@color/header_text_color"
 
       	        android:textSize="16sp" />
 
@@ -127,16 +131,20 @@
       	        android:onClick="navigate"
       	        android:text="Events"
       	        android:textColor="@color/header_text_color"
+      	        android:paddingBottom="10dp"
       	        android:textSize="16sp" />
 
       	</GridLayout>
 
       	<ImageView
       	    android:id="@+id/homeIconImageViewHA"
-      	    android:layout_width="400dp"
+      	    android:layout_width="match_parent"
       	    android:layout_height="wrap_content"
-      	    android:layout_alignParentLeft="true"
+      	    android:layout_marginRight="30dp"
+      	    android:layout_marginLeft="30dp"
+      	    android:layout_marginTop="5dp"
       	    android:layout_alignParentTop="true"
+      	    android:layout_centerHorizontal="true"
       	    android:contentDescription="Home Icon"
       	    android:gravity="center"
       	    android:src="@drawable/home_logo_blue"

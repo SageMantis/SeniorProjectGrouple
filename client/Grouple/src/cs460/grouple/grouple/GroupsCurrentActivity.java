@@ -114,10 +114,10 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		{
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			newIntent.putExtra("email", extras.getString("email"));
-			newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("ParentEmail", extras.getString("ParentParentEmail"));
+			newIntent.putExtra("email", extras.getString("ParentEmail"));
 			newIntent.putExtra("mod", "false");
-			newIntent.putExtra("ParentClassName", "GroupsCurrentActivity");
+			newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();

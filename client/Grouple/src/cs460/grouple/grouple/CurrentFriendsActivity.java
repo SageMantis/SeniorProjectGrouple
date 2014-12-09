@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,12 +40,15 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_current_friends);
+
+		Bundle extras = getIntent().getExtras();
+		Global global = ((Global) getApplicationContext());
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText("Friends");
+		actionbarTitle.setText(extras.getString("Name") + "'s Friends");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
@@ -56,7 +60,6 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		});
 		//Global global = ((Global) getApplicationContext());
 
-		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
 		// String email = global.getCurrentUser();
 		System.out.println("Email: " + email);
@@ -78,16 +81,26 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
-
+		String parentClassName = extras.getString("ParentParentClassName");
 		String className = extras.getString("ParentClassName");
+		if (className == null)
+		{
+			className = "UserActivity";
+		}
 		Intent newIntent = null;
 		try
 		{
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			newIntent.putExtra("email", extras.getString("email"));
-			newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", "CurrentFriendsActivity");
+			newIntent.putExtra("email", extras.getString("ParentEmail"));
+			if (extras.getString("ParentParentEmail") != null)
+			{
+				newIntent.putExtra("ParentEmail", extras.getString("ParentParentEmail"));
+			}
+			if (parentClassName != null)
+			{
+				newIntent.putExtra("ParentClassName", parentClassName);
+			}
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
@@ -207,6 +220,8 @@ public class CurrentFriendsActivity extends ActionBarActivity
 				// user has no friends
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
+					//Double check 2 is the no friends code
+					//inflate the new no friends layout 
 					LinearLayout currentFriendsRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 
 					View row = li.inflate(R.layout.listitem_friend, null);
@@ -231,12 +246,15 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		}
 	}
 
-	// Removing this makes it default to going to the previous page you were on.
-	/*
-	 * @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-	 * if(keyCode == KeyEvent.KEYCODE_BACK) { startFriendsActivity(null); }
-	 * return false; }
-	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			startParentActivity(null);
+		}
+		return false;
+	}
 
 	/* Start activity function for going back and logging out */
 	public void startFriendsActivity(View view)
@@ -328,10 +346,14 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		int id = view.getId();
 		// got the id, now we need to grab the users email and somehow pass it
 		// to the activity
+		Bundle extras = getIntent().getExtras();
 		String friendEmail = friendsEmailList.get(id);
 		Intent intent = new Intent(this, FriendProfileActivity.class);
 		intent.putExtra("ParentClassName", "CurrentFriendsActivity");
-		Bundle extras = getIntent().getExtras();
+		intent.putExtra("ParentParentEmail", extras.getString("ParentEmail"));
+		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
+		intent.putExtra("ParentName", extras.getString("Name"));
+
 		String email = extras.getString("email");
 		intent.putExtra("ParentEmail", email);
 		Global global = ((Global) getApplicationContext());

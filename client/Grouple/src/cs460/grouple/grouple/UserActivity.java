@@ -50,11 +50,8 @@ public class UserActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View view) {
-
 				startParentActivity(view);
-
 			}
 		});
 		//upButton.setOnClickListener
@@ -146,11 +143,31 @@ public class UserActivity extends ActionBarActivity
 	/* Start activity functions for going back to home and logging out */
 	public void startParentActivity(View view)
 	{
-		Intent intent = new Intent(this, HomeActivity.class);
-		startActivity(intent);
 		bmp = null;
 		iv = null;
 		finish();
+	
+		
+		Bundle extras = getIntent().getExtras();
+
+		String className = extras.getString("ParentClassName");
+		Intent newIntent = null;
+		try
+		{
+			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+			if (extras.getString("ParentEmail") != null)
+			{
+				newIntent.putExtra("email", extras.getString("ParentEmail"));
+			}
+			//newIntent.putExtra("email", extras.getString("email"));
+			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			newIntent.putExtra("ParentClassName", extras.getString("ParentClassName"));
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		startActivity(newIntent);
 	}
 
 	public void startEditProfileActivity(View view)
@@ -259,8 +276,11 @@ public class UserActivity extends ActionBarActivity
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		Global global = ((Global) getApplicationContext());
 		String email = global.getCurrentUser();
+		Bundle extras = getIntent().getExtras();
 		intent.putExtra("ParentClassName", "UserActivity");
+		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
 		intent.putExtra("ParentEmail", email);
+		intent.putExtra("Name", global.getName());
 		intent.putExtra("email", email);
 		intent.putExtra("mod", "true");
 		startActivity(intent);

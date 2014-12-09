@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,13 +34,13 @@ public class FriendProfileActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 	private Bitmap bmp;
 	private ImageView iv;
-
+	String profileName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_profile);
-		Bundle extras = getIntent().getExtras();
+		
 		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
 		Global global = ((Global) getApplicationContext());
 		
@@ -129,8 +130,8 @@ public class FriendProfileActivity extends ActionBarActivity
 
 	public void startParentActivity(View view)
 	{
-		Bundle parentIntent = getIntent().getExtras();
-		String className = parentIntent.getString("ParentClassName");
+		Bundle extras = getIntent().getExtras();
+		String className = extras.getString("ParentClassName");
 		
 		Intent newIntent = null;
 		try
@@ -138,24 +139,33 @@ public class FriendProfileActivity extends ActionBarActivity
 			// you need to define the class with package name
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			String parentEmail = parentIntent.getString("ParentEmail");
-			String email = parentIntent.getString("email");
-			newIntent.putExtra("email", parentEmail);
+			String email = extras.getString("ParentEmail");
+			String parentEmail = extras.getString("ParentParentEmail");
+			newIntent.putExtra("email", email);
 			//todo: check compared to current user first
 			//or pass in a parentMod in the extras
 			newIntent.putExtra("mod", "false");
-			newIntent.putExtra("ParentEmail", email);
-			newIntent.putExtra("ParentClassName", "FriendProfileActivity");
+			if (extras.getString("ParentName") != null)
+			{
+				newIntent.putExtra("Name", extras.getString("ParentName"));
+			}
+			newIntent.putExtra("ParentEmail", parentEmail);
+			newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
 		}
 		startActivity(newIntent);
 	}
-	/*
-	 * public boolean onKeyDown(int keyCode, KeyEvent event) { if(keyCode ==
-	 * KeyEvent.KEYCODE_BACK) { //startHomeActivity(null); } return false; }
-	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			startParentActivity(null);
+		}
+		return false;
+	}
 
 	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
@@ -214,7 +224,7 @@ public class FriendProfileActivity extends ActionBarActivity
 					last = last.substring(0, 1).toUpperCase()
 							+ last.substring(1);
 
-					String name = first + " " + last;
+					profileName = first + " " + last;
 					String age = jsonProfileArray.getString(2);
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
@@ -243,7 +253,7 @@ public class FriendProfileActivity extends ActionBarActivity
 					}
 
 					TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-					actionbarTitle.setText(name + "'s Profile");
+					actionbarTitle.setText(profileName + "'s Profile");
 					TextView ageTextView = (TextView) findViewById(R.id.ageTextViewFPA);
 					TextView locationTextView = (TextView) findViewById(R.id.locationTextViewFPA);
 					TextView bioTextView = (TextView) findViewById(R.id.bioTextViewFPA);
@@ -300,8 +310,12 @@ public class FriendProfileActivity extends ActionBarActivity
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		Bundle extras = getIntent().getExtras();
 		String email = extras.getString("email");
+		String parentEmail = extras.getString("ParentEmail");
+		intent.putExtra("Name", profileName);
 		intent.putExtra("ParentEmail", email);
 		intent.putExtra("email", email);
+		intent.putExtra("ParentParentEmail", parentEmail);
+		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
 		intent.putExtra("ParentClassName", "FriendProfileActivity");
 		intent.putExtra("mod", "false");
 		startActivity(intent);
