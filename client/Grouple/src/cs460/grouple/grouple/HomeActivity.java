@@ -25,6 +25,7 @@ public class HomeActivity extends ActionBarActivity
 	{
 		try
 		{
+			//Waiting
 			Thread.sleep(500);
 		} catch (InterruptedException e1)
 		{
@@ -116,7 +117,42 @@ public class HomeActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-
+			Bundle extras = getIntent().getExtras();
+			if (extras.getString("ParentClassName") != null)
+			{
+				Intent newIntent = null;
+				try
+				{
+					// you need to define the class with package name
+					newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+							+ extras.getString("ParentClassName")));
+					
+					String email = extras.getString("ParentEmail");
+					
+					String parentEmail = extras.getString("ParentParentEmail");
+					
+					if (email != null)
+					{
+						newIntent.putExtra("email", email);
+					}
+					
+					if (parentEmail != null)
+					{
+						newIntent.putExtra("ParentEmail", parentEmail);
+					}
+					//todo: check compared to current user first
+					//or pass in a parentMod in the extras
+					newIntent.putExtra("mod", "false");
+					if (extras.getString("ParentParentClassName") != null)
+					{
+						newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
+					}
+				} catch (ClassNotFoundException e)
+					{
+						e.printStackTrace();
+					}
+				startActivity(newIntent);
+			}
 		}
 		return false;
 	}
@@ -155,6 +191,7 @@ public class HomeActivity extends ActionBarActivity
 		case R.id.userButtonHA:
 			intent = new Intent(this, UserActivity.class);
 			intent.putExtra("ParentClassName", "HomeActivity");
+			intent.putExtra("ParentParentClassName", "HomeActivity");
 			startActivity(intent);
 			break;
 		default:

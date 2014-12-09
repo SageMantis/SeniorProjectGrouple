@@ -44,6 +44,8 @@ public class RegisterActivity extends ActionBarActivity {
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 
+		
+		
 		getActionBar().hide();
 		initKillswitchListener();
 	}

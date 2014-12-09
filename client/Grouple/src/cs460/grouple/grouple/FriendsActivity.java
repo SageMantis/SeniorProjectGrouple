@@ -76,6 +76,22 @@ public class FriendsActivity extends ActionBarActivity
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			Global global = ((Global) getApplicationContext());
+			//todo mess with notification update here
+			View friends = findViewById(R.id.friendsLayout);
+			View home = ((View) friends.getParent());
+			global.fetchNumFriendRequests(global.getCurrentUser());
+			global.setNotifications(home);
+			startParentActivity(null);
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 
@@ -111,20 +127,7 @@ public class FriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			Global global = ((Global) getApplicationContext());
-			View friends = findViewById(R.id.friendsLayout);
-			View home = ((View) friends.getParent());
-			global.fetchNumFriendRequests(global.getCurrentUser());
-			global.setNotifications(home);
-			startHomeActivity(home);
-		}
-		return false;
-	}
+
 
 	/*
 	 * Start activity functions for friends sub activities, going back and
@@ -133,6 +136,7 @@ public class FriendsActivity extends ActionBarActivity
 	public void startAddFriendActivity(View view)
 	{
 		Intent intent = new Intent(this, AddFriendActivity.class);
+		intent.putExtra("ParentClassName", "FriendsActivity");
 		startActivity(intent);
 	}
 
@@ -142,6 +146,9 @@ public class FriendsActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("Name", global.getName());
+		intent.putExtra("ParentEmail", global.getCurrentUser());
+		intent.putExtra("ParentParentClassName", "HomeActivity");
 		intent.putExtra("mod", "true");
 		startActivity(intent);
 	}
@@ -149,13 +156,17 @@ public class FriendsActivity extends ActionBarActivity
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
+		intent.putExtra("ParentClassName", "FriendsActivity");
 		startActivity(intent);
 		finish();
 	}
 
 	public void startFriendRequestsActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
+		intent.putExtra("email", global.getCurrentUser());
+		intent.putExtra("ParentClassName", "FriendsActivity");
 		startActivity(intent);
 	}
 	

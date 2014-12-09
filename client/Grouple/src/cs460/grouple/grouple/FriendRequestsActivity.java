@@ -31,6 +31,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,6 +53,15 @@ public class FriendRequestsActivity extends ActionBarActivity
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friend Requests");
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+
+				startParentActivity(view);
+
+			}
+		});
 
 		// display friend requests
 		// Create helper and if successful, will bring the correct home
@@ -124,6 +136,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected void onPostExecute(String result)
 		{
 			LayoutInflater li = getLayoutInflater();
+			LinearLayout friendRequestsLayout = (LinearLayout) findViewById(R.id.friendRequestsLayout);
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
@@ -137,9 +150,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 					if (jsonSenders != null)
 					{
-						View friendRequests = findViewById(R.id.friendRequestsLayout);
 						global.setNumFriendRequests(jsonSenders.length());
-						global.setNotifications(friendRequests);
+						global.setNotifications(friendRequestsLayout);
 						System.out.println(jsonSenders.toString() + "\n"
 								+ jsonSenders.length());
 
@@ -154,7 +166,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 							senders.add(row);
 							System.out.println("Row: " + row + "\nCount: " + i);
 						}
-						LinearLayout friendRequestsLayout = (LinearLayout) findViewById(R.id.friendRequestsLayout);
+						
 						// looping thru array and inflating listitems to the
 						// friend requests list
 						for (int i = 0; i < senders.size(); i++)
@@ -171,15 +183,24 @@ public class FriendRequestsActivity extends ActionBarActivity
 					} else
 					// no friend requests
 					{
+
+						// Setting text of each friend request to the email
+						// of the sender
+						//((ImageView) sadGuy
+							//	.findViewById(R.id.sadGuyImageView))
+								//.setText("You have no new friend requests.");
 						global.setNumFriendRequests(0);
 					}
 				} else
 				{
 					System.out.println("No friends found");
+					GridLayout sadGuy = (GridLayout) li.inflate(
+							R.layout.listitem_sadguy, null);
+					friendRequestsLayout.addView(sadGuy);
 					// If no friend requests are found, display no friends
 					// message
-					TextView noFriends = (TextView) findViewById(R.id.noFriendRequestsTextViewFRA);
-					noFriends.setVisibility(0);
+					//TextView noFriends = (TextView) findViewById(R.id.noFriendRequestsTextViewFRA);
+					//noFriends.setVisibility(0);
 				}
 			} catch (Exception e)
 			{
@@ -354,7 +375,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 	{
 		protected String doInBackground(String... urls)
 		{
-			return readJSONFeedAccept(urls[0]);
+			Global global = ((Global) getApplicationContext());
+			String receiver = global.getCurrentUser();
+			String sender = global.getAcceptEmail();
+			// Add your data
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
+			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
 		protected void onPostExecute(String result)
@@ -387,59 +415,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 	}
 
-	public String readJSONFeedAccept(String URL)
-	{
-		Global global = ((Global) getApplicationContext());
-		String receiver = global.getCurrentUser();
-		String sender = global.getAcceptEmail();
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(URL);
-		try
-		{
-			// Add your data
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			HttpResponse response = httpClient.execute(httpPost);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			Global global = ((Global) getApplicationContext());
 			View friendRequests = findViewById(R.id.friendRequestsLayout);
-			View friends = ((View) friendRequests.getParent());
-			global.fetchNumFriendRequests(global.getCurrentUser());
-			global.setNotifications(friendRequests);
-			startFriendsActivity(friends);
+			startParentActivity(friendRequests);
 		}
 		return false;
 	}
@@ -458,6 +441,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 			{
 				newIntent.putExtra("email", extras.getString("ParentEmail"));
 			}
+			Global global = ((Global) getApplicationContext());
+			View friendRequests = findViewById(R.id.friendRequestsLayout);
+			View friends = ((View) friendRequests.getParent());
+			global.fetchNumFriendRequests(global.getCurrentUser());
+			global.setNotifications(friendRequests);
 			//newIntent.putExtra("email", extras.getString("email"));
 			//newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("ParentClassName", "FriendRequestsActivity");
