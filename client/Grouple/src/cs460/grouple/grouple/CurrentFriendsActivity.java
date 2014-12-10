@@ -32,6 +32,8 @@ import android.widget.TextView;
 
 public class CurrentFriendsActivity extends ActionBarActivity
 {
+	Intent parentIntent;
+	Intent upIntent;
 	BroadcastReceiver broadcastReceiver;
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
 
@@ -41,8 +43,18 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_current_friends);
 
-		Bundle extras = getIntent().getExtras();
-		Global global = ((Global) getApplicationContext());
+		
+		View currentFriends = findViewById(R.id.currentFriendsContainer);
+		load(currentFriends);
+		
+	}
+
+	
+	/* loading actionbar */
+	public void initActionBar()
+	{
+		Bundle extras = parentIntent.getExtras();
+	
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -50,62 +62,71 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText(extras.getString("Name") + "'s Friends");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
-
+	
+		upButton.setOnClickListener(new OnClickListener() 
+		{
+	
 			public void onClick(View view) {
-
-				startParentActivity(view);
-
+				upIntent.putExtra("up", "true");
+				startActivity(upIntent);
+				finish();
 			}
 		});
-		//Global global = ((Global) getApplicationContext());
+				
+	}
+	
+	
+	/* loading in everything for current friends */
+	public void load(View view)
+	{
+		Global global = ((Global) getApplicationContext());
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		//do a check that it is not from a back push
+		if (extras.getString("up").equals("true"))
+		{
+			//pull a new intent from the stack
+			//load in everything from that intent
+			System.out.println("Should be fetching off stack for current friends");
+			parentIntent = global.getNextParentIntent(view);
+		}
+		else
+		{
+			//add to stack
+			parentIntent = intent;
+			//trying to add to stack whenever the page is actually left
+		}	
+		Bundle parentExtras = parentIntent.getExtras();
+		String className = parentExtras.getString("ParentClassName");
+		String email = parentExtras.getString("email");
+		try
+		{
+			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		String email = extras.getString("email");
-		// String email = global.getCurrentUser();
-		System.out.println("Email: " + email);
 		new getFriendsTask()
 				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
 						+ email);
 
+		initActionBar();
 		initKillswitchListener();
+		
 	}
-
 	@Override
 	protected void onDestroy()
 	{
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
-	}
-
-	public void startParentActivity(View view)
-	{
-		Bundle extras = getIntent().getExtras();
-		String parentClassName = extras.getString("ParentParentClassName");
-		String className = extras.getString("ParentClassName");
-		if (className == null)
-		{
-			className = "UserActivity";
-		}
-		Intent newIntent = null;
-		try
-		{
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-			newIntent.putExtra("email", extras.getString("ParentEmail"));
-			if (extras.getString("ParentParentEmail") != null)
-			{
-				newIntent.putExtra("ParentEmail", extras.getString("ParentParentEmail"));
-			}
-			if (parentClassName != null)
-			{
-				newIntent.putExtra("ParentClassName", parentClassName);
-			}
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		startActivity(newIntent);
 	}
 
 	@Override
@@ -120,13 +141,13 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Global global = ((Global) getApplicationContext());
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
@@ -139,6 +160,10 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			
+			intent.putExtra("up", "false");
+			intent.putExtra("ParentClassName", "CurrentFriendsActivity");
+			global.addToParentStackCurrentFriends(parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -169,7 +194,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 						System.out.println(jsonFriends.toString() + "\n"
 								+ jsonFriends.length());
 						LinearLayout currentFriendsRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
-						Bundle extras = getIntent().getExtras();
+						Bundle extras = parentIntent.getExtras();
 						// looping thru json and adding to an array
 						for (int i = 0; i < jsonFriends.length(); i++)
 						{
@@ -248,18 +273,13 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			startParentActivity(null);
+			upIntent.putExtra("up", "true");
+			startActivity(upIntent);
+			finish();
 		}
 		return false;
 	}
 
-	/* Start activity function for going back and logging out */
-	public void startFriendsActivity(View view)
-	{
-		Intent intent = new Intent(this, FriendsActivity.class);
-		startActivity(intent);
-		finish();
-	}
 
 	public void removeFriendButton(View view)
 	{
@@ -268,7 +288,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		final String friendEmail = friendsEmailList.get(idz); // Email of friend
 							// to remove
 		// refreshing the current friends layout
-		Bundle extras = getIntent().getExtras();
+		Bundle extras = parentIntent.getExtras();
 		final String email = extras.getString("email");
 		//delete confirmation
 		new AlertDialog.Builder(this)
@@ -343,20 +363,16 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		int id = view.getId();
 		// got the id, now we need to grab the users email and somehow pass it
 		// to the activity
-		Bundle extras = getIntent().getExtras();
+		Bundle extras = parentIntent.getExtras();
 		String friendEmail = friendsEmailList.get(id);
 		Intent intent = new Intent(this, FriendProfileActivity.class);
 		intent.putExtra("ParentClassName", "CurrentFriendsActivity");
-		intent.putExtra("ParentParentEmail", extras.getString("ParentEmail"));
-		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
-		intent.putExtra("ParentName", extras.getString("Name"));
-
-		String email = extras.getString("email");
-		intent.putExtra("ParentEmail", email);
 		Global global = ((Global) getApplicationContext());
+		global.addToParentStackCurrentFriends(parentIntent);
 		global.fetchNumFriends(friendEmail);
 		Thread.sleep(500);
 		intent.putExtra("email", friendEmail);
+		intent.putExtra("up", "false");
 		startActivity(intent);
 
 	}

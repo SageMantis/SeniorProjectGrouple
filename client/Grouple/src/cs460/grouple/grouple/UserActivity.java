@@ -35,13 +35,24 @@ public class UserActivity extends ActionBarActivity
 	private ImageView iv;
 	private Bitmap bmp;
 	BroadcastReceiver broadcastReceiver;
+	Intent parentIntent;
+	Intent upIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
+		
+		View user = findViewById(R.id.userContainer);
+		load(user);
 
+	}
+
+	public void initActionBar()
+	{
+
+		Global global = ((Global) getApplicationContext());
 		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -51,21 +62,58 @@ public class UserActivity extends ActionBarActivity
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				startParentActivity(view);
+				upIntent.putExtra("up", "true");
+				startActivity(upIntent);
+				finish();
 			}
 		});
 		//upButton.setOnClickListener
-		Global global = ((Global) getApplicationContext());
+		//global.fetchNumFriends(email)
 		actionbarTitle.setText(global.getName() + "'s Profile");
+	}
+	
+	public void load(View view)
+	{
+
+		Global global = ((Global) getApplicationContext());
+
 		
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		//do a check that it is not from a back push
+		if (extras.getString("up").equals("true"))
+		{
+			//pull a new intent from the stack
+			//load in everything from that intent
+			parentIntent = global.getNextParentIntent(view);
+		}
+		else
+		{
+			//add to stack
+			parentIntent = intent;
+		}	
+		Bundle parentExtras = parentIntent.getExtras();
+		String className = parentExtras.getString("ParentClassName");
+		
+		try
+		{
+			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		/*Notifications*/
 		global.fetchNumFriends(global.getCurrentUser());
 		global.fetchNumFriendRequests(global.getCurrentUser());
-		// Setting num friends on friends button
-		//Button friendsButton = (Button) findViewById(R.id.friendsButtonUPA);
-		// global.fetchNumFriends();
-		//friendsButton.setText("Friends\n(" + global.getNumFriends() + ")");
-		View user = findViewById(R.id.userLayout);
+
+		View user = findViewById(R.id.userContainer);
 
 		global.setNotifications(user);
 		
@@ -74,9 +122,11 @@ public class UserActivity extends ActionBarActivity
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
+		initActionBar();
 		initKillswitchListener();
+		
 	}
-
+	
 	@Override
 	protected void onDestroy()
 	{
@@ -124,6 +174,8 @@ public class UserActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("ParentClassName", "UserActivity");
+			intent.putExtra("up", "false");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -134,45 +186,20 @@ public class UserActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			startParentActivity(null);
+			upIntent.putExtra("up", "false");
+			startActivity(upIntent);
+			finish();
 		}
 		return false;
 	}
 
-
-	/* Start activity functions for going back to home and logging out */
-	public void startParentActivity(View view)
-	{
-		bmp = null;
-		iv = null;
-		finish();
-	
-		
-		Bundle extras = getIntent().getExtras();
-
-		String className = extras.getString("ParentClassName");
-		Intent newIntent = null;
-		try
-		{
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-			if (extras.getString("ParentEmail") != null)
-			{
-				newIntent.putExtra("email", extras.getString("ParentEmail"));
-			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", extras.getString("ParentClassName"));
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		startActivity(newIntent);
-	}
-
 	public void startEditProfileActivity(View view)
 	{
+		Global global = ((Global)getApplicationContext());
 		Intent intent = new Intent(this, EditProfileActivity.class);
+		intent.putExtra("up", "false");
+		intent.putExtra("ParentClassName", "UserActivity");
+		global.addToParentStackUser(parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -195,8 +222,6 @@ public class UserActivity extends ActionBarActivity
 			nameValuePairs.add(new BasicNameValuePair("email", email));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
-
-		
 
 		protected void onPostExecute(String result)
 		{
@@ -265,6 +290,8 @@ public class UserActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "UserActivity");
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
+		intent.putExtra("up", "false");
+		global.addToParentStackUser(parentIntent);
 		intent.putExtra("ParentEmail", global.getCurrentUser());
 		startActivity(intent);
 		bmp = null;
@@ -276,13 +303,13 @@ public class UserActivity extends ActionBarActivity
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
 		Global global = ((Global) getApplicationContext());
 		String email = global.getCurrentUser();
-		Bundle extras = getIntent().getExtras();
+		global.addToParentStackUser(parentIntent);
 		intent.putExtra("ParentClassName", "UserActivity");
-		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
 		intent.putExtra("ParentEmail", email);
 		intent.putExtra("Name", global.getName());
 		intent.putExtra("email", email);
 		intent.putExtra("mod", "true");
+		intent.putExtra("up", "false");
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -290,8 +317,11 @@ public class UserActivity extends ActionBarActivity
 
 	public void startEventsActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, EventsActivity.class);
 		intent.putExtra("ParentClassName", "UserActivity");
+		global.addToParentStackUser(parentIntent);
+		intent.putExtra("up", "false");
 		startActivity(intent);
 		bmp = null;
 		iv = null;

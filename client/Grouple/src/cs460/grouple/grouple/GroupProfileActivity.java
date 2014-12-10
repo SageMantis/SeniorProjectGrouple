@@ -48,7 +48,9 @@ public class GroupProfileActivity extends ActionBarActivity
 
 	private ImageView iv;
 	private Bitmap bmp;
-	BroadcastReceiver broadcastReceiver;
+	private final static int CAMERA_DATA = 0;
+	private Intent i;
+	private BroadcastReceiver broadcastReceiver;
 	private String gname = "";
 	private String bio = "";
 	private int gcount = 0;
@@ -312,17 +314,21 @@ public class GroupProfileActivity extends ActionBarActivity
 							contents[7] + ".");
 					
 					//<<<<<<<<<< here >>>>>>>>>>//
-					GridLayout rowView = (GridLayout) inflater.inflate(R.layout.listitem_friend_noaccess, null);
+					GridLayout rowView = (GridLayout) inflater.inflate(R.layout.listitem_groupprofile, null);
 					Button removeFriendButton = (Button) rowView.findViewById(R.id.removeFriendButtonNoAccess);
 					Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
 					friendNameButton.setText(member);
-					if(role.equals("false")){
-						removeFriendButton.setText("-");
-						removeFriendButton.setTextColor(getResources().getColor(R.color.light_blue));
+					if(role.equals("C")){
+						removeFriendButton.setText("C");
+						removeFriendButton.setTextColor(getResources().getColor(R.color.black));
 					}
-					else{
+					else if(role.equals("A")){
 						removeFriendButton.setText("A");
 						removeFriendButton.setTextColor(getResources().getColor(R.color.light_green));
+					}
+					else{
+						removeFriendButton.setText("-");
+						removeFriendButton.setTextColor(getResources().getColor(R.color.light_blue));
 					}
 					removeFriendButton.setId(index);
 					friendNameButton.setId(index);
@@ -382,7 +388,33 @@ public class GroupProfileActivity extends ActionBarActivity
 	public void toggleAdmin(View view){
 		
 	}
+	
+	public void editGroupProfileButton(View v)
+	{
+		// TODO Auto-generated method stub
+		switch (v.getId())
+		{
+		case R.id.editGroupProfilePhotoButton:
+			i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			startActivityForResult(i, CAMERA_DATA);
+			break;
 
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int reqCode, int resCode, Intent d)
+	{
+		// TODO Auto-generated method stub
+		super.onActivityResult(reqCode, resCode, d);
+		if (resCode == RESULT_OK)
+		{
+			Bundle extras = d.getExtras();
+			bmp = (Bitmap) extras.get("data");
+			iv.setImageBitmap(bmp);
+		}
+	}
+	
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER

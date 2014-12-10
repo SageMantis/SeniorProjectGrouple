@@ -1,10 +1,17 @@
 package cs460.grouple.grouple;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -25,43 +32,89 @@ import android.widget.TextView;
 
 public class GroupsCurrentActivity extends ActionBarActivity {
 
+	Intent parentIntent;
+	Intent upIntent;
 	BroadcastReceiver broadcastReceiver;
 	private ArrayList<String> groupsNameList = new ArrayList<String>();
+	private String email;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups_current);
-		
-		Bundle extras = getIntent().getExtras();
-		String email = extras.getString("email");//need to put email in extras when current groups is called
-		Log.d("PANDA", "EMAIL: " + email);
-		/*Action bar*/
+
+		View currentFriends = findViewById(R.id.currentFriendsContainer);
+		load(currentFriends);
+	}
+
+	
+	/* loading actionbar */
+	public void initActionBar()
+	{
+		Bundle extras = parentIntent.getExtras();
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		Global global = ((Global) getApplicationContext());
-		actionbarTitle.setText("Groups");
+		actionbarTitle.setText(extras.getString("Name") + "'s Friends");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
-
+	
+		upButton.setOnClickListener(new OnClickListener() 
+		{
 			public void onClick(View view) {
-
-				startParentActivity(view);
-
+				upIntent.putExtra("up", "true");
+				startActivity(upIntent);
+				finish();
 			}
 		});
-		
-		
+				
+	}
+	
+	
+	/* loading in everything for current friends */
+	public void load(View view)
+	{
+		Global global = ((Global) getApplicationContext());
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		//do a check that it is not from a back push
+		if (extras.getString("up").equals("true"))
+		{
+			//pull a new intent from the stack
+			//load in everything from that intent
+			System.out.println("Should be fetching off stack for current friends");
+			parentIntent = global.getNextParentIntent(view);
+		}
+		else
+		{
+			//add to stack
+			parentIntent = intent;
+			//trying to add to stack whenever the page is actually left
+		}	
+		Bundle parentExtras = parentIntent.getExtras();
+		String className = parentExtras.getString("ParentClassName");
+		String email = parentExtras.getString("email");
+		try
+		{
+			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//also need to set the mod privs for the current user -> current list of groups
-		new getGroupsTask()
-		.execute("http://98.213.107.172/android_connect/get_groups.php?email="
-				+ email);
+		new getGroupsTask().execute("http://98.213.107.172/android_connect/get_groups.php?email="+ email);
+	
+		initActionBar();
 		initKillswitchListener();
 	}
-
+	
 	@Override
 	protected void onDestroy()
 	{
@@ -98,34 +151,13 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("ParentClassName", "GroupsCurrentActivity");
+			intent.putExtra("up", "false");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void startParentActivity(View view)
-	{
-		Bundle extras = getIntent().getExtras();
-
-		String className = extras.getString("ParentClassName");
-		Intent newIntent = null;
-		try
-		{
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-			if (extras.getString("ParentParentEmail") != null)
-			{
-				newIntent.putExtra("ParentEmail", extras.getString("ParentParentEmail"));
-			}
-				newIntent.putExtra("email", extras.getString("ParentEmail"));
-			newIntent.putExtra("mod", "false");
-			newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		startActivity(newIntent);
-	}
 
 	private class getGroupsTask extends AsyncTask<String, Void, String>
 	{
@@ -164,7 +196,6 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 									+ groupname + "\n");
 				
 							GridLayout rowView;
-							//same each way for now
 							if (extras.getString("mod").equals("true"))
 							{
 								rowView = (GridLayout) li.inflate(
@@ -173,19 +204,17 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 								//Button removeFriendButton = (Button) rowView
 									//	.findViewById(R.id.removeFriendButton);
 								//removeFriendButton.setId(i);
-							} 
-							else
+							} else
 							{
 								rowView = (GridLayout) li.inflate(
 										R.layout.listitem_group, null);
-								groupsNameList.add(i, groupname);
 
 							}
-							Button groupNameButton = (Button) rowView
-									.findViewById(R.id.groupNameButton);
-
+							//Grab the buttons and set their IDs. Their IDs will fall inline with the array 'groupsNameList'.
+							Button groupNameButton = (Button) rowView.findViewById(R.id.groupNameButton);
+							Button removeButton = (Button) rowView.findViewById(R.id.removeGroupButton);
 							groupNameButton.setText(groupname);
-
+							removeButton.setId(i);
 							groupNameButton.setId(i);
 							rowView.setId(i);
 							currentGroupsLayout.addView(rowView);
@@ -197,14 +226,16 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 					}
 				}
 				// user has no groups
-				if (jsonObject.getString("success").toString().equals("0"))
+				if (jsonObject.getString("success").toString().equals("2"))
 				{
 					LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-					View row = li.inflate(R.layout.listitem_sadguy, null);
-					//String message = jsonObject.getString("message").toString();
-					((TextView) row.findViewById(R.id.sadGuyTextView))
-							.setText("You are not in any groups.");
-					//row.findViewById(R.id.removeGroupButton).setVisibility(1);
+
+					View row = li.inflate(R.layout.listitem_group, null);
+
+					String message = jsonObject.getString("message").toString();
+					((Button) row.findViewById(R.id.groupNameButton))
+							.setText(message);
+					row.findViewById(R.id.removeGroupButton).setVisibility(1);
 					currentGroupsLayout.addView(row);
 				} else
 				{
@@ -252,11 +283,74 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		Log.d("message", "Executing the group profile: " + groupsNameList.get(id));
 		String groupsName = groupsNameList.get(id);
 		Intent intent = new Intent(this, GroupProfileActivity.class);
-		Global global = ((Global) getApplicationContext());
 		//global.fetchNumGroupInvites(groupsName);
 		Thread.sleep(500);
 		intent.putExtra("gname", groupsName);
 		startActivity(intent);
+	}
+	
+	private class deleteGroupTask extends AsyncTask<String, Void, String>
+	{
+		protected String doInBackground(String... urls)
+		{
+			//urls 1, 2 are the emails
+			Global global = ((Global) getApplicationContext());
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+			nameValuePairs.add(new BasicNameValuePair("gname", urls[1]));
+			return global.readJSONFeed(urls[0], nameValuePairs);
+		}
+
+		protected void onPostExecute(String result)
+		{
+			try
+			{
+				JSONObject jsonObject = new JSONObject(result);
+
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
+					// success: group has been deleted
+					Log.d("dbmsg", jsonObject.getString("message"));
+				} else if (jsonObject.getString("success").toString()
+						.equals("2"))
+				{
+					// group was not found in database. Need to throw message alerting the user.
+					Log.d("dbmsg", jsonObject.getString("message"));
+				} else
+				{
+					// sql error
+					Log.d("dbmsg", jsonObject.getString("message"));
+				}
+
+			} catch (Exception e)
+			{
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
+	}
+
+	
+	public void removeGroupButton(View view) throws InterruptedException
+	{
+		//Get the id.
+		int id = view.getId();
+		final String gname = groupsNameList.get(id);
+		new AlertDialog.Builder(this)
+		.setMessage("Are you sure you want to delete this group?")
+		.setCancelable(true)
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int id)
+			{
+				new deleteGroupTask().execute("http://98.213.107.172/android_connect/delete_group.php",gname);
+				//removing all of the views
+				LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
+				currentGroupsLayout.removeAllViews();								
+				//Refresh the page to show the removal of the group.
+				new getGroupsTask().execute("http://98.213.107.172/android_connect/get_groups.php?email="+ email);
+				
+
+			}
+		}).setNegativeButton("Cancel", null).show();
 	}
 
 }

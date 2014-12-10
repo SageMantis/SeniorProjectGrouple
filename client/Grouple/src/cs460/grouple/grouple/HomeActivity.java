@@ -34,6 +34,20 @@ public class HomeActivity extends ActionBarActivity
 		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+
+		Global global = ((Global) getApplicationContext());
+		//Updating notifications
+		View home = findViewById(R.id.homeLayout);
+		global.fetchNumFriendRequests(global.getCurrentUser());
+		global.fetchNumFriends(global.getCurrentUser());
+		global.setNotifications(home);
+
+		initActionBar();
+		initKillswitchListener();
+	}
+	
+	public void initActionBar()
+	{
 		
 		//Actionbar settings
 		ActionBar ab = getSupportActionBar();
@@ -43,17 +57,7 @@ public class HomeActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		Global global = ((Global) getApplicationContext());
 		actionbarTitle.setText("Welcome, " + global.getName() + "!");
-
-		//Updating notifications
-		View home = findViewById(R.id.homeLayout);
-		global.fetchNumFriendRequests(global.getCurrentUser());
-		global.fetchNumFriends(global.getCurrentUser());
-		global.setNotifications(home);
-
-
-		initKillswitchListener();
 	}
-
 	@Override
 	protected void onDestroy()
 	{
@@ -160,43 +164,46 @@ public class HomeActivity extends ActionBarActivity
 	
 	public void navigate(View view)
 	{
-		Intent intent;
+		Intent intent = null;
+
 		switch (view.getId())
 		{
 		case R.id.friendsButtonHA:
 			intent = new Intent(this, FriendsActivity.class);
-			intent.putExtra("ParentClassName", "HomeActivity");
+
 			startActivity(intent);
 			break;
 		case R.id.settingsButtonHA:
 			intent = new Intent(this, SettingsActivity.class);
-			intent.putExtra("ParentClassName", "HomeActivity");
 			startActivity(intent);
 			break;
 		case R.id.eventsButtonHA:
 			intent = new Intent(this, EventsActivity.class);
-			intent.putExtra("ParentClassName", "HomeActivity");
 			startActivity(intent);
 			break;
 		case R.id.messagesButtonHA:
 			intent = new Intent(this, MessagesActivity.class);
-			intent.putExtra("ParentClassName", "HomeActivity");
 			startActivity(intent);
 			break;
 		case R.id.groupsButtonHA:
 			intent = new Intent(this, GroupsActivity.class);
-			intent.putExtra("ParentClassName", "HomeActivity");
 			startActivity(intent);
 			break;
 		case R.id.userButtonHA:
 			intent = new Intent(this, UserActivity.class);
-			intent.putExtra("ParentClassName", "HomeActivity");
-			intent.putExtra("ParentParentClassName", "HomeActivity");
-			startActivity(intent);
+
 			break;
 		default:
+		
 				break;
 		}
+		if (intent != null)
+		{
+			intent.putExtra("ParentClassName", "HomeActivity");
+			intent.putExtra("up", "false");
+			startActivity(intent);
+		}
+
 	}
 
 
