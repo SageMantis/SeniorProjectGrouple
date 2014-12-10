@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,13 +52,13 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 	/* loading actionbar */
 	public void initActionBar()
 	{
-		Bundle extras = parentIntent.getExtras();
+		Global global = ((Global) getApplicationContext());
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText(extras.getString("Name") + "'s Friends");
+		actionbarTitle.setText(global.getName() + "'s Groups");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 	
 		upButton.setOnClickListener(new OnClickListener() 
@@ -99,6 +100,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 		String email = parentExtras.getString("email");
+		global.fetchName(email);
 		try
 		{
 			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
@@ -114,6 +116,19 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		initActionBar();
 		initKillswitchListener();
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			upIntent.putExtra("up", "true");
+			startActivity(upIntent);
+			finish();
+		}
+		return false;
+	}
+
 	
 	@Override
 	protected void onDestroy()
@@ -132,13 +147,13 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Global global = ((Global) getApplicationContext());
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
@@ -153,6 +168,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("ParentClassName", "GroupsCurrentActivity");
 			intent.putExtra("up", "false");
+			global.addToParentStackGroupsCurrent(parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -276,6 +292,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 	}
 	
 	public void addToGroupTable(View view) throws InterruptedException {
+		Global global = ((Global) getApplicationContext());
 		// launches GroupProfileActivity, loading the page to its corresponding group
 		int id = view.getId();
 		// got the id, now we need to grab the users email and somehow pass it
@@ -286,6 +303,9 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		//global.fetchNumGroupInvites(groupsName);
 		Thread.sleep(500);
 		intent.putExtra("gname", groupsName);
+		intent.putExtra("up", "false");
+		intent.putExtra("ParentClassName", "GroupsCurrentActivity");
+		global.addToParentStackGroupsCurrent(parentIntent);
 		startActivity(intent);
 	}
 	

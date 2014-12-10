@@ -60,9 +60,10 @@ public class FriendProfileActivity extends ActionBarActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
+
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		//actionbarTitle.setText(global.getCurrentUser() + "'s Profile");
+		actionbarTitle.setText(global.getName() + "'s Profile");
 		
 		//handling up navigation
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
@@ -93,18 +94,23 @@ public class FriendProfileActivity extends ActionBarActivity
 			//pull a new intent from the stack
 			//load in everything from that intent
 			parentIntent = global.getNextParentIntent(view);
+
 		}
 		else
 		{
 			//add to stack
-
+			
 			parentIntent = intent;
 			//use info from this intent
 		}	
 		Bundle parentExtras = parentIntent.getExtras();	
-		String email = parentExtras.getString("email");
 		String className = parentExtras.getString("ParentClassName");
-
+		String email = parentExtras.getString("email");
+		System.out.println("In FPA GlobalUser: " + global.getCurrentUser() + "intentEmail:" + email);
+		global.fetchName(email);
+		global.fetchNumFriends(email);
+		global.fetchNumGroups(email);
+		global.setNotifications(view);
 		
 		try
 		{
@@ -116,8 +122,7 @@ public class FriendProfileActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 		
-		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
-		friendsButton.setText("Friends\n(" + global.getNumFriends() + ")");
+		global.setNotifications(view);
 		
 		// execute php script, using the current users email address to populate
 		// the textviews
@@ -389,7 +394,6 @@ public class FriendProfileActivity extends ActionBarActivity
 							// System.exit(1);
 							finish();
 						}
-
 					}
 				};
 				registerReceiver(broadcastReceiver, intentFilter);

@@ -40,6 +40,7 @@ public class HomeActivity extends ActionBarActivity
 		View home = findViewById(R.id.homeLayout);
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
+		global.fetchNumGroupInvites(global.getCurrentUser());
 		global.setNotifications(home);
 
 		initActionBar();

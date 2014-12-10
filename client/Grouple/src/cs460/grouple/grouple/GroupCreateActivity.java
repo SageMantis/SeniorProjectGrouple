@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,12 +42,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+@SuppressLint("UseSparseArrays")
 public class GroupCreateActivity extends ActionBarActivity {
 
 	BroadcastReceiver broadcastReceiver;
@@ -54,11 +58,12 @@ public class GroupCreateActivity extends ActionBarActivity {
 	//This holds all of your friends by name.
 	private ArrayList<String> friendsNameList = new ArrayList<String>();
 	private Map<Integer, Boolean> isAdmin = new HashMap<Integer, Boolean>();
-	private ArrayList<String> alreadyAdded = new ArrayList<String>();
-	private ArrayList<String> added = new ArrayList<String>();
-	private ArrayList<Boolean> role = new ArrayList<Boolean>();
+	private Map<Integer, String> alreadyAdded = new HashMap<Integer, String>();
+	private Map<Integer, String> added = new HashMap<Integer, String>();
+	private Map<Integer, Boolean> role = new HashMap<Integer, Boolean>();
 	private ArrayList<HttpResponse> response = new ArrayList<HttpResponse>();
 	//private ArrayList<String> addedEmailAddress = new ArrayList<String>();
+	int firstEntry = 0;
 	private int increment = 0;
 	private String email = null;
 	//private final EditText groupName = (EditText)findViewById(R.id.groupName); <- NEVER EVER USE THIS HERE
@@ -141,8 +146,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
-			intent.putExtra("up", "false");
-			intent.putExtra("ParentClassName", "GroupCreateActivity");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -163,15 +166,18 @@ public class GroupCreateActivity extends ActionBarActivity {
 				newIntent.putExtra("email", extras.getString("ParentEmail"));
 			}
 			//newIntent.putExtra("email", extras.getString("email"));
+			System.out.println("delete");
 			//newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("ParentClassName", "GroupCreateActivity");
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
 		}
+		newIntent.putExtra("up", "true");
 		startActivity(newIntent);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public String readGetFriendsJSONFeed(String URL)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
@@ -206,28 +212,35 @@ public class GroupCreateActivity extends ActionBarActivity {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				response.add(httpClient.execute(httpPost));
 				
-				for(int i = 0; i < added.size(); i++){
+				Iterator iterate = added.entrySet().iterator();
+				Iterator iterate2 = role.entrySet().iterator();
+				while(iterate.hasNext()){//for(int i = 0; i < added.size(); i++){
+
+					Map.Entry tadded = (Map.Entry)iterate.next();
+					Map.Entry trole = (Map.Entry)iterate2.next();
 					
-					Log.d("message3", "How many of these are there? " + i);
-					//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
-					nameValuePairs.add(new BasicNameValuePair("gname", groupname));
-					nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
-					//use this name to get the index of the friendslistname and use that index to get the  email address ffs
-					int temp_id = friendsNameList.indexOf(added.get(i));
-					String temp_email = friendsEmailList.get(temp_id);
-					//Add the email address to the mf.
-					nameValuePairs.add(new BasicNameValuePair("mem",temp_email));
-					
-					if(role.get(i)){
-						nameValuePairs.add(new BasicNameValuePair("role", "A"));
+					if(tadded.getValue() != null){//if(!added.get(i).equals(null)){
+						Log.d("message3", "How many of these are there? ");
+						//nameValuePairs.add(new BasicNameValuePair("index", "" + i));
+						nameValuePairs.add(new BasicNameValuePair("gname", groupname));
+						nameValuePairs.add(new BasicNameValuePair("gbio", groupbio));
+						//use this name to get the index of the friendslistname and use that index to get the  email address ffs
+						int temp_id = friendsNameList.indexOf(tadded.getValue());//added.get(i));
+						String temp_email = friendsEmailList.get(temp_id);
+						//Add the email address to the mf.
+						nameValuePairs.add(new BasicNameValuePair("mem",temp_email));
+
+						if((Boolean) trole.getValue()){//if(role.get(i)){
+							nameValuePairs.add(new BasicNameValuePair("role", "A"));
+						}
+						else{
+							nameValuePairs.add(new BasicNameValuePair("role", "M"));
+						}
+						//Add the sender. (Yourself)
+						nameValuePairs.add(new BasicNameValuePair("sender", email));
+						httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+						response.add(httpClient.execute(httpPost));
 					}
-					else{
-						nameValuePairs.add(new BasicNameValuePair("role", "M"));
-					}
-					//Add the sender. (Yourself)
-					nameValuePairs.add(new BasicNameValuePair("sender", email));
-					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-					response.add(httpClient.execute(httpPost));
 				}
 				
 				//Here we will return to the Group main page.
@@ -367,8 +380,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 							System.out.println("Idx: " + i + " Email: "
 									+ friendEmail + "\n" + row + "\n");
 							GridLayout rowView;
-							if (extras.getString("mod").equals("true"))
-							{
 								rowView = (GridLayout) inflater.inflate(R.layout.listitem_groupcreateadded, null);
 								
 								//isAdmin.add(false);
@@ -379,123 +390,98 @@ public class GroupCreateActivity extends ActionBarActivity {
 									public void onClick(View view){
 										if(removeFriendButton.getText().toString().equals("-")){
 											removeFriendButton.setText("A");
-											//isAdmin.set(view.getId(), true);
+											isAdmin.put(view.getId(), true);
 											removeFriendButton.setTextColor(Color.parseColor("#7fff00"));
 										}
 										else{
 											removeFriendButton.setText("-");
-											//isAdmin.set(view.getId(), false);
+											isAdmin.put(view.getId(), false);
 											removeFriendButton.setTextColor(Color.parseColor("#ffcc0000"));
 										}
 									}
 								});
 								removeFriendButton.setId(i);
 								//removeFriendButton2.setId(i);
-							} else
-							{
-								rowView = (GridLayout) inflater.inflate(R.layout.listitem_groupcreateadd, null);
-
-							}
 							//Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
 							final Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
 							final CheckBox cb = (CheckBox) rowView.findViewById(R.id.addToGroupBox);
+							cb.setId(removeFriendButton.getId());
 							isAdmin.put(cb.getId(), false);
-							cb.setOnClickListener(new OnClickListener(){
-								public void onClick(View view){
+							cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+								
+								@SuppressWarnings("rawtypes")
+								@Override
+								public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+									// TODO Auto-generated method stub
 									String text = friendNameButton.getLayout().getText().toString();
-									if(alreadyAdded.size() == 0){
-										if(!view.isSelected()){
-											added.add(text); //role.add(isAdmin.get(view.getId()));
-											role.add(isAdmin.get(view.getId()));
-											alreadyAdded.add(text);
-										}
-										else if(view.isSelected()){
-
-											added.add(text); //role.add(isAdmin.get(view.getId()));
-											role.add(isAdmin.get(view.getId()));
-											alreadyAdded.add(text);
-										}
-										GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_groupcreateadded, null);
-										Button removeFriendButton2 = (Button) rowView2.findViewById(R.id.removeFriendButtonNoAccess);//////
-										removeFriendButton2.setId(view.getId()); ////////////////
-										//if(isAdmin.get(removeFriendButton2.getId())){/////////////view.getId()
-											//removeFriendButton2.setText("A");////////////////
-											//isAdmin.set(view.getId(), true);/////////////////
-											//removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
-											//added.add(text); role.add(true);//
-										//}
-										//else{
-											//removeFriendButton2.setText("-");///////
-											//isAdmin.set(view.getId(), false);//////////
-											//removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
-											//added.add(text); role.add(false);//
-										//}
-										
-										
-										//rowView2.setId(view.getId());
-										//((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
-										//rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
-										//membersToAdd2.addView(rowView2);
-										//alreadyAdded.add(text);
+									//alreadyAdded.keySet().size();
+									//if(firstEntry == 0 || ((alreadyAdded.size() == 1) && firstEntry == view.getId())){//if(alreadyAdded.size() == 0){
+									if(!view.isChecked() && (alreadyAdded.keySet().size() == 1) && (firstEntry == view.getId())){
+										Log.d("here2?", " <=allthewayuphere?");
+										//alreadyAdded = new HashMap<Integer, String>();
+										//added = new HashMap<Integer, String>();
+										//role = new HashMap<Integer, Boolean>();
+										alreadyAdded.clear();
+										added.clear();
+										role.clear();
+										firstEntry = 0;
+										Log.d("Close Attention", "The mapsize is: " + alreadyAdded.keySet().size());
+										//added.remove(view.getId()); //role.add(isAdmin.get(view.getId()));
+										//role.remove(view.getId());
+										//alreadyAdded.remove(view.getId());
 									}
-									else{
+									else if(alreadyAdded.keySet().isEmpty()){	
+										if(view.isChecked()){
+											Log.d("here2?", " <=here we are?");
+											added.put(view.getId(), text); //role.add(isAdmin.get(view.getId()));
+											role.put(view.getId(), isAdmin.get(view.getId()));
+											alreadyAdded.put(view.getId(), text);
+											Log.d("Close Attention", "The mapsize is: " + alreadyAdded.keySet().size());
+											firstEntry = view.getId();
+										}
+									}
+									else if(view.isChecked()){
 										boolean flag = false;
-										for(int i = 0; i < alreadyAdded.size(); i++){
-											if(alreadyAdded.get(i).equals(text)){
+										Log.d("here2?", " <=outtheloop?");
+										Iterator iterate = alreadyAdded.entrySet().iterator();
+										while(iterate.hasNext()){//for(int i = 0; i < alreadyAdded.size(); i++){
+											Log.d("here2?", " <=intheloop?");
+											Map.Entry pair = (Map.Entry)iterate.next();
+											if(pair.getValue().equals(text)){//if(alreadyAdded.get(i).equals(text)){
 												flag = true;
+												Log.d("here?", "flag <=here?");
 											}
 										}
 										
 										if(!flag){
-											if(!view.isSelected()){
-												added.add(text); role.add(true);
-												role.add(isAdmin.get(view.getId()));
-												alreadyAdded.add(text);
+											if(view.isChecked()){
+												Log.d("herefromunselected?", " <=here?");
+												added.put(view.getId(), text); //role.add(isAdmin.get(view.getId()));
+												role.put(view.getId(), isAdmin.get(view.getId()));
+												alreadyAdded.put(view.getId(), text);
+												Log.d("Close Attention", "The mapsize is: " + alreadyAdded.keySet().size());
 											}
-											else if(view.isSelected()){
-												added.add(text); role.add(true);
-												role.add(isAdmin.get(view.getId()));
-												alreadyAdded.add(text);
-											}
-											GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_groupcreateadded, null);
-											Button removeFriendButton2 = (Button) rowView2.findViewById(R.id.removeFriendButtonNoAccess);//////
-											removeFriendButton2.setId(view.getId()); ///////////////////
-											//if(isAdmin.get(removeFriendButton2.getId())){///////////// view.getId()
-											//removeFriendButton2.setText("A");////////////////
-											//isAdmin.set(view.getId(), true);/////////////////
-											//removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
-											//added.add(text); role.add(true);//
-											//}
-											//else{
-											//removeFriendButton2.setText("-");///////
-											//isAdmin.set(view.getId(), false);//////////
-											//removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
-											//added.add(text); role.add(false);//
-											//}
-
-
-											//rowView2.setId(view.getId());
-											//((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
-											//rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
-											//membersToAdd2.addView(rowView2);
-											//alreadyAdded.add(text);
 										}
+									}
+									else if(!view.isChecked()){
+										Log.d("herefromselected?", " <=here?");
+										added.remove(view.getId()); //role.add(isAdmin.get(view.getId()));
+										role.remove(view.getId());
+										alreadyAdded.remove(view.getId());
+										Log.d("Close Attention", "The mapsize is: " + alreadyAdded.keySet().size());
 									}
 								}
 							});
+							
 							friendNameButton.setText(row);
-
 							friendNameButton.setId(i);
 							rowView.setId(i);
 							membersToAdd.addView(rowView);
-							//membersToAdd2.addView(rowView);
-							// System.out.println("Row: " + row +"\nCount: " +
-							// i);
-
 						}
 
 					}
 				}
+				
 				// user has no friends
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
@@ -587,7 +573,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 	public void startGroupsActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsActivity.class);
-		intent.putExtra("up", "true");
 		startActivity(intent);
 		finish();
 	}

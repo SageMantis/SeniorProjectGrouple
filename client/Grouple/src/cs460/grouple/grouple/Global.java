@@ -30,6 +30,7 @@ import android.widget.EditText;
 
 public class Global extends Application {
 	private String currentUser;
+	private String currentName;
 	private String acceptEmail;
 	private String declineEmail;
 	private String name;
@@ -90,6 +91,15 @@ public class Global extends Application {
 		return numGroups;
 	}
 
+	public String getCurrentName()
+	{
+		return currentName;
+	}
+	
+	public void setCurrentName(String name)
+	{
+		currentName = name;
+	}
 	public String getName() {
 		return name;
 	}
@@ -230,19 +240,48 @@ public class Global extends Application {
 	}
 	
 	public void setNotifications(View view) {
-		//todo: think if I can pass an email in here and skip other steps
+		//todo: If I can pass an email in here and skip setting current user
 		int numFriendRequests = getNumFriendRequests();
 		int numFriends = getNumFriends();
 		int numGroupInvites = getNumGroupInvites();
 		int numGroups = getNumGroups();
-		Button friendsButton = (Button) view.findViewById(R.id.friendsButtonHA);
 
+		//Home Activity
+		if (numFriendRequests > 0
+				&& view.findViewById(R.id.friendsButtonHA) != null) 
+		{
+			if (numFriendRequests == 1) {
+				((Button)view.findViewById(R.id.friendsButtonHA)).setText("Friends \n(" + numFriendRequests
+						+ " request)");
+			} else {
+				((Button)view.findViewById(R.id.friendsButtonHA)).setText("Friends \n(" + numFriendRequests
+						+ " requests)");
+			}
+		}else if (numFriendRequests == 0
+				&& view.findViewById(R.id.friendsButtonHA) != null) {
+			((Button)view.findViewById(R.id.friendsButtonHA)).setText("Friends");
+		}
+		if (numGroupInvites > 0
+				&& view.findViewById(R.id.groupsButtonHA) != null) 
+		{
+			if (numFriendRequests == 1) {
+				((Button)view.findViewById(R.id.groupsButtonHA)).setText("Groups \n(" + numGroupInvites
+						+ " invites)");
+			} else {
+				((Button)view.findViewById(R.id.groupsButtonHA)).setText("Groups \n(" + numGroupInvites
+						+ " invites)");
+			}
+		}else if (numFriendRequests == 0
+				&& view.findViewById(R.id.groupsButtonHA) != null) {
+			((Button)view.findViewById(R.id.groupsButtonHA)).setText("Groups");
+		}
+		
 		//Friends Activity
 		if (view.findViewById(R.id.friendRequestsButtonFA) != null && view.findViewById(R.id.currentFriendsButtonFA) != null) {
 			Button friendRequestsButton = (Button) view
 					.findViewById(R.id.friendRequestsButtonFA);
 			friendRequestsButton.setText("Friend Requests ("
-					+ Integer.toString(numFriendRequests) + ")");
+					+ numFriendRequests + ")");
 			Button currentFriendsButton = (Button) view
 					.findViewById(R.id.currentFriendsButtonFA);
 			currentFriendsButton.setText("My Friends ("
@@ -253,36 +292,23 @@ public class Global extends Application {
 		if ((view.findViewById(R.id.friendsButtonUPA) != null) && (view.findViewById(R.id.groupsButtonUPA) != null) && (view.findViewById(R.id.eventsButtonUPA) != null))
 		{
 			((Button)view.findViewById(R.id.friendsButtonUPA)).setText("Friends\n(" + numFriends + ")");
-			
+			((Button)view.findViewById(R.id.groupsButtonUPA)).setText("Groups\n(" + numGroups + ")");
 			//set numfriends, numgroups, and numevents
 		}
 		
-		//User Profile Buttons
+		//Friend Profile Buttons
 		if ((view.findViewById(R.id.friendsButtonFPA) != null) && (view.findViewById(R.id.groupsButtonFPA) != null) && (view.findViewById(R.id.eventsButtonFPA) != null))
 		{
 			//set numfriends, numgroups, and numevents
+			((Button)view.findViewById(R.id.friendsButtonFPA)).setText("Friends\n(" + numFriends + ")");
+			((Button)view.findViewById(R.id.groupsButtonFPA)).setText("Groups\n(" + numGroups + ")");
 		}
 		
-		//Friends button
-		if (numFriendRequests > 0
-				&& view.findViewById(R.id.friendsButtonHA) != null) 
-		{
-			if (numFriendRequests == 1) {
-				friendsButton.setText("Friends \n(" + numFriendRequests
-						+ " request)");
-			} else {
-				friendsButton.setText("Friends \n(" + numFriendRequests
-						+ " requests)");
-			}
-		}else if (numFriendRequests == 0
-				&& view.findViewById(R.id.friendsButtonHA) != null) {
-			friendsButton.setText("Friends");
-
-		}
 
 		//Groups activity
 		if (view.findViewById(R.id.pendingGroupsButton) != null)
 		{
+			System.out.println("Pending groups setting text to what it is");
 			((Button) view.findViewById(R.id.pendingGroupsButton)).setText("Group Invites (" + numGroupInvites + ")");
 		}
 		if (view.findViewById(R.id.yourGroupsButton) != null)
@@ -351,7 +377,7 @@ public class Global extends Application {
 					System.out
 							.println("Should be setting the num friends to " + numFriends);
 					setNumFriends(Integer.parseInt(numFriends));
-	
+					
 				}
 				// user has no friends
 				if (jsonObject.getString("success").toString().equals("2")) {
@@ -381,10 +407,9 @@ public class Global extends Application {
 
 				if (jsonObject.getString("success").toString().equals("1")) {
 					System.out.println("Just success on json return");
-					String numRequests =  jsonObject.getString("numGroups");
-					System.out.println("Set it to " + numRequests); 
-					setNumGroupInvites(Integer.parseInt(numRequests));
-					System.out.println("Number of Friend Requests: " + numRequests);
+					String numGroupInvites =  jsonObject.getString("numGroupInvites");
+					System.out.println("Set # of group invites to " + numGroupInvites); 
+					setNumGroupInvites(Integer.parseInt(numGroupInvites));
 					
 					// successful
 				} else {
@@ -400,7 +425,7 @@ public class Global extends Application {
 	
 	public void fetchNumGroups(String email) // Should take in email
 	{
-		new getNumGroupInvitesTask()
+		new getNumGroupsTask()
 				.execute("http://98.213.107.172/android_connect/get_count_groups.php?email="
 						+ email);
 	}
@@ -424,7 +449,7 @@ public class Global extends Application {
 					// successful
 				} else {
 					//fetching from server failed
-					Log.d("DB Error", "Error fetching num requests from server");
+					Log.d("DB Error", "Error fetching num groups from server");
 					setNumGroupInvites(0);
 				}
 			} catch (Exception e) {
@@ -434,10 +459,10 @@ public class Global extends Application {
 	}
 	
 	// Get name, should change to take in email
-	public void fetchName() {
+	public void fetchName(String email) {
 		new getNameTask()
 				.execute("http://98.213.107.172/android_connect/get_user_by_email.php?email="
-						+ getCurrentUser());
+						+ email);
 	}
 
 
