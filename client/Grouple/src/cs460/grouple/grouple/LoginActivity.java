@@ -26,12 +26,10 @@ public class LoginActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
 		ActionBar ab = getActionBar();
 		ab.hide();
 		Log.d("app666", "we created");
 		//todo auto capitalize first / last names.
-
 		initKillswitchListener();
 	}
 
@@ -63,10 +61,10 @@ public class LoginActivity extends Activity
 		// activity.
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
-		String email = emailEditText.getText().toString();
-		String password = passwordEditText.getText().toString();
-		//String email = "test004@gmail.com";
-		//String password="password";
+		///String email = emailEditText.getText().toString();
+		//String password = passwordEditText.getText().toString();
+		String email = "olivia.ann.trimble@gmail.com";
+		String password="penguins92";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
 		new getLoginTask()
@@ -93,6 +91,9 @@ public class LoginActivity extends Activity
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
 					global.fetchNumFriendRequests(global.getCurrentUser());
+					global.fetchNumFriends(global.getCurrentUser());
+					global.fetchNumGroups(global.getCurrentUser());
+					global.fetchNumGroupInvites(global.getCurrentUser());
 					// Sets this users name.
 					global.fetchName();
 					Thread.sleep(1000); // Sleeping to let home activity start up

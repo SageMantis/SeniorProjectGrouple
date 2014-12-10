@@ -19,13 +19,25 @@ import android.widget.TextView;
 public class FriendsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
-
+	Intent parentIntent;
+	Intent upIntent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
 
+
+
+		View friends = findViewById(R.id.friendsContainer);
+		load(friends);
+
+
+		initKillswitchListener();
+	}
+
+	public void initActionBar()
+	{
 		//Actionbar settings
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -37,23 +49,61 @@ public class FriendsActivity extends ActionBarActivity
 		upButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View view) {
-
-				startParentActivity(view);
-
+				upIntent.putExtra("up", "true");
+				startActivity(upIntent);
+				finish();
 			}
 		});
-
+	}
+	
+	public void load(View view)
+	{
 		Global global = ((Global) getApplicationContext());
-		View friends = findViewById(R.id.friendsLayout);
+		View friends = findViewById(R.id.friendsContainer);
+
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		String email;
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		//do a check that it is not from a back push
+		if (extras.getString("up").equals("true"))
+		{
+			//pull a new intent from the stack
+			//load in everything from that intent
+			parentIntent = global.getNextParentIntent(view);
+			System.out.println("Up was true, fetching parent intent...");
+			
+			System.out.println("ParentName = " +parentIntent.getExtras().getString("ParentClassName"));
+		}
+		else
+		{
+			System.out.println("Up was false... not fetching parent");
+			parentIntent = intent;
+		}	
+		
+		Bundle parentExtras = parentIntent.getExtras();
+		String className = parentExtras.getString("ParentClassName");
+		try
+		{
+			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
 		global.setNotifications(friends);
-
-
-
+		
+		
+		
+		initActionBar();
 		initKillswitchListener();
 	}
-
 	@Override
 	protected void onDestroy()
 	{
@@ -68,7 +118,7 @@ public class FriendsActivity extends ActionBarActivity
 		super.onResume(); // Always call the superclass method first
 		System.out.println("In Friends onResume()");
 		Global global = ((Global) getApplicationContext());
-		View friends = findViewById(R.id.friendsLayout);
+		View friends = findViewById(R.id.friendsContainer);
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		// friendRequests = global.getNumFriendRequests();
 		global.setNotifications(friends);
@@ -81,12 +131,9 @@ public class FriendsActivity extends ActionBarActivity
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
 			Global global = ((Global) getApplicationContext());
-			//todo mess with notification update here
-			View friends = findViewById(R.id.friendsLayout);
-			View home = ((View) friends.getParent());
-			global.fetchNumFriendRequests(global.getCurrentUser());
-			global.setNotifications(home);
-			startParentActivity(null);
+			upIntent.putExtra("up", "true");
+			startActivity(upIntent);
+			finish();
 		}
 		return false;
 	}
@@ -122,6 +169,8 @@ public class FriendsActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("ParentClassName", "FriendsActivity");
+			intent.putExtra("up", "false");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -135,8 +184,11 @@ public class FriendsActivity extends ActionBarActivity
 	 */
 	public void startAddFriendActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, AddFriendActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
+		intent.putExtra("up", "false");
+		global.addToParentStackFriends(parentIntent);
 		startActivity(intent);
 	}
 
@@ -148,17 +200,10 @@ public class FriendsActivity extends ActionBarActivity
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("Name", global.getName());
 		intent.putExtra("ParentEmail", global.getCurrentUser());
-		intent.putExtra("ParentParentClassName", "HomeActivity");
 		intent.putExtra("mod", "true");
+		intent.putExtra("up", "false");
+		global.addToParentStackFriends(parentIntent);
 		startActivity(intent);
-	}
-
-	public void startHomeActivity(View view)
-	{
-		Intent intent = new Intent(this, HomeActivity.class);
-		intent.putExtra("ParentClassName", "FriendsActivity");
-		startActivity(intent);
-		finish();
 	}
 
 	public void startFriendRequestsActivity(View view)
@@ -167,31 +212,10 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("ParentClassName", "FriendsActivity");
+		global.addToParentStackFriends(parentIntent);
+		intent.putExtra("up", "false");
+		//intent.putExtra("mod", "true");
 		startActivity(intent);
-	}
-	
-	public void startParentActivity(View view)
-	{
-		Bundle extras = getIntent().getExtras();
-
-		String className = extras.getString("ParentClassName");
-		Intent newIntent = null;
-		try
-		{
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-			if (extras.getString("ParentEmail") != null)
-			{
-				newIntent.putExtra("email", extras.getString("ParentEmail"));
-			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", "FriendsActivity");
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		startActivity(newIntent);
 	}
 	
 	

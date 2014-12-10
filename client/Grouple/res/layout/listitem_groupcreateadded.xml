@@ -45,7 +45,6 @@
         android:layout_toLeftOf="@+id/removeFriendButtonNoAccess"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:onClick="toggleAdmin"
         android:padding="0dp" />
 
 </GridLayout>

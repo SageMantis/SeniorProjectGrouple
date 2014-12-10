@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -18,7 +19,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import android.app.Application;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +33,19 @@ public class Global extends Application {
 	private String acceptEmail;
 	private String declineEmail;
 	private String name;
+	private LinkedList<Intent> parentStackCurrentFriends = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackFriendProfile = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackGroupsCurrent = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackGroupProfile = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackUser = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackFriends = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackGroups = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackGroupInvites = new LinkedList<Intent>();
 	private int numFriendRequests;
 	private int numFriends;
 	private int numGroupInvites;
 	private int numGroups;
+	//TODO: Add getParentFriendsActivity
 
 
 	public String getCurrentUser() {
@@ -107,6 +119,116 @@ public class Global extends Application {
 		this.numFriends = numFriends;
 	}
 
+	public void addToParentStackCurrentFriends(Intent intent)
+	{
+		this.parentStackCurrentFriends.push(intent);
+	}
+	
+	public void addToParentStackFriendProfile(Intent intent)
+	{
+		this.parentStackFriendProfile.push(intent);
+	}
+	
+	public void addToParentStackGroupProfile(Intent intent)
+	{
+		this.parentStackGroupProfile.push(intent);
+	}
+	
+	public void addToParentStackGroupInvites(Intent intent)
+	{
+		this.parentStackGroupInvites.push(intent);
+	}
+	
+	public void addToParentStackGroupsCurrent(Intent intent)
+	{
+		this.parentStackGroupsCurrent.push(intent);
+	}
+
+	public void addToParentStackFriends(Intent intent)
+	{
+		this.parentStackFriends.push(intent);
+	}
+	
+	public void addToParentStackGroups(Intent intent)
+	{
+		this.parentStackGroups.push(intent);
+	}
+	
+	public void addToParentStackUser(Intent intent)
+	{
+		this.parentStackUser.push(intent);
+	}
+	
+	public Intent getNextParentIntent(View view)
+	{
+		Intent parentIntent = null;
+		switch (view.getId())
+		{
+			case R.id.currentFriendsContainer:
+				if (parentStackCurrentFriends.size() >= 1)
+				{
+					System.out.println("In next parent get of current friends");
+					parentIntent = parentStackCurrentFriends.pop();
+				}
+				else
+				{
+					parentIntent = new Intent(this, FriendsActivity.class);
+					startActivity(parentIntent);
+				}
+					break;
+			case R.id.friendProfileContainer:
+				if (parentStackFriendProfile.size() >= 1)
+				{
+					parentIntent = parentStackFriendProfile.pop();
+				}
+				break;
+			case R.id.groupsCurrentContainer:
+				if (parentStackGroupsCurrent.size() >= 1)
+				{
+					System.out.println("Groups current container");
+					parentIntent = parentStackGroupsCurrent.pop();
+					System.out.println("Parent has name " + parentIntent.getExtras().getString("ParentClassName"));
+				}
+				break;
+			case R.id.groupProfileContainer:
+				if (parentStackGroupProfile.size() >= 1)
+				{
+					parentIntent = parentStackGroupProfile.pop();
+				}
+				break;
+			case R.id.friendsContainer:
+				if (parentStackFriends.size() >= 1)
+				{
+					parentIntent = parentStackFriends.pop();
+				}
+				break;
+			case R.id.userContainer:
+				if (parentStackUser.size() >= 1)
+				{
+					parentIntent = parentStackUser.pop();
+				}
+				break;
+			case R.id.groupsContainer:
+				if (parentStackGroups.size() >= 1)
+				{
+					parentIntent = parentStackGroups.pop();
+				}
+			case R.id.groupInvitesContainer:
+				if (parentStackGroupInvites.size() >= 1)
+				{
+					parentIntent = parentStackGroupInvites.pop();
+				}
+				break;
+			default: 
+				parentIntent = new Intent(this, HomeActivity.class);
+				parentIntent.putExtra("ParentClassName", "HomeActivity");
+				break;
+		}
+		
+		return parentIntent;
+		
+	}
+	
 	public void setNotifications(View view) {
 		//todo: think if I can pass an email in here and skip other steps
 		int numFriendRequests = getNumFriendRequests();

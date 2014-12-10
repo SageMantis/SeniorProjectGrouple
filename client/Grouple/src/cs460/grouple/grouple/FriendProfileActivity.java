@@ -34,54 +34,101 @@ public class FriendProfileActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 	private Bitmap bmp;
 	private ImageView iv;
+	Intent parentIntent;
+	Intent upIntent;
 	String profileName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_profile);
-		
-		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
-		Global global = ((Global) getApplicationContext());
-		
-		/*Action bar*/
-		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		ab.setCustomView(R.layout.actionbar);
-		ab.setDisplayHomeAsUpEnabled(false);
-		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText(global.getCurrentUser() + "'s Profile");
-		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
 
-			public void onClick(View view) {
-
-				startParentActivity(view);
-
-			}
-		});
-
-		// Global global = ((Global)getApplicationContext());
 		// actionbarTitle.setText(global.getName()+"'s Profile");
 		// This where we add our friends email. not ours.
 		//Bundle extras = getIntent().getExtras();
 		//String email = extras.getString("email");
 
+		//grabbing current container to load
+		View friendProfile = findViewById(R.id.friendProfileContainer);
+		load(friendProfile);
 
+	}
+	
+	public void initActionBar()
+	{
+		Global global = ((Global) getApplicationContext());
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		ab.setCustomView(R.layout.actionbar);
+		ab.setDisplayHomeAsUpEnabled(false);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		//actionbarTitle.setText(global.getCurrentUser() + "'s Profile");
+		
+		//handling up navigation
+		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		upButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				upIntent.putExtra("up", "true");
+				startActivity(upIntent);
+				finish();
+			}
+		});
+	}
+	
+	/* loading in necessary components of the friend profile */
+	public void load(View view)
+	{
+		Global global = ((Global) getApplicationContext());
 
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		Intent intent = getIntent();
+		Bundle extras = getIntent().getExtras();
+		//do a check that it is not from a back push
+		if (extras.getString("up").equals("true"))
+		{
+			
+			//pull a new intent from the stack
+			//load in everything from that intent
+			parentIntent = global.getNextParentIntent(view);
+		}
+		else
+		{
+			//add to stack
+
+			parentIntent = intent;
+			//use info from this intent
+		}	
+		Bundle parentExtras = parentIntent.getExtras();	
+		String email = parentExtras.getString("email");
+		String className = parentExtras.getString("ParentClassName");
+
+		
+		try
+		{
+			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Button friendsButton = (Button) findViewById(R.id.friendsButtonFPA);
 		friendsButton.setText("Friends\n(" + global.getNumFriends() + ")");
-
+		
 		// execute php script, using the current users email address to populate
 		// the textviews
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
-
-		// global.fetchNumFriendRequests();
-		// global.setNotifications(user);
-
-		initKillswitchListener();
+		
+		//load in actionbar
+		initActionBar();
+		//starting killswitch listener
+		initKillswitchListener();		
 	}
-
 	@Override
 	protected void onDestroy()
 	{
@@ -105,10 +152,10 @@ public class FriendProfileActivity extends ActionBarActivity
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		Global global = ((Global) getApplicationContext());
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
@@ -123,46 +170,24 @@ public class FriendProfileActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("up", "false");
+			intent.putExtra("ParentClassName", "FriendProfileActivity");
+			global.addToParentStackFriendProfile(parentIntent);
 			startActivity(intent);
+			
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void startParentActivity(View view)
-	{
-		Bundle extras = getIntent().getExtras();
-		String className = extras.getString("ParentClassName");
-		
-		Intent newIntent = null;
-		try
-		{
-			// you need to define the class with package name
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-			String email = extras.getString("ParentEmail");
-			String parentEmail = extras.getString("ParentParentEmail");
-			newIntent.putExtra("email", email);
-			//todo: check compared to current user first
-			//or pass in a parentMod in the extras
-			newIntent.putExtra("mod", "false");
-			if (extras.getString("ParentName") != null)
-			{
-				newIntent.putExtra("Name", extras.getString("ParentName"));
-			}
-			newIntent.putExtra("ParentEmail", parentEmail);
-			newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		startActivity(newIntent);
-	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			startParentActivity(null);
+			upIntent.putExtra("up", "true");
+			startActivity(upIntent);
+			finish();
 		}
 		return false;
 	}
@@ -170,7 +195,11 @@ public class FriendProfileActivity extends ActionBarActivity
 	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, HomeActivity.class);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("up", "false");
+		global.addToParentStackFriendProfile(parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -180,7 +209,11 @@ public class FriendProfileActivity extends ActionBarActivity
 
 	public void startEditProfileActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, EditProfileActivity.class);
+		intent.putExtra("up", "false");
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		global.addToParentStackFriendProfile(parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -294,13 +327,15 @@ public class FriendProfileActivity extends ActionBarActivity
 
 	public void startGroupsCurrentActivity(View view)
 	{
-		Bundle extras = getIntent().getExtras();
+		Global global = ((Global) getApplicationContext());
+		Bundle extras = parentIntent.getExtras();
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		intent.putExtra("email", extras.getString("email"));
+		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "FriendProfileActivity");
-		intent.putExtra("ParentParentEmail", extras.getString("ParentEmail"));
 		intent.putExtra("ParentEmail", extras.getString("email"));
 		intent.putExtra("mod", "false");
+		global.addToParentStackFriendProfile(parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -308,25 +343,30 @@ public class FriendProfileActivity extends ActionBarActivity
 
 	public void startCurrentFriendsActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, CurrentFriendsActivity.class);
-		Bundle extras = getIntent().getExtras();
+		Bundle extras = parentIntent.getExtras();
 		String email = extras.getString("email");
-		String parentEmail = extras.getString("ParentEmail");
 		intent.putExtra("Name", profileName);
-		intent.putExtra("ParentEmail", email);
 		intent.putExtra("email", email);
-		intent.putExtra("ParentParentEmail", parentEmail);
-		intent.putExtra("ParentParentClassName", extras.getString("ParentClassName"));
+		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "FriendProfileActivity");
 		intent.putExtra("mod", "false");
 		startActivity(intent);
+		global.addToParentStackFriendProfile(parentIntent);
 		bmp = null;
 		iv = null;
 	}
 
 	public void startEventsActivity(View view)
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, EventsActivity.class);
+		intent.putExtra("up", "false");
+		intent.putExtra("Name", profileName);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("mod", "false");
+		global.addToParentStackFriendProfile(parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;

@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,6 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -50,7 +53,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
 	//This holds all of your friends by name.
 	private ArrayList<String> friendsNameList = new ArrayList<String>();
-	private ArrayList<Boolean> isAdmin = new ArrayList<Boolean>();
+	private Map<Integer, Boolean> isAdmin = new HashMap<Integer, Boolean>();
 	private ArrayList<String> alreadyAdded = new ArrayList<String>();
 	private ArrayList<String> added = new ArrayList<String>();
 	private ArrayList<Boolean> role = new ArrayList<Boolean>();
@@ -138,6 +141,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("up", "false");
+			intent.putExtra("ParentClassName", "GroupCreateActivity");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -364,21 +369,22 @@ public class GroupCreateActivity extends ActionBarActivity {
 							GridLayout rowView;
 							if (extras.getString("mod").equals("true"))
 							{
-								rowView = (GridLayout) inflater.inflate(R.layout.listitem_friend_noaccess, null);
+								rowView = (GridLayout) inflater.inflate(R.layout.listitem_groupcreateadded, null);
 								
-								isAdmin.add(false);
+								//isAdmin.add(false);
 								
 								final Button removeFriendButton = (Button) rowView.findViewById(R.id.removeFriendButtonNoAccess);
+								
 								removeFriendButton.setOnClickListener(new OnClickListener(){
 									public void onClick(View view){
 										if(removeFriendButton.getText().toString().equals("-")){
 											removeFriendButton.setText("A");
-											isAdmin.set(view.getId(), true);
+											//isAdmin.set(view.getId(), true);
 											removeFriendButton.setTextColor(Color.parseColor("#7fff00"));
 										}
 										else{
 											removeFriendButton.setText("-");
-											isAdmin.set(view.getId(), false);
+											//isAdmin.set(view.getId(), false);
 											removeFriendButton.setTextColor(Color.parseColor("#ffcc0000"));
 										}
 									}
@@ -387,37 +393,50 @@ public class GroupCreateActivity extends ActionBarActivity {
 								//removeFriendButton2.setId(i);
 							} else
 							{
-								rowView = (GridLayout) inflater.inflate(R.layout.listitem_friends_friend_noaccess, null);
+								rowView = (GridLayout) inflater.inflate(R.layout.listitem_groupcreateadd, null);
 
 							}
 							//Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
 							final Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
-							friendNameButton.setOnClickListener(new OnClickListener(){
+							final CheckBox cb = (CheckBox) rowView.findViewById(R.id.addToGroupBox);
+							isAdmin.put(cb.getId(), false);
+							cb.setOnClickListener(new OnClickListener(){
 								public void onClick(View view){
 									String text = friendNameButton.getLayout().getText().toString();
 									if(alreadyAdded.size() == 0){
-										GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_friend_noaccess, null);
+										if(!view.isSelected()){
+											added.add(text); //role.add(isAdmin.get(view.getId()));
+											role.add(isAdmin.get(view.getId()));
+											alreadyAdded.add(text);
+										}
+										else if(view.isSelected()){
+
+											added.add(text); //role.add(isAdmin.get(view.getId()));
+											role.add(isAdmin.get(view.getId()));
+											alreadyAdded.add(text);
+										}
+										GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_groupcreateadded, null);
 										Button removeFriendButton2 = (Button) rowView2.findViewById(R.id.removeFriendButtonNoAccess);//////
 										removeFriendButton2.setId(view.getId()); ////////////////
-										if(isAdmin.get(removeFriendButton2.getId())){/////////////view.getId()
-											removeFriendButton2.setText("A");////////////////
+										//if(isAdmin.get(removeFriendButton2.getId())){/////////////view.getId()
+											//removeFriendButton2.setText("A");////////////////
 											//isAdmin.set(view.getId(), true);/////////////////
-											removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
-											added.add(text); role.add(true);//
-										}
-										else{
-											removeFriendButton2.setText("-");///////
+											//removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
+											//added.add(text); role.add(true);//
+										//}
+										//else{
+											//removeFriendButton2.setText("-");///////
 											//isAdmin.set(view.getId(), false);//////////
-											removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
-											added.add(text); role.add(false);//
-										}
+											//removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
+											//added.add(text); role.add(false);//
+										//}
 										
 										
-										rowView2.setId(view.getId());
-										((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
-										rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
-										membersToAdd2.addView(rowView2);
-										alreadyAdded.add(text);
+										//rowView2.setId(view.getId());
+										//((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
+										//rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
+										//membersToAdd2.addView(rowView2);
+										//alreadyAdded.add(text);
 									}
 									else{
 										boolean flag = false;
@@ -428,28 +447,38 @@ public class GroupCreateActivity extends ActionBarActivity {
 										}
 										
 										if(!flag){
-											GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_friend_noaccess, null);
+											if(!view.isSelected()){
+												added.add(text); role.add(true);
+												role.add(isAdmin.get(view.getId()));
+												alreadyAdded.add(text);
+											}
+											else if(view.isSelected()){
+												added.add(text); role.add(true);
+												role.add(isAdmin.get(view.getId()));
+												alreadyAdded.add(text);
+											}
+											GridLayout rowView2 = (GridLayout) inflater2.inflate(R.layout.listitem_groupcreateadded, null);
 											Button removeFriendButton2 = (Button) rowView2.findViewById(R.id.removeFriendButtonNoAccess);//////
 											removeFriendButton2.setId(view.getId()); ///////////////////
-											if(isAdmin.get(removeFriendButton2.getId())){///////////// view.getId()
-												removeFriendButton2.setText("A");////////////////
-												//isAdmin.set(view.getId(), true);/////////////////
-												removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
-												added.add(text); role.add(true);//
-											}
-											else{
-												removeFriendButton2.setText("-");///////
-												//isAdmin.set(view.getId(), false);//////////
-												removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
-												added.add(text); role.add(false);//
-											}
-											
-											
-											rowView2.setId(view.getId());
-											((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
-											rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
-											membersToAdd2.addView(rowView2);
-											alreadyAdded.add(text);
+											//if(isAdmin.get(removeFriendButton2.getId())){///////////// view.getId()
+											//removeFriendButton2.setText("A");////////////////
+											//isAdmin.set(view.getId(), true);/////////////////
+											//removeFriendButton2.setTextColor(Color.parseColor("#7fff00"));///////
+											//added.add(text); role.add(true);//
+											//}
+											//else{
+											//removeFriendButton2.setText("-");///////
+											//isAdmin.set(view.getId(), false);//////////
+											//removeFriendButton2.setTextColor(Color.parseColor("#ffcc0000"));//////////
+											//added.add(text); role.add(false);//
+											//}
+
+
+											//rowView2.setId(view.getId());
+											//((Button) rowView2.findViewById(R.id.friendNameButtonNoAccess)).setText(text);
+											//rowView2.findViewById(R.id.friendNameButtonNoAccess).setVisibility(1);
+											//membersToAdd2.addView(rowView2);
+											//alreadyAdded.add(text);
 										}
 									}
 								}
@@ -472,7 +501,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				{
 					LinearLayout membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested1);
 
-					View row = inflater.inflate(R.layout.listitem_friend_noaccess, null);
+					View row = inflater.inflate(R.layout.listitem_groupcreateadded, null);
 
 					// GridLayout rowRL =
 					// (GridLayout)currentFriendsRL.findViewById(R.id.friendGridLayout);
@@ -558,6 +587,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 	public void startGroupsActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsActivity.class);
+		intent.putExtra("up", "true");
 		startActivity(intent);
 		finish();
 	}

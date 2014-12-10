@@ -1,9 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/groupInvitesLayout"
-    tools:context="cs460.grouple.grouple.GroupInvitesActivity"
+    android:id="@+id/groupInvitesContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:background="@color/background_color"
+    android:padding="0dp" >
+	
+      <ScrollView
+			    android:id="@+id/groupInvitesScrollView"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@color/layout_background_color"
+			    android:padding="0dp"
+
+			    android:layout_margin="0dp" >
+			    <LinearLayout
+			        	android:orientation="vertical"
+			    	    android:id="@+id/groupInvitesLayout"
+			    	    android:layout_width="fill_parent"
+			    	    android:layout_height="wrap_content"
+			    	    />
+	      	</ScrollView>
+
+
 </RelativeLayout>
