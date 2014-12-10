@@ -69,7 +69,7 @@ public class UserActivity extends ActionBarActivity
 		});
 		//upButton.setOnClickListener
 		//global.fetchNumFriends(email)
-		actionbarTitle.setText(global.getName() + "'s Profile");
+		actionbarTitle.setText(global.getCurrentName() + "'s Profile");
 	}
 	
 	public void load(View view)
@@ -111,7 +111,7 @@ public class UserActivity extends ActionBarActivity
 
 		/*Notifications*/
 		global.fetchNumFriends(global.getCurrentUser());
-		global.fetchNumFriendRequests(global.getCurrentUser());
+		global.fetchNumGroups(global.getCurrentUser());
 
 		View user = findViewById(R.id.userContainer);
 
@@ -122,9 +122,9 @@ public class UserActivity extends ActionBarActivity
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
+		//initializing th eaction bar and killswitch listener
 		initActionBar();
-		initKillswitchListener();
-		
+		initKillswitchListener();	
 	}
 	
 	@Override

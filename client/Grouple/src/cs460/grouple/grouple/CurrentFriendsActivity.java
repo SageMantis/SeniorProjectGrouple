@@ -54,13 +54,13 @@ public class CurrentFriendsActivity extends ActionBarActivity
 	public void initActionBar()
 	{
 		Bundle extras = parentIntent.getExtras();
-	
+		Global global = ((Global) getApplicationContext());
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText(extras.getString("Name") + "'s Friends");
+		actionbarTitle.setText(global.getCurrentName() + "'s Friends");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 	
 		upButton.setOnClickListener(new OnClickListener() 
@@ -103,6 +103,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 		String email = parentExtras.getString("email");
+		global.fetchName(email);
 		try
 		{
 			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
@@ -254,13 +255,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 							.setText("You do not have any friends.");
 					currentFriendsRL.addView(row);
 
-				} else
-				{
-					// failed
-					// TextView loginFail = (TextView)
-					// findViewById(R.id.loginFailTextViewLA);
-					// loginFail.setVisibility(0);
-				}
+				} 
 			} catch (Exception e)
 			{
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
@@ -370,6 +365,7 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		global.addToParentStackCurrentFriends(parentIntent);
 		global.fetchNumFriends(friendEmail);
+		global.fetchNumGroups(friendEmail);
 		Thread.sleep(500);
 		intent.putExtra("email", friendEmail);
 		intent.putExtra("up", "false");

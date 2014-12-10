@@ -56,7 +56,9 @@ public class GroupProfileActivity extends ActionBarActivity
 	private int gcount = 0;
 	private int index = 0;
 	private LayoutInflater inflater;
-	private LinearLayout membersToAdd;;
+	private LinearLayout membersToAdd;
+	Intent upIntent;
+	Intent parentIntent;
 
 
 	@Override
@@ -64,6 +66,14 @@ public class GroupProfileActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_profile);
+
+		View groupProfile = findViewById(R.id.groupProfileContainer);
+		load(groupProfile);
+	}
+	
+	
+	public void initActionBar()
+	{
 
 		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
@@ -79,19 +89,58 @@ public class GroupProfileActivity extends ActionBarActivity
 		upButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View view) {
-
-				startParentActivity(view);
-
+				upIntent.putExtra("up", "true");
+				startActivity(upIntent);
+				finish();
 			}
 		});
+	}
+	
+	public void load(View view)
+	{
 		Log.d("message", "00000000000000001");
 		
 		inflater = getLayoutInflater();
 		membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested2);
 		
+		Global global = ((Global) getApplicationContext());
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		//do a check that it is not from a back push
+		if (extras.getString("up").equals("true"))
+		{
+			//pull a new intent from the stack
+			//load in everything from that intent
+			System.out.println("Should be fetching off stack for current friends");
+			parentIntent = global.getNextParentIntent(view);
+		}
+		else
+		{
+			//add to stack
+			parentIntent = intent;
+			//trying to add to stack whenever the page is actually left
+		}	
+		Bundle parentExtras = parentIntent.getExtras();
+		String className = parentExtras.getString("ParentClassName");
+		try
+		{
+			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
+					+ className));
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		getGroupCount();
 		
+		initActionBar();
 		initKillswitchListener();
+		
 	}
 	
 	public void getGroupCount(){
@@ -139,13 +188,13 @@ public class GroupProfileActivity extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Global global = ((Global) getApplicationContext());
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
@@ -160,6 +209,10 @@ public class GroupProfileActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("ParentClassName", "GroupProfileActivity");
+			intent.putExtra("up", "false");
+			//add to stack
+			global.addToParentStackGroupProfile(intent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -170,7 +223,9 @@ public class GroupProfileActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			startHomeActivity(null);
+			upIntent.putExtra("up", "true");
+			startActivity(upIntent);
+			finish();
 		}
 		return false;
 	}

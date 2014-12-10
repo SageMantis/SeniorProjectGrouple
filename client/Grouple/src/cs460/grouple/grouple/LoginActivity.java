@@ -61,12 +61,21 @@ public class LoginActivity extends Activity
 		// activity.
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
-		///String email = emailEditText.getText().toString();
+		//String email = emailEditText.getText().toString();
 		//String password = passwordEditText.getText().toString();
-		String email = "olivia.ann.trimble@gmail.com";
-		String password="penguins92";
+		String email = "test001@gmail.com";
+		String password="password";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
+		global.fetchName(email);
+		try
+		{
+			Thread.sleep(500);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
 						+ email + "&password=" + password);
@@ -95,7 +104,9 @@ public class LoginActivity extends Activity
 					global.fetchNumGroups(global.getCurrentUser());
 					global.fetchNumGroupInvites(global.getCurrentUser());
 					// Sets this users name.
-					global.fetchName();
+
+					global.setCurrentName(global.getName());
+					System.out.println("Setting current name to " + global.getName());
 					Thread.sleep(1000); // Sleeping to let home activity start up
 					startHomeActivity();
 					finish(); // Finishing login (possibly save some memory)
