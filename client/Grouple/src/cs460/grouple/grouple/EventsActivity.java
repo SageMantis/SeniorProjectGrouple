@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,24 +61,19 @@ public class EventsActivity extends ActionBarActivity
 	{
 		Bundle extras = getIntent().getExtras();
 
-		String className = extras.getString("ParentClassName");
+		String className = "HomeActivity";
 		Intent newIntent = null;
 		try
 		{
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			if (extras.getString("ParentEmail") != null)
-			{
-				newIntent.putExtra("email", extras.getString("ParentEmail"));
-			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", "EventsActivity");
+
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
 		}
 		startActivity(newIntent);
+		finish();
 	}
 	
 	@Override
@@ -115,6 +111,17 @@ public class EventsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			startParentActivity(null);
+		}
+		return false;
+	}
+	
 	/* Start activity functions for going back and logging out */
 	public void startHomeActivity(View view)
 	{

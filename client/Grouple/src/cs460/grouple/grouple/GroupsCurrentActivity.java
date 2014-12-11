@@ -44,8 +44,8 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups_current);
 
-		View currentFriends = findViewById(R.id.currentFriendsContainer);
-		load(currentFriends);
+		View groupsCurrent = findViewById(R.id.groupsCurrentContainer);
+		load(groupsCurrent);
 	}
 
 	
@@ -99,7 +99,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		}	
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
-		String email = parentExtras.getString("email");
+		email = parentExtras.getString("email");
 		global.fetchName(email);
 		try
 		{
@@ -307,6 +307,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		intent.putExtra("ParentClassName", "GroupsCurrentActivity");
 		global.addToParentStackGroupsCurrent(parentIntent);
 		startActivity(intent);
+		finish();
 	}
 	
 	private class deleteGroupTask extends AsyncTask<String, Void, String>

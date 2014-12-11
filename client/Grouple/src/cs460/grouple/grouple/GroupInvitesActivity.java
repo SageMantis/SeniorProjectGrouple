@@ -397,23 +397,13 @@ public class GroupInvitesActivity extends ActionBarActivity {
 	 * Start activity functions for refreshing friend requests, going back and
 	 * logging out
 	 */
-	public void startGroupsActivity()
-	{
-		Intent intent = new Intent(this, GroupsActivity.class);
-		intent.putExtra("ParentClassName", "HomeActivity");
-		startActivity(intent);
-	}
 	public void startGroupInvitesActivity()
 	{
+		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, GroupInvitesActivity.class);
+		intent.putExtra("up", "true");
+		global.addToParentStackGroupInvites(parentIntent);
 		startActivity(intent);
 	}
-	public void startGroupsCurrentActivity()
-	{
-		Intent intent = new Intent(this, GroupsCurrentActivity.class);
-		intent.putExtra("email", receiver);
-		//Needed this code for the GroupsCurrentActivity. It seems hardcoded so it seems like useless code.
-		intent.putExtra("mod", "true");
-		startActivity(intent);
-	}
+
 }

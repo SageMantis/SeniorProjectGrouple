@@ -60,7 +60,16 @@ public class CurrentFriendsActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText(global.getCurrentName() + "'s Friends");
+		
+		try
+		{
+			Thread.sleep(300);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		actionbarTitle.setText(global.getName()+ "'s Friends");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 	
 		upButton.setOnClickListener(new OnClickListener() 
@@ -113,6 +122,15 @@ public class CurrentFriendsActivity extends ActionBarActivity
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+			try
+			{
+				Thread.sleep(500);
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
 
 		new getFriendsTask()
 				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
@@ -234,13 +252,10 @@ public class CurrentFriendsActivity extends ActionBarActivity
 									.findViewById(R.id.friendNameButton);
 
 							friendNameButton.setText(row);
-
 							friendNameButton.setId(i);
 							rowView.setId(i);
 							currentFriendsRL.addView(rowView);
-
 						}
-
 					}
 				}
 				// user has no friends

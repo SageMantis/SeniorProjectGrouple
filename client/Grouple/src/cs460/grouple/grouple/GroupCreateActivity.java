@@ -146,6 +146,8 @@ public class GroupCreateActivity extends ActionBarActivity {
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("up", "false");
+			intent.putExtra("ParentClassName", "GroupCreateActivity");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -512,30 +514,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 				Log.d("ReadatherJSONFeedTask", "" + e.getLocalizedMessage());
 			}
 		
-		
-			/* begin building the interface */
-			/*
-			LinearLayout membersToAdd = (LinearLayout)findViewById(R.id.linearLayoutNested2);
-			String[] members = {"Bobby Hill", "Peggy Hill", "Hank Hill"};
-			
-			for(int i = 0; i < 3; i++){
-				GridLayout gridView;
-				gridView = (GridLayout)inflater.inflate(R.layout.listitem_friend, null);
-				
-				Button removeFriendButton = (Button)gridView.findViewById(R.id.removeFriendButton);
-				//removeFriendButton.setVisibility(1);
-				removeFriendButton.setId(i);
-				
-				Button friendNameButton = (Button)gridView.findViewById(R.id.friendNameButton);
-				friendNameButton.setText(members[i]);
-				
-				friendNameButton.setId(i);
-				gridView.setId(i);
-				membersToAdd.addView(gridView);
-			}
-			*/
-			/* end building the interface */
-		
 		}
 	}
 	
@@ -562,17 +540,11 @@ public class GroupCreateActivity extends ActionBarActivity {
 		
 	}
 	
-	/* Start activity function for going back and logging out */
-	public void startFriendsActivity(View view)
-	{
-		Intent intent = new Intent(this, FriendsActivity.class);
-		startActivity(intent);
-		finish();
-	}
 	
 	public void startGroupsActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsActivity.class);
+		intent.putExtra("up", "true");
 		startActivity(intent);
 		finish();
 	}
@@ -690,23 +662,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		}
 	}
 
-	public void startFriendProfileActivity(View view)
-			throws InterruptedException
-	{
-		// need to get access to this friends email
-		// launches friendProfileActivity and loads content based on that email
-		int id = view.getId();
-		// got the id, now we need to grab the users email and somehow pass it
-		// to the activity
-		String friendEmail = friendsEmailList.get(id);
-		Intent intent = new Intent(this, FriendProfileActivity.class);
-		Global global = ((Global) getApplicationContext());
-		global.fetchNumFriends(friendEmail);
-		Thread.sleep(500);
-		intent.putExtra("email", friendEmail);
-		startActivity(intent);
 
-	}
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER

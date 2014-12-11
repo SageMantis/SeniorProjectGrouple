@@ -92,7 +92,7 @@
                 android:background="@drawable/border"
         android:layout_alignLeft="@+id/fNameEditText"
         android:layout_below="@+id/fNameEditText"
-        		android:fontFamily="sans-serif-condensed"
+        		android:fontFamily="sans-serif"
         android:ems="10"
         android:hint="@string/lNameEditText"
 		android:inputType="textCapSentences" />
@@ -115,6 +115,7 @@
                 android:layout_marginBottom="5dp"
         		android:fontFamily="sans-serif-condensed"
 		android:textColor="@color/button_text_color"
+		android:textStyle="bold"
 		android:background="@drawable/button_border"
         android:layout_alignLeft="@+id/lNameEditText"
         android:layout_below="@+id/lNameEditText"

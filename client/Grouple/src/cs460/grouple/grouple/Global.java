@@ -195,9 +195,9 @@ public class Global extends Application {
 			case R.id.groupsCurrentContainer:
 				if (parentStackGroupsCurrent.size() >= 1)
 				{
+					System.out.println("we are in the switch for current groups");
 					System.out.println("Groups current container");
 					parentIntent = parentStackGroupsCurrent.pop();
-					System.out.println("Parent has name " + parentIntent.getExtras().getString("ParentClassName"));
 				}
 				break;
 			case R.id.groupProfileContainer:

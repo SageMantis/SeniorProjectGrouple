@@ -268,8 +268,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 			new setProfileTask()
 					.execute("http://98.213.107.172/android_connect/update_profile.php");
 			Intent intent = new Intent(this, UserActivity.class);
+			intent.putExtra("up", "true");
 			startActivity(intent);
-			finish();
 		}
 
 	}

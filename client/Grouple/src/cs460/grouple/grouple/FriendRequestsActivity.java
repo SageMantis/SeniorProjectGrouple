@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,12 +42,26 @@ import android.widget.TextView;
 public class FriendRequestsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
+	Intent upIntent;
+	Intent parentIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_requests);
+
+
+		// display friend requests
+		// Create helper and if successful, will bring the correct home
+		// activity.
+		View friendRequests = findViewById(R.id.friendRequestsContainer);
+		load(friendRequests);
+
+	}
+
+	public void initActionBar()
+	{
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -55,19 +70,28 @@ public class FriendRequestsActivity extends ActionBarActivity
 		actionbarTitle.setText("Friend Requests");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View view) {
-
-				startParentActivity(view);
-
+				startActivity(upIntent);
+				finish();
 			}
 		});
-
-		// display friend requests
-		// Create helper and if successful, will bring the correct home
-		// activity.
-
+	}
+	
+	public void load(View view)
+	{
 		Global global = ((Global) getApplicationContext());
+
+		
+		//backstack of intents
+		//each class has a stack of intents lifo method used to execute them at start of activity
+		//intents need to include everything like ParentClassName, things for current page (email, ...)
+		//if check that friends
+		parentIntent = getIntent();
+		upIntent = new Intent(this, FriendsActivity.class);
+		upIntent.putExtra("up", "true");
+		
+
+		
 		String receiver = global.getCurrentUser();
 		new getFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
@@ -80,8 +104,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 		global.setNotifications(friends);
 		global.setNotifications(home);
 		initKillswitchListener();
+		
+		initActionBar();
+		initKillswitchListener();
 	}
-
+	
 	@Override
 	protected void onDestroy()
 	{
@@ -422,8 +449,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			View friendRequests = findViewById(R.id.friendRequestsLayout);
-			startParentActivity(friendRequests);
+			startActivity(upIntent);
+			finish();
 		}
 		return false;
 	}

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,18 @@ public class SettingsActivity extends ActionBarActivity
 
 		actionbarTitle.setText("Settings");
 	}
-
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			startParentActivity(null);
+		}
+		return false;
+	}
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -74,6 +86,8 @@ public class SettingsActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("up", "false");
+			intent.putExtra("ParentClassName", "SettingsActivity");
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -81,26 +95,20 @@ public class SettingsActivity extends ActionBarActivity
 	
 	public void startParentActivity(View view)
 	{
-		Bundle extras = getIntent().getExtras();
 
-		String className = extras.getString("ParentClassName");
+		String className = "HomeActivity";
 		Intent newIntent = null;
 		try
 		{
 			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
 					+ className));
-			if (extras.getString("ParentEmail") != null)
-			{
-				newIntent.putExtra("email", extras.getString("ParentEmail"));
-			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", "SettingsActivity");
+
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
 		}
 		startActivity(newIntent);
+		finish();
 	}
 	
 	public void initKillswitchListener()

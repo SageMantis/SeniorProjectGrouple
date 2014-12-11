@@ -83,7 +83,7 @@
     <string name="groupBioMessage">Tell people a little about this group</string>
     <string name="confirm">Confirm Create Group</string>
 
-    <string name="introMessage2">Current members in this group</string>
+    <string name="introMessage2">Current Members</string>
 
 
 </resources>
