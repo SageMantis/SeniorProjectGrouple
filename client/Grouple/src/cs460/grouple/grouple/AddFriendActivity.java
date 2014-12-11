@@ -122,7 +122,7 @@ public class AddFriendActivity extends ActionBarActivity
 			}
 			//newIntent.putExtra("email", extras.getString("email"));
 			//newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", "AddFriendActivity");
+			newIntent.putExtra("up", "true");
 		} catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
@@ -203,7 +203,7 @@ public class AddFriendActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			startFriendsActivity(null);
+			startParentActivity(null);
 		}
 		return false;
 	}

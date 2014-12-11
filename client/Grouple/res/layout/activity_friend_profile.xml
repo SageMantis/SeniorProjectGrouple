@@ -10,7 +10,7 @@
      	android:id="@+id/friendProfileOuterLayout"
    	    android:layout_width="match_parent"
    	    android:orientation="vertical"
-   	    android:layout_height="match_parent"
+   	    android:layout_height="wrap_content"
    	    android:background="@color/layout_background_color" >
 
    	    <LinearLayout
@@ -56,7 +56,18 @@
 
 		</LinearLayout>
 		
-   	    
+   	    <TextView
+        android:id="@+id/createIntroMessage1"
+   		android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+       	android:fontFamily="sans-serif-condensed"
+        android:layout_height="wrap_content"
+		android:padding="5dp"
+        android:gravity="left"
+        android:text="About User:"
+        android:background="@color/black"
+        android:textColor="@color/white" />
+       
    	    <LinearLayout
    	        android:id="@+id/friendProfileInnerLayout2"
    	        android:layout_width="match_parent"

@@ -88,14 +88,23 @@ public class GroupProfileActivity extends ActionBarActivity
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
+	
 			public void onClick(View view) {
-				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
-				finish();
 			}
 		});
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			startActivity(upIntent);
+		}
+		return false;
+	}
+
 	public void load(View view)
 	{
 		Log.d("message", "00000000000000001");
@@ -111,33 +120,13 @@ public class GroupProfileActivity extends ActionBarActivity
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		//do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			//pull a new intent from the stack
-			//load in everything from that intent
-			System.out.println("Should be fetching off stack for current friends");
-			parentIntent = global.getNextParentIntent(view);
-		}
-		else
-		{
-			//add to stack
-			parentIntent = intent;
-			//trying to add to stack whenever the page is actually left
-		}	
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		
 		getGroupCount();
-		
+		upIntent = new Intent(this, GroupsCurrentActivity.class);
+		upIntent.putExtra("up", "true");
+		upIntent.putExtra("mod", "true");
+		//startActivity(upIntent);
 		initActionBar();
 		initKillswitchListener();
 		
@@ -218,46 +207,15 @@ public class GroupProfileActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			upIntent.putExtra("up", "true");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
-
-	public void startParentActivity(View view)
-	{
-		Bundle extras = getIntent().getExtras();
-
-		String className = extras.getString("ParentClassName");
-		Intent newIntent = null;
-		try
-		{
-			newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-			if (extras.getString("ParentEmail") != null)
-			{
-				newIntent.putExtra("email", extras.getString("ParentEmail"));
-			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
-			newIntent.putExtra("ParentClassName", "GroupProfileActivity");
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		startActivity(newIntent);
-	}
 
 	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
+		intent.putExtra("ParentClassName", "GroupProfileActivity");
+		intent.putExtra("up", "false");
+		Global global = ((Global) getApplicationContext());
+		global.addToParentStackGroupProfile(parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -267,6 +225,10 @@ public class GroupProfileActivity extends ActionBarActivity
 	public void startEditProfileActivity(View view)
 	{
 		Intent intent = new Intent(this, EditProfileActivity.class);
+		intent.putExtra("up", "false");
+		Global global = ((Global) getApplicationContext());
+		global.addToParentStackGroupProfile(parentIntent);
+		intent.putExtra("ParentClassName", "GroupProfileActivity");
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -436,9 +398,6 @@ public class GroupProfileActivity extends ActionBarActivity
 		}
 	}
 	
-	public void addToGroupTable(View view){
-		
-	}
 	
 	public void toggleAdmin(View view){
 		
