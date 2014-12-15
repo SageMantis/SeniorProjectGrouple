@@ -1,6 +1,5 @@
 package cs460.grouple.grouple;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +33,7 @@ public class SettingsActivity extends ActionBarActivity
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
+			@Override
 			public void onClick(View view) {
 
 				startParentActivity(view);

@@ -1,19 +1,8 @@
 package cs460.grouple.grouple;
 
-import java.io.BufferedReader;
-import android.graphics.Color;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import android.content.BroadcastReceiver;
@@ -41,24 +30,29 @@ public class AddFriendActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		//Set the activity layout.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
+		//Set up the action bar. 
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
+		//Set up the back button listener for the action bar.
 		upButton.setOnClickListener(new OnClickListener() {
 
+			@Override
 			public void onClick(View view) {
 
 				startParentActivity(view);
 
 			}
 		});
+		//Set the action bar title.
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Add Friend");
-
+		//Initialize the kill switch. The kill switch will kill all open activities.
 		initKillswitchListener();
 	}
 
@@ -88,6 +82,7 @@ public class AddFriendActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
+			//If the user hits the logout button, then clear global and go to the logout screen.
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
@@ -105,7 +100,7 @@ public class AddFriendActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	//This function helps the action bar back button go back to the correct activity.
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
@@ -129,7 +124,7 @@ public class AddFriendActivity extends ActionBarActivity
 		}
 		startActivity(newIntent);
 	}
-	
+	//Adds a friend.
 	public void addFriendButton(View view)
 	{
 		EditText emailEditTextAFA = (EditText) findViewById(R.id.emailEditTextAFA);
@@ -138,15 +133,15 @@ public class AddFriendActivity extends ActionBarActivity
 		String senderEmail = global.getCurrentUser();
 		System.out.println("Email:" + email + "\nSender Email:" + senderEmail);
 
-		// write the mf
-		new getAddFriendTask()
-				.execute("http://98.213.107.172/android_connect/add_friend.php");
+		//Execute the add friend php
+		new getAddFriendTask().execute("http://98.213.107.172/android_connect/add_friend.php");
 	}
 
 	
-
+	//This task sends a friend request to the given user.
 	private class getAddFriendTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
@@ -160,6 +155,7 @@ public class AddFriendActivity extends ActionBarActivity
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
@@ -199,6 +195,7 @@ public class AddFriendActivity extends ActionBarActivity
 	}
 
 	@Override
+	//If the user hits the back button (not the one in the action bar, then go back to the parent activity.
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)

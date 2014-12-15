@@ -12,7 +12,8 @@
                 android:background="@drawable/border"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="3dp"
-        		android:fontFamily="sans-serif-condensed"
+        		android:fontFamily="sans-serif"
+        
         		                android:textColorHint="@color/hint_text_color"
 		android:textColor="@color/text_color"
         android:layout_marginTop="70dp"
@@ -45,7 +46,8 @@
         android:layout_marginBottom="3dp"
                 android:textColorHint="@color/hint_text_color"
         android:layout_alignRight="@+id/emailEditTextRA"
-        		android:fontFamily="sans-serif-condensed"
+        		android:fontFamily="sans-serif"
+        	
 		android:textColor="@color/text_color"
         android:layout_below="@+id/emailEditTextRA"
         android:ems="10"
@@ -57,7 +59,8 @@
                 android:textColorHint="@color/hint_text_color"
                         android:background="@drawable/border"
                                 android:layout_marginBottom="3dp"
-                		android:fontFamily="sans-serif-condensed"
+                		android:fontFamily="sans-serif"
+                		
 		android:textColor="@color/text_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,6 +72,7 @@
         android:inputType="textPassword" />
 
     <EditText
+       
         android:id="@+id/fNameEditText"
                 android:background="@drawable/border"
                 android:textColorHint="@color/hint_text_color"
@@ -101,6 +105,7 @@
         android:id="@+id/noFriendRequestsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         		android:fontFamily="sans-serif-condensed"
 		android:textColor="@color/text_color"
         android:layout_above="@+id/loginButtonRA"
@@ -115,7 +120,6 @@
                 android:layout_marginBottom="5dp"
         		android:fontFamily="sans-serif-condensed"
 		android:textColor="@color/button_text_color"
-		android:textStyle="bold"
 		android:background="@drawable/button_border"
         android:layout_alignLeft="@+id/lNameEditText"
         android:layout_below="@+id/lNameEditText"

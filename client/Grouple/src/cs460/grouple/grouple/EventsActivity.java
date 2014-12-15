@@ -21,6 +21,9 @@ public class EventsActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
+	/*
+	 * We have not used the Events Actvity yet.
+	 */
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -34,6 +37,7 @@ public class EventsActivity extends ActionBarActivity
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
+			@Override
 			public void onClick(View view) {
 
 				startParentActivity(view);

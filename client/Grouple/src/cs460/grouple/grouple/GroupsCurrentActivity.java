@@ -63,6 +63,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 	
 		upButton.setOnClickListener(new OnClickListener() 
 		{
+			@Override
 			public void onClick(View view) {
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
@@ -177,12 +178,14 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 
 	private class getGroupsTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
 			return global.readJSONFeed(urls[0], null);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			LayoutInflater li = getLayoutInflater();
@@ -192,7 +195,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					//ArrayList<String> groups = new ArrayList<String>();
-					JSONArray jsonGroups = (JSONArray) jsonObject
+					JSONArray jsonGroups = jsonObject
 							.getJSONArray("groups");
 
 					if (jsonGroups != null)
@@ -306,12 +309,15 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "GroupsCurrentActivity");
 		global.addToParentStackGroupsCurrent(parentIntent);
+
 		startActivity(intent);
+		
 		finish();
 	}
 	
 	private class deleteGroupTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			//urls 1, 2 are the emails
@@ -321,6 +327,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
@@ -360,6 +367,7 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		.setCancelable(true)
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener()
 		{
+			@Override
 			public void onClick(DialogInterface dialog, int id)
 			{
 				new deleteGroupTask().execute("http://98.213.107.172/android_connect/delete_group.php",gname);

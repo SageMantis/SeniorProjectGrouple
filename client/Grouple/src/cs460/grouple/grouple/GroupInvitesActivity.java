@@ -1,20 +1,8 @@
 package cs460.grouple.grouple;
 
-//import cs460.grouple.grouple.FriendRequestsActivity.getFriendRequestsTask;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import android.app.AlertDialog;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -70,6 +58,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 
 		upButton.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
@@ -196,6 +185,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 	
 	private class getGroupInvitesTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			//?
@@ -203,6 +193,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			return global.readJSONFeed(urls[0],null);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			LinearLayout groupInvitesLayout = (LinearLayout) findViewById(R.id.groupInvitesLayout);
@@ -216,7 +207,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 					System.out.println("We are in the success");
 					ArrayList<String> senders = new ArrayList<String>();
 					ArrayList<String> groups = new ArrayList<String>();
-					JSONArray jsonGroupInvites = (JSONArray) jsonObject.getJSONArray("requests");
+					JSONArray jsonGroupInvites = jsonObject.getJSONArray("requests");
 
 					
 					if (jsonGroupInvites != null)
@@ -303,6 +294,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 	//Decline Group Request. Refactor the JSON calls.
 	private class getDeclineGroupTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -315,6 +307,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -346,6 +339,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 	//Accept code. 
 	private class getAcceptGroupTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -358,6 +352,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -382,6 +377,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		}
 	}
 	
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)

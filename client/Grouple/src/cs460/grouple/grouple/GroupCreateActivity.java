@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -95,6 +94,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
+			@Override
 			public void onClick(View view) {
 
 				startParentActivity(view);
@@ -293,6 +293,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 		.setCancelable(true)
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener()
 		{
+			@Override
 			public void onClick(DialogInterface dialog, int id)
 			{
 				new GroupMembers().execute("http://98.213.107.172/" +
@@ -327,12 +328,14 @@ public class GroupCreateActivity extends ActionBarActivity {
 	{
 
 		//Override
+		@Override
 		protected String doInBackground(String... urls) {
 			// TODO Auto-generated method stub
 			return readGetFriendsJSONFeed(urls[0]);
 		}
 		
 		//Override
+		@Override
 		protected void onPostExecute(String result){
 
 			/* beginning building the interface */
@@ -348,7 +351,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					//ArrayList<String> friends = new ArrayList<String>();
-					JSONArray jsonFriends = (JSONArray) jsonObject
+					JSONArray jsonFriends = jsonObject
 							.getJSONArray("friends");
 
 					if (jsonFriends != null)
@@ -389,16 +392,17 @@ public class GroupCreateActivity extends ActionBarActivity {
 								final Button removeFriendButton = (Button) rowView.findViewById(R.id.removeFriendButtonNoAccess);
 								
 								removeFriendButton.setOnClickListener(new OnClickListener(){
+									@Override
 									public void onClick(View view){
 										if(removeFriendButton.getText().toString().equals("-")){
 											removeFriendButton.setText("A");
 											isAdmin.put(view.getId(), true);
-											removeFriendButton.setTextColor(Color.parseColor("#7fff00"));
+											removeFriendButton.setTextColor(getResources().getColor(R.color.light_green));
 										}
 										else{
 											removeFriendButton.setText("-");
 											isAdmin.put(view.getId(), false);
-											removeFriendButton.setTextColor(Color.parseColor("#ffcc0000"));
+											removeFriendButton.setTextColor(getResources().getColor(R.color.orange));
 										}
 									}
 								});
@@ -560,6 +564,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				.setCancelable(true)
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener()
 				{
+					@Override
 					public void onClick(DialogInterface dialog, int id)
 					{
 
@@ -629,11 +634,13 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 	private class deleteFriendTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			return deleteFriendJSONFeed(urls[0], urls[1]);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try

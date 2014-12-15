@@ -14,7 +14,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import cs460.grouple.grouple.R;
 import android.support.v7.app.ActionBar;
@@ -24,11 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -89,6 +85,7 @@ public class GroupProfileActivity extends ActionBarActivity
 		upButton.setOnClickListener(new OnClickListener() {
 
 	
+			@Override
 			public void onClick(View view) {
 				startActivity(upIntent);
 			}
@@ -225,7 +222,7 @@ public class GroupProfileActivity extends ActionBarActivity
 	public void startEditProfileActivity(View view)
 	{
 		Intent intent = new Intent(this, EditProfileActivity.class);
-		intent.putExtra("up", "false");
+		intent.putExtra("up", "false");//test
 		Global global = ((Global) getApplicationContext());
 		global.addToParentStackGroupProfile(parentIntent);
 		intent.putExtra("ParentClassName", "GroupProfileActivity");
@@ -293,12 +290,14 @@ public class GroupProfileActivity extends ActionBarActivity
 	private class getProfileTask extends AsyncTask<String, Void, String>
 	{
 
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Log.d("message", "00000000000000003 " + urls[0]);
 			return readGetFriendsJSONFeed(urls[0]);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try

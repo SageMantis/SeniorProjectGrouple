@@ -24,13 +24,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class FriendProfileActivity extends ActionBarActivity
 {
+	//Set up the fields.
 	BroadcastReceiver broadcastReceiver;
 	private Bitmap bmp;
 	private ImageView iv;
@@ -68,6 +68,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		//handling up navigation
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
@@ -231,6 +232,7 @@ public class FriendProfileActivity extends ActionBarActivity
 	private class getProfileTask extends AsyncTask<String, Void, String>
 	{
 
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -242,7 +244,11 @@ public class FriendProfileActivity extends ActionBarActivity
 			nameValuePairs.add(new BasicNameValuePair("email", email));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
-
+		/*
+		 * On success, we get the friend's profile and set it to the text views in the profile.
+		 * On fail, the profile is not loaded. It can be a connection error or incorrect email address for the php. 
+		 */
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
@@ -252,15 +258,12 @@ public class FriendProfileActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// Success
-					JSONArray jsonProfileArray = (JSONArray) jsonObject
-							.getJSONArray("profile");
-
+					JSONArray jsonProfileArray = jsonObject.getJSONArray("profile");
+					//Get the profile information
 					String first = jsonProfileArray.getString(0);
 					String last = jsonProfileArray.getString(1);
-					first = first.substring(0, 1).toUpperCase()
-							+ first.substring(1);
-					last = last.substring(0, 1).toUpperCase()
-							+ last.substring(1);
+					first = first.substring(0, 1).toUpperCase()+ first.substring(1);
+					last = last.substring(0, 1).toUpperCase()+ last.substring(1);
 
 					profileName = first + " " + last;
 					String age = jsonProfileArray.getString(2);
@@ -296,8 +299,8 @@ public class FriendProfileActivity extends ActionBarActivity
 					TextView locationTextView = (TextView) findViewById(R.id.locationTextViewFPA);
 					TextView bioTextView = (TextView) findViewById(R.id.bioTextViewFPA);
 
-					// We only want to add the profile details if the user
-					// filled them out.
+					// We only want to add the profile details if the user filled them out.
+					//if it's not null, then add the profile info to the the corresponding text views.
 					if (!age.equalsIgnoreCase("null"))
 					{
 						ageTextView.setText(age + " years old");
@@ -329,7 +332,7 @@ public class FriendProfileActivity extends ActionBarActivity
 			}
 		}
 	}
-
+	//Method that handles starting the current groups from the user's profile.
 	public void startGroupsCurrentActivity(View view)
 	{
 		Global global = ((Global) getApplicationContext());
@@ -345,7 +348,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		bmp = null;
 		iv = null;
 	}
-
+	//Method that handles starting the current friends from the user's profile.
 	public void startCurrentFriendsActivity(View view)
 	{
 		Global global = ((Global) getApplicationContext());
@@ -362,7 +365,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		bmp = null;
 		iv = null;
 	}
-
+	//Method that handles starting the current events from the user's profile.
 	public void startEventsActivity(View view)
 	{
 		Global global = ((Global) getApplicationContext());

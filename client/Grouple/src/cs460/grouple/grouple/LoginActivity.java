@@ -83,12 +83,14 @@ public class LoginActivity extends Activity
 
 	private class getLoginTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
 			return global.readJSONFeed(urls[0], null);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
