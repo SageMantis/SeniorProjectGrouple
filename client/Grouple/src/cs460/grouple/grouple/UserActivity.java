@@ -61,6 +61,7 @@ public class UserActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
@@ -212,6 +213,7 @@ public class UserActivity extends ActionBarActivity
 	private class getProfileTask extends AsyncTask<String, Void, String>
 	{
 
+		@Override
 		protected String doInBackground(String... urls)
 		{
 
@@ -223,6 +225,7 @@ public class UserActivity extends ActionBarActivity
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
@@ -232,7 +235,7 @@ public class UserActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// Success
-					JSONArray jsonProfileArray = (JSONArray) jsonObject
+					JSONArray jsonProfileArray = jsonObject
 							.getJSONArray("profile");
 
 					//String name = jsonProfileArray.getString(0) + " "

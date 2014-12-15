@@ -11,7 +11,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,7 +57,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		load(friendRequests);
 
 	}
-
+	//Start the action bar.
 	public void initActionBar()
 	{
 		ActionBar ab = getSupportActionBar();
@@ -70,13 +68,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 		actionbarTitle.setText("Friend Requests");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				startActivity(upIntent);
 				finish();
 			}
 		});
 	}
-	
+	//Gets the friends requests and displays them to the user
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
@@ -93,8 +92,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 		
 		String receiver = global.getCurrentUser();
-		new getFriendRequestsTask()
-				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
+		//Php call that gets the users friend requests.
+		new getFriendRequestsTask().execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 						+ receiver);
 
 		View friendRequests = findViewById(R.id.friendRequestsLayout);
@@ -151,15 +150,20 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	/*
+	 * Using the user's email address, we get the user's current friend requests.
+	 * On success we display the user's current friends request, if there are any.
+	 */
 	private class getFriendRequestsTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
 			return global.readJSONFeed(urls[0],null);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			LayoutInflater li = getLayoutInflater();
@@ -171,7 +175,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					System.out.println("We are in the success");
 					ArrayList<String> senders = new ArrayList<String>();
-					JSONArray jsonSenders = (JSONArray) jsonObject
+					JSONArray jsonSenders = jsonObject
 							.getJSONArray("senders").getJSONArray(0);
 					Global global = ((Global) getApplicationContext());
 
@@ -185,6 +189,9 @@ public class FriendRequestsActivity extends ActionBarActivity
 						// looping thru json and adding to an array
 						for (int i = 0; i < jsonSenders.length(); i++)
 						{
+							//This is a hackish way of getting the friend request from the json object.
+							//This was before we had a good understanding of JSON
+							//TODO: clean this up.
 							String raw = jsonSenders.get(i).toString()
 									.replace("\"", "").replace("]", "")
 									.replace("[", "");
@@ -238,27 +245,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 	}
 
 	/*
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *********************************DECLINE
-	 * CODE********************************************
-	 * **************************
-	 * ***************************************************************
-	 * ***********
-	 * ***************************************************************
-	 * ***************
-	 * ***********************************************************
-	 * ******************************
-	 * ********************************************
-	 * *********************************************
-	 * *****************************
-	 * ************************************************************
-	 * **************
-	 * ************************************************************
-	 * ***************
+	 *On click listener that determines if the user declined or accepted the code.
 	 */
 	public void onClick(View view)
 	{
@@ -283,9 +270,13 @@ public class FriendRequestsActivity extends ActionBarActivity
 			break;
 		}
 	}
-
+	/*
+	 * Code for declining a friend request.
+	 * On success, we remove the friend request and refresh the friend requests activity.
+	 */
 	private class getDeclineFriendTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -297,6 +288,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -376,31 +368,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 	}
 
 	/*
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * *****************************************************************************************
-	 * **********************ACCEPT
-	 * CODE********************************************************
-	 * **************
-	 * ************************************************************
-	 * ***************
-	 * ***********************************************************
-	 * ******************************
-	 * ********************************************
-	 * *********************************************
-	 * *****************************
-	 * ************************************************************
-	 * **************
-	 * ************************************************************
-	 * ***************
-	 * ***********************************************************
-	 * ******************************
+	 * Code for accepting a friend request.
+	 * On success, we remove the friend request and refresh the friend requests activity.
+	 * We also confirm the friendship in the database.
 	 */
 
 	private class getAcceptFriendTask extends AsyncTask<String, Void, String>
 	{
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
@@ -413,6 +388,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result)
 		{
 			Global global = ((Global) getApplicationContext());

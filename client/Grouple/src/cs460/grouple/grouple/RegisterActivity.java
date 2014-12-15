@@ -1,21 +1,10 @@
 package cs460.grouple.grouple;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +35,7 @@ public class RegisterActivity extends ActionBarActivity {
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				startParentActivity(null);
 			}
@@ -77,7 +67,7 @@ public class RegisterActivity extends ActionBarActivity {
 	{
 		Bundle extras = getIntent().getExtras();
 
-		String className = "HomeActivity";
+		String className = "LoginActivity";
 		Intent newIntent = null;
 		try
 		{
@@ -117,6 +107,7 @@ public class RegisterActivity extends ActionBarActivity {
 	
 	private class getRegisterTask extends AsyncTask<String, Void, String> {
 
+		@Override
 		protected String doInBackground(String... urls) {
 			Global global = ((Global) getApplicationContext());
 
@@ -140,6 +131,7 @@ public class RegisterActivity extends ActionBarActivity {
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		@Override
 		protected void onPostExecute(String result) {
 			try {
 				JSONObject jsonObject = new JSONObject(result);

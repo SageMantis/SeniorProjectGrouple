@@ -11,7 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -46,6 +45,7 @@ import android.widget.TextView;
 public class EditProfileActivity extends ActionBarActivity implements
 		View.OnClickListener
 {
+	//Set up fields. Most are just for the camera.
 	private Button b;
 	private ImageView iv;
 	private final static int CAMERA_DATA = 0;
@@ -57,9 +57,10 @@ public class EditProfileActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		//Set the activity layout to activity_edit_profile.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
-
+		//Set up the action bar.
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -67,6 +68,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
+			@Override
 			public void onClick(View view) {
 
 				startParentActivity(view);
@@ -81,10 +83,9 @@ public class EditProfileActivity extends ActionBarActivity implements
 		initKillswitchListener();
 
 
-		// execute php script, using the current users email address to populate
-		// the textviews
-		new getProfileTask()
-				.execute("http://98.213.107.172/android_connect/get_profile.php");
+		// execute php script, using the current users email address to populate the textviews for editing.
+		//We NEED to execute this before displaying the activity.
+		new getProfileTask().execute("http://98.213.107.172/android_connect/get_profile.php");
 
 	}
 
@@ -95,7 +96,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-
+	//Executed when hitting the back button.
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
@@ -110,8 +111,6 @@ public class EditProfileActivity extends ActionBarActivity implements
 			{
 				newIntent.putExtra("email", extras.getString("ParentEmail"));
 			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("ParentClassName", "EditProfileActivity");
 		} catch (ClassNotFoundException e)
 		{
@@ -127,18 +126,22 @@ public class EditProfileActivity extends ActionBarActivity implements
 	 */
 	private class getProfileTask extends AsyncTask<String, Void, String>
 	{
-
+		//Pass the current user's email address to the php so we can get their info from the database.
+		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
 			String email = global.getCurrentUser();
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-					1);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 			nameValuePairs.add(new BasicNameValuePair("email", email));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
-		
+		/*
+		 * If the result is success, the we grab the user's info and add it to the editiable textview.
+		 * If it fails, then something went wrong. Could be connection error or incorrect user email address..
+		 */
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
@@ -148,9 +151,9 @@ public class EditProfileActivity extends ActionBarActivity implements
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// Success
-					JSONArray jsonProfileArray = (JSONArray) jsonObject
+					JSONArray jsonProfileArray = jsonObject
 							.getJSONArray("profile");
-
+					//Get the information so we can add it to the editable textviews.
 					String name = jsonProfileArray.getString(0) + " "
 							+ jsonProfileArray.getString(1);
 					String age = jsonProfileArray.getString(2);
@@ -179,7 +182,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 						decodedString = null;
 					}
 					Log.d("scott", "6th");
-
+					//Find the text views.
 					TextView nameTextView = (TextView) findViewById(R.id.nameEditTextEPA);
 					TextView ageTextView = (TextView) findViewById(R.id.ageEditTextEPA);
 					TextView locationTextView = (TextView) findViewById(R.id.locationEditTextEPA);
@@ -189,7 +192,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 						Log.d("scott", "7th");
 						iv = (ImageView) findViewById(R.id.profilePhoto);
 					}
-					// JSONObject bioJson = jsonProfileArray.getJSONObject(0);
+					//Add the info to the textviews for editing.
 					nameTextView.setText(name);
 					ageTextView.setText(age);
 					bioTextView.setText(bio);
@@ -281,12 +284,13 @@ public class EditProfileActivity extends ActionBarActivity implements
 	private class setProfileTask extends AsyncTask<String, Void, String>
 	{
 
+		@Override
 		protected String doInBackground(String... urls)
 		{
 
 			return readJSONFeed(urls[0]);
 		}
-
+		//Grab the data from the textviews and push it to the database.
 		public String readJSONFeed(String URL)
 		{
 
@@ -375,13 +379,13 @@ public class EditProfileActivity extends ActionBarActivity implements
 			}
 			return stringBuilder.toString();
 		}
-
+		//need to do more error checking.
+		@Override
 		protected void onPostExecute(String result)
 		{
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
-				// System.out.println(jsonObject.getString("success"));
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// Success

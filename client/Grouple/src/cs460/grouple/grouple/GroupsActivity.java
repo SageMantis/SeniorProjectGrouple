@@ -46,6 +46,7 @@ public class GroupsActivity extends ActionBarActivity
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {
 
+			@Override
 			public void onClick(View view) {
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
