@@ -42,6 +42,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/*
+ * EditProfileActivity allows user to make changes to his/her profile.
+ */
 public class EditProfileActivity extends ActionBarActivity implements
 		View.OnClickListener
 {

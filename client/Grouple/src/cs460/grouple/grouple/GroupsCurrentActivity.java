@@ -31,6 +31,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/*
+ * GroupsCurrentActivity displays a list of all groups a member is a part of.
+ */
 public class GroupsCurrentActivity extends ActionBarActivity {
 
 	Intent parentIntent;
@@ -60,7 +63,6 @@ public class GroupsCurrentActivity extends ActionBarActivity {
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText(global.getName() + "'s Groups");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-	
 		upButton.setOnClickListener(new OnClickListener() 
 		{
 			@Override

@@ -106,4 +106,13 @@
         android:textColor="@color/red"
         android:visibility="invisible" />
 
+    <ProgressBar
+        android:id="@+id/progressBarLA"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginFailTextViewLA"
+        android:layout_centerHorizontal="true" />
+
+
 </RelativeLayout>

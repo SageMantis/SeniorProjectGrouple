@@ -16,14 +16,14 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/*
+ * EventsActivity has not been implemented yet.
+ */
 public class EventsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
-	/*
-	 * We have not used the Events Actvity yet.
-	 */
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);

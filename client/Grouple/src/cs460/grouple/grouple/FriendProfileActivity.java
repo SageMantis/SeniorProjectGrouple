@@ -28,6 +28,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/*
+ * FriendProfileActivity displays the profile page of a user's friend.
+ */
 public class FriendProfileActivity extends ActionBarActivity
 {
 	//Set up the fields.
