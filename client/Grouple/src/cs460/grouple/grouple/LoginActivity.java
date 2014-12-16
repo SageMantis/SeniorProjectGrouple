@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,20 +15,35 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/*
+ * HomeActivity is Launcher activity and allows the user to log in to his/her acccount.
+ */
 public class LoginActivity extends Activity
 {
 	Button loginButton;
 	BroadcastReceiver broadcastReceiver;
+	ProgressBar progBar;
+	TextView loginFail;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		ActionBar ab = getActionBar();
-		ab.hide();
+		
+		//sets up an progress bar spinner that will appear when user hits login.
+		progBar = (ProgressBar) findViewById(R.id.progressBarLA);
+		progBar.setVisibility(View.GONE);
+		
+		//sets up error message that will appear if user enters invalid login/pass.
+		loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
+		
+		//The following two lines cause crash when app loads.
+		//ActionBar ab = getActionBar();   //returns null
+		//ab.hide();  //since above line returned null, this throws NullPointerException
 		Log.d("app666", "we created");
 		//todo auto capitalize first / last names.
 		initKillswitchListener();
@@ -59,6 +75,13 @@ public class LoginActivity extends Activity
 	{
 		// Create helper and if successful, will bring the correct home
 		// activity.
+		
+		//Removes any previous error message from previous failed login
+		loginFail.setVisibility(View.INVISIBLE);
+		
+		//Makes progress bar visible during processing of login
+		progBar.setVisibility(View.VISIBLE);
+		
 		EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditTextLA);
 		String email = emailEditText.getText().toString();
@@ -110,15 +133,25 @@ public class LoginActivity extends Activity
 					global.setCurrentName(global.getName());
 					System.out.println("Setting current name to " + global.getName());
 					Thread.sleep(1000); // Sleeping to let home activity start up
+					//Login processing finished: progress bar disappear again
+					progBar.setVisibility(View.GONE);
+					//display message from json (successful login message)
+					loginFail.setText(jsonObject.getString("message"));
+					loginFail.setTextColor(Color.GREEN);
+					loginFail.setVisibility(View.VISIBLE);
 					startHomeActivity();
 					finish(); // Finishing login (possibly save some memory)
 				} else
 				{
 					// failed
+					
+					//Login processing finished: progress bar disappear again
+					progBar.setVisibility(View.GONE);
 					System.out.println("failed");
-					TextView loginFail = (TextView) findViewById(R.id.loginFailTextViewLA);
+					//display message from json (failed login reason)
 					loginFail.setText(jsonObject.getString("message"));
-					loginFail.setVisibility(0);
+					loginFail.setTextColor(Color.RED);
+					loginFail.setVisibility(View.VISIBLE);
 				}
 			} catch (Exception e)
 			{

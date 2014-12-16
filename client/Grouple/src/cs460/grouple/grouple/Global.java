@@ -23,7 +23,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-
+/*
+ * Global stores user values needed for notifications.
+ */
 public class Global extends Application {
 	private String currentUser;
 	private String currentName;

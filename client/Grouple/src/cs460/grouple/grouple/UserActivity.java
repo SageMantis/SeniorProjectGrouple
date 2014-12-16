@@ -29,9 +29,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/*
+ * UserActivity displays the profile page of the logged-in user.
+ */
 public class UserActivity extends ActionBarActivity 
 {
-
 	private ImageView iv;
 	private Bitmap bmp;
 	BroadcastReceiver broadcastReceiver;
@@ -46,12 +48,10 @@ public class UserActivity extends ActionBarActivity
 		
 		View user = findViewById(R.id.userContainer);
 		load(user);
-
 	}
 
 	public void initActionBar()
 	{
-
 		Global global = ((Global) getApplicationContext());
 		/*Action bar*/
 		ActionBar ab = getSupportActionBar();
@@ -68,8 +68,6 @@ public class UserActivity extends ActionBarActivity
 				finish();
 			}
 		});
-		//upButton.setOnClickListener
-		//global.fetchNumFriends(email)
 		actionbarTitle.setText(global.getCurrentName() + "'s Profile");
 	}
 	
@@ -123,7 +121,7 @@ public class UserActivity extends ActionBarActivity
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
-		//initializing th eaction bar and killswitch listener
+		//initializing the action bar and killswitch listener
 		initActionBar();
 		initKillswitchListener();	
 	}
@@ -139,7 +137,6 @@ public class UserActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 

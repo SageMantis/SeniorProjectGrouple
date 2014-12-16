@@ -15,6 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/*
+ * HomeActivity displays the primary navigation and welcome screen after logging in.
+ */
 public class HomeActivity extends ActionBarActivity
 {
 	LayoutInflater li;
@@ -23,15 +26,6 @@ public class HomeActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		try
-		{
-			//Waiting
-			Thread.sleep(500);
-		} catch (InterruptedException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
@@ -49,7 +43,6 @@ public class HomeActivity extends ActionBarActivity
 	
 	public void initActionBar()
 	{
-		
 		//Actionbar settings
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -65,6 +58,14 @@ public class HomeActivity extends ActionBarActivity
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
+	}
+	
+	//This method closes the app when back button is pressed on main page
+	@Override
+	public void onBackPressed() 
+	{
+		Log.d("backPress", "Back was pressed on home screen.");
+		finish();
 	}
 
 	@Override
@@ -117,6 +118,7 @@ public class HomeActivity extends ActionBarActivity
 		global.setNotifications(home);
 	}
 
+	/*
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -159,8 +161,10 @@ public class HomeActivity extends ActionBarActivity
 				startActivity(newIntent);
 			}
 		}
+		
 		return false;
 	}
+	*/
 
 	
 	public void navigate(View view)

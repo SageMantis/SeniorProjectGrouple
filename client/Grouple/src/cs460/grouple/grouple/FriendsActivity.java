@@ -16,6 +16,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/*
+ * FriendsActivity displays displays the friend navigation page for the user.
+ */
 public class FriendsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;

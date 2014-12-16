@@ -16,6 +16,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/*
+ * GroupsActivity displays displays the group navigation page for the user.
+ */
 public class GroupsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;

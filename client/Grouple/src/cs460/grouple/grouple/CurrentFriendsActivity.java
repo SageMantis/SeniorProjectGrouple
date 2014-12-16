@@ -30,6 +30,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/*
+ * CurrentFriendsActivity displays a list of all friends of user.
+ */
 public class CurrentFriendsActivity extends ActionBarActivity
 {
 	Intent parentIntent;

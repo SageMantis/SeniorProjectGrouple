@@ -49,6 +49,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 @SuppressLint("UseSparseArrays")
+
+/*
+ * GroupCreateActivity allows a user to create a new group.
+ */
 public class GroupCreateActivity extends ActionBarActivity {
 
 	BroadcastReceiver broadcastReceiver;
@@ -77,17 +81,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionBarTitle = (TextView)findViewById(R.id.actionbarTitleTextView);
 		actionBarTitle.setText("Groups");
-		//Global global = (Global)getApplicationContext();
-		/*
-		final Button toggle = (Button)findViewById(R.id.removeFriendButtonNoAccess);
-		toggle.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View arg){
-				//toggle.setText("+");
-				//toggle.setTextColor(Color.parseColor("#FFFFFF"));
-			}
-		});
-		*/
 		Bundle extras = getIntent().getExtras();
 		email = extras.getString("email");
 		
@@ -96,9 +89,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View view) {
-
 				startParentActivity(view);
-
 			}
 		});
 		
@@ -275,7 +266,7 @@ public class GroupCreateActivity extends ActionBarActivity {
 				{
 					Log.d("JSON", "Failed to download file");
 				}
-			}////////////////////////////////////////////
+			}
 		} catch (Exception e)
 		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
@@ -301,40 +292,17 @@ public class GroupCreateActivity extends ActionBarActivity {
 			}
 		}).setNegativeButton("Cancel", null).show();
 	}
-	///////////
 	
-	
-	///////////
-	/*
-	private class createGroup extends AsyncTask<String, Void, String>
-	{
-
-		//Override
-		protected String doInBackground(String... urls) {
-			// TODO Auto-generated method stub
-			return readGetFriendsJSONFeed(urls[0]);
-		}
-		
-		//Override
-		protected void onPostExecute(String result){
-
-		}
-		
-	}
-	*/
-	///////////
-	//This is where the initial php leads to.
 	private class GroupMembers extends AsyncTask<String, Void, String>
 	{
 
-		//Override
+	
 		@Override
 		protected String doInBackground(String... urls) {
 			// TODO Auto-generated method stub
 			return readGetFriendsJSONFeed(urls[0]);
 		}
 		
-		//Override
 		@Override
 		protected void onPostExecute(String result){
 
@@ -508,10 +476,6 @@ public class GroupCreateActivity extends ActionBarActivity {
 					// rowRL.setY(y);
 				} else
 				{
-					// failed
-					// TextView loginFail = (TextView)
-					// findViewById(R.id.loginFailTextViewLA);
-					// loginFail.setVisibility(0);
 				}
 			} catch (Exception e)
 			{

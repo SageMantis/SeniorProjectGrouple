@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/*
+ * HomeActivity allows the user to register for a new Grouple account.
+ */
 public class RegisterActivity extends ActionBarActivity {
 	BroadcastReceiver broadcastReceiver;
 	
@@ -40,7 +43,6 @@ public class RegisterActivity extends ActionBarActivity {
 				startParentActivity(null);
 			}
 		});
-		
 		
 		getActionBar().hide();
 		initKillswitchListener();
@@ -88,8 +90,8 @@ public class RegisterActivity extends ActionBarActivity {
 		EditText rePasswordEditText = (EditText) findViewById(R.id.rePasswordEditTextRA);
 		String password = passwordEditText.getText().toString();
 		String rePassword = rePasswordEditText.getText().toString();
+		//Confirms that both passwords match before executing php
 		if (password.equals(rePassword)) {
-			// write the mf
 			new getRegisterTask()
 					.execute("http://98.213.107.172/android_connect/register_account.php");
 

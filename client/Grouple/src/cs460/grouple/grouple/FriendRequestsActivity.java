@@ -37,6 +37,9 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/*
+ * FriendRequestsActivity displays a list of all active friend requests of a user.
+ */
 public class FriendRequestsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
