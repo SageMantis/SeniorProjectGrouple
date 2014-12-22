@@ -16,6 +16,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/*
+ * MessagesActivity has not been implemented yet.
+ */
 public class MessagesActivity extends ActionBarActivity {
 	BroadcastReceiver broadcastReceiver;
 	@Override

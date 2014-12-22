@@ -39,6 +39,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/*
+ * GroupProfileActivity displays the profile of a user's group.
+ */
 public class GroupProfileActivity extends ActionBarActivity 
 {
 
@@ -62,6 +65,10 @@ public class GroupProfileActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_profile);
+		
+		Global global = ((Global) getApplicationContext());
+		Bundle extras = getIntent().getExtras();
+		gname = extras.getString("gname");
 
 		View groupProfile = findViewById(R.id.groupProfileContainer);
 		load(groupProfile);
@@ -77,9 +84,6 @@ public class GroupProfileActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		Global global = ((Global) getApplicationContext());
-		Bundle extras = getIntent().getExtras();
-		gname = extras.getString("gname");
 		actionbarTitle.setText(gname);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener() {

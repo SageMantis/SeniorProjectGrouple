@@ -31,6 +31,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/*
+ * GroupCreateActivity displays a list of all active group requests of a user.
+ */
 public class GroupInvitesActivity extends ActionBarActivity {
 	Intent parentIntent;
 	Intent upIntent;

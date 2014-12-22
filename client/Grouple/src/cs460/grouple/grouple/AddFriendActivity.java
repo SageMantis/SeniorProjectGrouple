@@ -23,6 +23,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/*
+ * AddFriendActivity allows user to add another user as a friend.
+ */
 public class AddFriendActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
