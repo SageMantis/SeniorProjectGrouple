@@ -237,7 +237,7 @@ public class Global extends Application {
 		
 	}
 	
-	public void setNotifications(View view) {
+	public int setNotifications(View view) {
 		//todo: If I can pass an email in here and skip setting current user
 		int numFriendRequests = getNumFriendRequests();
 		int numFriends = getNumFriends();
@@ -313,17 +313,18 @@ public class Global extends Application {
 		{
 			((Button) view.findViewById(R.id.yourGroupsButton)).setText("My Groups (" + numGroups + ")");
 		}
-		
+		return 1; //successful
 		// else do nothing, keep that invisible
 	}
 
 	/* Takes in email of user, and sets the friend requests */
 	//Should switch this to return the number
-	public void fetchNumFriendRequests(String email) 
+	public int fetchNumFriendRequests(String email) 
 	{
 		new getNumFriendRequestsTask()
 				.execute("http://98.213.107.172/android_connect/get_count_friend_requests.php?email="
 						+ email);
+		return 1;
 	}
 
 
@@ -358,10 +359,11 @@ public class Global extends Application {
 	}
 
 	// Get numFriends, TODO: work on returning the integer
-	public void fetchNumFriends(String email) {
+	public int fetchNumFriends(String email) {
 		new getFriendsTask()
 				.execute("http://98.213.107.172/android_connect/get_count_friends.php?email="
 						+ email);
+		return 1;
 	}
 
 	private class getFriendsTask extends AsyncTask<String, Void, String> {
@@ -391,11 +393,12 @@ public class Global extends Application {
 		}
 	}
 
-	public void fetchNumGroupInvites(String email) // Should take in email
+	public int fetchNumGroupInvites(String email) // Should take in email
 	{
 		new getNumGroupInvitesTask()
 				.execute("http://98.213.107.172/android_connect/get_count_group_invites.php?email="
 						+ email);
+		return 1;
 	}
 	
 	private class getNumGroupInvitesTask extends AsyncTask<String, Void, String> {
@@ -427,11 +430,12 @@ public class Global extends Application {
 		}
 	}
 	
-	public void fetchNumGroups(String email) // Should take in email
+	public int fetchNumGroups(String email) // Should take in email
 	{
 		new getNumGroupsTask()
 				.execute("http://98.213.107.172/android_connect/get_count_groups.php?email="
 						+ email);
+		return 1;
 	}
 	
 	private class getNumGroupsTask extends AsyncTask<String, Void, String> {
@@ -465,10 +469,11 @@ public class Global extends Application {
 	}
 	
 	// Get name, should change to take in email
-	public void fetchName(String email) {
+	public int fetchName(String email) {
 		new getNameTask()
 				.execute("http://98.213.107.172/android_connect/get_user_by_email.php?email="
 						+ email);
+		return 1;
 	}
 
 

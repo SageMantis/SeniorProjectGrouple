@@ -123,7 +123,8 @@ public class GroupProfileActivity extends ActionBarActivity
 		//do a check that it is not from a back push
 
 		
-		getGroupCount();
+		if (getGroupCount() == 1){System.out.println("waiting");}
+		getGroupContents();
 		upIntent = new Intent(this, GroupsCurrentActivity.class);
 		upIntent.putExtra("up", "true");
 		upIntent.putExtra("mod", "true");
@@ -133,9 +134,10 @@ public class GroupProfileActivity extends ActionBarActivity
 		
 	}
 	
-	public void getGroupCount(){
+	public int getGroupCount(){
 		new getProfileTask().execute("http://98.213.107.172/" +
 				"android_connect/count_group_members.php");
+		return 1;
 	}
 	
 	public void getGroupContents(){
@@ -314,7 +316,7 @@ public class GroupProfileActivity extends ActionBarActivity
 					String gnumTemp = (jsonObject.getString("gcount"));
 					gcount = Integer.parseInt(gnumTemp);
 					Log.d("count group members", "There are " + gnumTemp + " gmembers.");
-					getGroupContents();
+					
 				}
 				else if(jsonObject.getString("success").toString().equals("2")){
 					String grow = (jsonObject.getString("grow"));
@@ -355,7 +357,7 @@ public class GroupProfileActivity extends ActionBarActivity
 					rowView.setId(index);
 					membersToAdd.addView(rowView);
 					
-					getGroupContents();
+					//getGroupContents();
 				}
 					/*
 					// Success

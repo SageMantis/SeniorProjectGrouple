@@ -16,6 +16,7 @@
    	    <LinearLayout
    	        android:id="@+id/friendProfileInnerLayout1"
    	        android:layout_width="match_parent"
+   	        android:layout_weight="1"
    	        android:background="@color/layout_background_color" 
    	        android:layout_height="wrap_content" 
    	        android:orientation="horizontal"
@@ -103,7 +104,8 @@
    	    <Button
    	        android:id="@+id/friendsButtonFPA"
    	        android:layout_width="match_parent"
-   	        android:layout_height="60dp"
+   	        android:layout_height="wrap_content"
+   	        android:layout_weight="1"
    	        android:background="@drawable/button_border"
    	        android:fontFamily="sans-serif-condensed"
    	        android:onClick="startCurrentFriendsActivity"
@@ -115,7 +117,8 @@
    	    <Button
    	        android:id="@+id/groupsButtonFPA"
    	        android:layout_width="match_parent"
-   	        android:layout_height="60dp"
+   	        android:layout_height="wrap_content"
+   	        android:layout_weight="1"
    	        android:layout_marginTop="10dp"
    	        android:background="@drawable/button_border"
    	        android:fontFamily="sans-serif-condensed"
@@ -128,7 +131,8 @@
    	        android:id="@+id/eventsButtonFPA"
    	           	        android:layout_marginTop="10dp"
    	        android:layout_width="match_parent"
-   	        android:layout_height="60dp"
+   	        android:layout_height="wrap_content"
+   	        android:layout_weight="1"
    	        android:background="@drawable/button_border"
    	        android:fontFamily="sans-serif-condensed"
    	        android:onClick="startEventsActivity"
