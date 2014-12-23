@@ -45,7 +45,6 @@ public class LoginActivity extends Activity
 		//ActionBar ab = getActionBar();   //returns null
 		//ab.hide();  //since above line returned null, this throws NullPointerException
 		Log.d("app666", "we created");
-		//todo auto capitalize first / last names.
 		initKillswitchListener();
 	}
 
@@ -90,18 +89,12 @@ public class LoginActivity extends Activity
 		//String password="password";
 		Global global = ((Global) getApplicationContext());
 		global.setCurrentUser(email);
-		global.fetchName(email);
-		try
+		if (global.fetchName(email) == 1)
 		{
-			Thread.sleep(500);
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		new getLoginTask()
+			new getLoginTask()
 				.execute("http://98.213.107.172/android_connect/get_login.php?email="
 						+ email + "&password=" + password);
+		}
 	}
 
 	private class getLoginTask extends AsyncTask<String, Void, String>
@@ -124,20 +117,23 @@ public class LoginActivity extends Activity
 					// successful
 					Global global = ((Global) getApplicationContext());
 					// check for current number of friend requests
-					global.fetchNumFriendRequests(global.getCurrentUser());
-					global.fetchNumFriends(global.getCurrentUser());
-					global.fetchNumGroups(global.getCurrentUser());
-					global.fetchNumGroupInvites(global.getCurrentUser());
+					if (global.fetchNumFriendRequests(global.getCurrentUser()) == 1)
+					{
+						if (global.fetchNumFriends(global.getCurrentUser()) == 1)
+							if (global.fetchNumGroups(global.getCurrentUser()) == 1)
+								if (global.fetchNumGroupInvites(global.getCurrentUser()) == 1)
+								{}
+					}
+			
 					// Sets this users name.
 
 					global.setCurrentName(global.getName());
 					System.out.println("Setting current name to " + global.getName());
-					Thread.sleep(1000); // Sleeping to let home activity start up
 					//Login processing finished: progress bar disappear again
-					progBar.setVisibility(View.GONE);
+					progBar.setVisibility(View.VISIBLE);
 					//display message from json (successful login message)
 					loginFail.setText(jsonObject.getString("message"));
-					loginFail.setTextColor(Color.GREEN);
+					loginFail.setTextColor(getResources().getColor(R.color.light_green));
 					loginFail.setVisibility(View.VISIBLE);
 					startHomeActivity();
 					finish(); // Finishing login (possibly save some memory)
