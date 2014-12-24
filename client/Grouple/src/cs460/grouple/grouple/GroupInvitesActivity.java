@@ -7,7 +7,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 //import cs460.grouple.grouple.FriendRequestsActivity.getAcceptFriendTask;
 //import cs460.grouple.grouple.FriendRequestsActivity.getDeclineFriendTask;
 
@@ -34,17 +33,21 @@ import android.widget.TextView;
 /*
  * GroupCreateActivity displays a list of all active group requests of a user.
  */
-public class GroupInvitesActivity extends ActionBarActivity {
+public class GroupInvitesActivity extends ActionBarActivity
+{
 	Intent parentIntent;
 	Intent upIntent;
 	BroadcastReceiver broadcastReceiver;
 	private String receiver;
+	View groupInvites;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState){
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_invites);
-		
-		View groupInvites = findViewById(R.id.groupInvitesContainer);
+
+		groupInvites = findViewById(R.id.groupInvitesContainer);
 		load(groupInvites);
 	}
 
@@ -52,7 +55,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 	{
 
 		Global global = ((Global) getApplicationContext());
-		/*Action bar*/
+		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -60,45 +63,47 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
 				finish();
 			}
 		});
-		//upButton.setOnClickListener
-		//global.fetchNumFriends(email)
+		// upButton.setOnClickListener
+		// global.fetchNumFriends(email)
 		actionbarTitle.setText(global.getName() + "'s Group Invites");
 	}
-	
+
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
 
-		
-		//backstack of intents
-		//each class has a stack of intents lifo method used to execute them at start of activity
-		//intents need to include everything like ParentClassName, things for current page (email, ...)
-		//if check that friends
+		// backstack of intents
+		// each class has a stack of intents lifo method used to execute them at
+		// start of activity
+		// intents need to include everything like ParentClassName, things for
+		// current page (email, ...)
+		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		//do a check that it is not from a back push
+		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
-			//pull a new intent from the stack
-			//load in everything from that intent
+			// pull a new intent from the stack
+			// load in everything from that intent
 			parentIntent = global.getNextParentIntent(view);
-		}
-		else
+		} else
 		{
-			//add to stack
+			// add to stack
 			parentIntent = intent;
-		}	
+		}
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
-		
+
 		try
 		{
 			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
@@ -109,16 +114,17 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			e.printStackTrace();
 		}
 
-		//Get the current users email address
+		// Get the current users email address
 		receiver = global.getCurrentUser();
-		//Execute the php to get the the number of group invites.
+		// Execute the php to get the the number of group invites.
 		new getGroupInvitesTask()
-		.execute("http://98.213.107.172/android_connect/get_groups_requests.php?email="
-				+ receiver);
-		
+				.execute("http://98.213.107.172/android_connect/get_groups_requests.php?email="
+						+ receiver);
+
 		initActionBar();
 		initKillswitchListener();
 	}
+
 	@Override
 	protected void onDestroy()
 	{
@@ -126,16 +132,18 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		Global global = ((Global) getApplicationContext());
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
@@ -157,43 +165,44 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("up", "false");
 			intent.putExtra("ParentClassName", "GroupInvitesActivity");
-			global.addToParentStackGroupInvites(parentIntent);
+			global.addToParentStack(groupInvites, parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
-	
+
 	private class getGroupInvitesTask extends AsyncTask<String, Void, String>
 	{
 		@Override
 		protected String doInBackground(String... urls)
 		{
-			//?
+			// ?
 			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0],null);
+			return global.readJSONFeed(urls[0], null);
 		}
 
 		@Override
@@ -210,9 +219,9 @@ public class GroupInvitesActivity extends ActionBarActivity {
 					System.out.println("We are in the success");
 					ArrayList<String> senders = new ArrayList<String>();
 					ArrayList<String> groups = new ArrayList<String>();
-					JSONArray jsonGroupInvites = jsonObject.getJSONArray("requests");
+					JSONArray jsonGroupInvites = jsonObject
+							.getJSONArray("requests");
 
-					
 					if (jsonGroupInvites != null)
 					{
 						View groupInvites = findViewById(R.id.groupInvitesContainer);
@@ -224,46 +233,54 @@ public class GroupInvitesActivity extends ActionBarActivity {
 						// looping thru json and adding to an array
 						for (int i = 0; i < jsonGroupInvites.length(); i++)
 						{
-							JSONObject object = jsonGroupInvites.getJSONObject(i);
+							JSONObject object = jsonGroupInvites
+									.getJSONObject(i);
 							String raw = object.getString("sender");
 							senders.add(raw);
 							raw = object.getString("g_name");
 							groups.add(raw);
 							System.out.println("Row: " + raw + "\nCount: " + i);
 						}
-						
+
 						// looping thru array and inflating listitems to the
 						// GROUP REQUEST NAMES. CAN EASILY ADD SENDERS.
 						for (int i = 0; i < groups.size(); i++)
 						{
-							GridLayout row = (GridLayout) li.inflate(R.layout.listitem_group_request, null);
+							GridLayout row = (GridLayout) li.inflate(
+									R.layout.listitem_group_request, null);
 							// Setting text of each friend request to the email
 							// of the sender
-							((TextView) row.findViewById(R.id.emailTextViewGRLI)).setText(groups.get(i));
+							((TextView) row
+									.findViewById(R.id.emailTextViewGRLI))
+									.setText(groups.get(i));
 							groupInvitesLayout.addView(row);
 						}
 					} else
 					// no friend requests
 					{
 						global.setNumGroupInvites(0);
-						
-						GridLayout row = (GridLayout) li.inflate(R.id.sadGuyGridLayout, null);
+
+						GridLayout row = (GridLayout) li.inflate(
+								R.id.sadGuyGridLayout, null);
 						// Setting text of each friend request to the email
 						// of the sender
-						
-						((TextView) row.findViewById(R.id.sadGuyTextView)).setText("You do not have any group invites.");
+
+						((TextView) row.findViewById(R.id.sadGuyTextView))
+								.setText("You do not have any group invites.");
 						groupInvitesLayout.addView(row);
 					}
 				} else
 				{
 					System.out.println("No groups found");
 					global.setNumGroupInvites(0);
-					
-					GridLayout row = (GridLayout) li.inflate(R.layout.listitem_sadguy, null);
+
+					GridLayout row = (GridLayout) li.inflate(
+							R.layout.listitem_sadguy, null);
 					// Setting text of each friend request to the email
 					// of the sender
-					
-					((TextView) row.findViewById(R.id.sadGuyTextView)).setText("You do not have any group invites.");
+
+					((TextView) row.findViewById(R.id.sadGuyTextView))
+							.setText("You do not have any group invites.");
 					groupInvitesLayout.addView(row);
 				}
 			} catch (Exception e)
@@ -272,29 +289,33 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			}
 		}
 	}
-	
+
 	public void onClick(View view)
 	{
 		Global global = ((Global) getApplicationContext());
 		switch (view.getId())
 		{
 		case R.id.declineGroupRequestButtonGRLI:
-			
+
 			View parent = (View) view.getParent();
-			TextView declineEmail = (TextView) parent.findViewById(R.id.emailTextViewGRLI);
+			TextView declineEmail = (TextView) parent
+					.findViewById(R.id.emailTextViewGRLI);
 			global.setDeclineEmail(declineEmail.getText().toString());
-			new getDeclineGroupTask().execute("http://98.213.107.172/android_connect/decline_group_request.php");
+			new getDeclineGroupTask()
+					.execute("http://98.213.107.172/android_connect/decline_group_request.php");
 			break;
 		case R.id.acceptGroupRequestButtonGRLI:
 			View parent2 = (View) view.getParent();
 			TextView acceptEmail = (TextView) parent2
 					.findViewById(R.id.emailTextViewGRLI);
 			global.setAcceptEmail(acceptEmail.getText().toString());
-			new getAcceptGroupTask().execute("http://98.213.107.172/android_connect/accept_group_request.php");
+			new getAcceptGroupTask()
+					.execute("http://98.213.107.172/android_connect/accept_group_request.php");
 			break;
 		}
 	}
-	//Decline Group Request. Refactor the JSON calls.
+
+	// Decline Group Request. Refactor the JSON calls.
 	private class getDeclineGroupTask extends AsyncTask<String, Void, String>
 	{
 		@Override
@@ -305,7 +326,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			String groupName = global.getDeclineEmail();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("mem", receiver));
-			//pass the group name...
+			// pass the group name...
 			nameValuePairs.add(new BasicNameValuePair("gname", groupName));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
@@ -321,7 +342,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					startGroupInvitesActivity();
-					//TODO: startFriendRequestsActivity();
+					// TODO: startFriendRequestsActivity();
 
 				} else
 				{
@@ -339,7 +360,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		}
 	}
 
-	//Accept code. 
+	// Accept code.
 	private class getAcceptGroupTask extends AsyncTask<String, Void, String>
 	{
 		@Override
@@ -365,7 +386,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 				System.out.println(jsonObject.getString("success"));
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-	
+
 					startGroupInvitesActivity();
 
 				} else
@@ -379,7 +400,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -391,7 +412,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * Start activity functions for refreshing friend requests, going back and
 	 * logging out
@@ -401,7 +422,7 @@ public class GroupInvitesActivity extends ActionBarActivity {
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, GroupInvitesActivity.class);
 		intent.putExtra("up", "true");
-		global.addToParentStackGroupInvites(parentIntent);
+		//global.addToParentStack(groupInvites, parentIntent);
 		startActivity(intent);
 	}
 

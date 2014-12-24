@@ -30,7 +30,7 @@ public class HomeActivity extends ActionBarActivity
 		setContentView(R.layout.activity_home);
 
 		Global global = ((Global) getApplicationContext());
-		//Updating notifications
+		// Updating notifications
 		View home = findViewById(R.id.homeLayout);
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
@@ -40,18 +40,19 @@ public class HomeActivity extends ActionBarActivity
 		initActionBar();
 		initKillswitchListener();
 	}
-	
+
 	public void initActionBar()
 	{
-		//Actionbar settings
+		// Actionbar settings
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
-		//ab.setDisplayHomeAsUpEnabled(true);
+		// ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		Global global = ((Global) getApplicationContext());
 		actionbarTitle.setText("Welcome, " + global.getName() + "!");
 	}
+
 	@Override
 	protected void onDestroy()
 	{
@@ -59,10 +60,10 @@ public class HomeActivity extends ActionBarActivity
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
-	//This method closes the app when back button is pressed on main page
+
+	// This method closes the app when back button is pressed on main page
 	@Override
-	public void onBackPressed() 
+	public void onBackPressed()
 	{
 		Log.d("backPress", "Back was pressed on home screen.");
 		finish();
@@ -119,54 +120,32 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	/*
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			Bundle extras = getIntent().getExtras();
-			if (extras.getString("ParentClassName") != null)
-			{
-				Intent newIntent = null;
-				try
-				{
-					// you need to define the class with package name
-					newIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-							+ extras.getString("ParentClassName")));
-					
-					String email = extras.getString("ParentEmail");
-					
-					String parentEmail = extras.getString("ParentParentEmail");
-					
-					if (email != null)
-					{
-						newIntent.putExtra("email", email);
-					}
-					
-					if (parentEmail != null)
-					{
-						newIntent.putExtra("ParentEmail", parentEmail);
-					}
-					//todo: check compared to current user first
-					//or pass in a parentMod in the extras
-					newIntent.putExtra("mod", "false");
-					if (extras.getString("ParentParentClassName") != null)
-					{
-						newIntent.putExtra("ParentClassName", extras.getString("ParentParentClassName"));
-					}
-				} catch (ClassNotFoundException e)
-					{
-						e.printStackTrace();
-					}
-				startActivity(newIntent);
-			}
-		}
-		
-		return false;
-	}
-	*/
+	 * @Override public boolean onKeyDown(int keyCode, KeyEvent event) { if
+	 * (keyCode == KeyEvent.KEYCODE_BACK) { Bundle extras =
+	 * getIntent().getExtras(); if (extras.getString("ParentClassName") != null)
+	 * { Intent newIntent = null; try { // you need to define the class with
+	 * package name newIntent = new Intent(this,
+	 * Class.forName("cs460.grouple.grouple." +
+	 * extras.getString("ParentClassName")));
+	 * 
+	 * String email = extras.getString("ParentEmail");
+	 * 
+	 * String parentEmail = extras.getString("ParentParentEmail");
+	 * 
+	 * if (email != null) { newIntent.putExtra("email", email); }
+	 * 
+	 * if (parentEmail != null) { newIntent.putExtra("ParentEmail",
+	 * parentEmail); } //todo: check compared to current user first //or pass in
+	 * a parentMod in the extras newIntent.putExtra("mod", "false"); if
+	 * (extras.getString("ParentParentClassName") != null) {
+	 * newIntent.putExtra("ParentClassName",
+	 * extras.getString("ParentParentClassName")); } } catch
+	 * (ClassNotFoundException e) { e.printStackTrace(); }
+	 * startActivity(newIntent); } }
+	 * 
+	 * return false; }
+	 */
 
-	
 	public void navigate(View view)
 	{
 		Intent intent = null;
@@ -199,8 +178,8 @@ public class HomeActivity extends ActionBarActivity
 
 			break;
 		default:
-		
-				break;
+
+			break;
 		}
 		if (intent != null)
 		{
@@ -211,30 +190,28 @@ public class HomeActivity extends ActionBarActivity
 
 	}
 
-
-
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 
 }

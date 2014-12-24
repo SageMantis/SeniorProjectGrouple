@@ -23,15 +23,16 @@ public class GroupsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
 	Intent parentIntent;
-
+	View groups;
 	Intent upIntent;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groups);
-		
-		View groups = findViewById(R.id.groupsContainer);
+
+		groups = findViewById(R.id.groupsContainer);
 		load(groups);
 
 	}
@@ -47,45 +48,49 @@ public class GroupsActivity extends ActionBarActivity
 		// ImageView view = (ImdageView)findViewById(android.R.id.home);
 		// view.setPadding(15, 20, 5, 40);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
 				finish();
 			}
 		});
 	}
-	
+
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
 		// Action bar setup
 		// ActionBar ab = getActionBar();
-		//backstack of intents
-		//each class has a stack of intents lifo method used to execute them at start of activity
-		//intents need to include everything like ParentClassName, things for current page (email, ...)
-		//if check that friends
+		// backstack of intents
+		// each class has a stack of intents lifo method used to execute them at
+		// start of activity
+		// intents need to include everything like ParentClassName, things for
+		// current page (email, ...)
+		// if check that friends
 		String email;
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		//do a check that it is not from a back push
+		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
-			//pull a new intent from the stack
-			//load in everything from that intent
+			// pull a new intent from the stack
+			// load in everything from that intent
 			parentIntent = global.getNextParentIntent(view);
 			System.out.println("Up was true, fetching parent intent...");
-			
-			System.out.println("ParentName = " +parentIntent.getExtras().getString("ParentClassName"));
-		}
-		else
+
+			System.out.println("ParentName = "
+					+ parentIntent.getExtras().getString("ParentClassName"));
+		} else
 		{
 			System.out.println("Up was false... not fetching parent");
 			parentIntent = intent;
-		}	
-		
+		}
+
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 		try
@@ -101,11 +106,11 @@ public class GroupsActivity extends ActionBarActivity
 		global.fetchNumGroupInvites(global.getCurrentUser());
 		global.setNotifications(view);
 
-		
 		initActionBar();
 		initKillswitchListener();
-		
+
 	}
+
 	@Override
 	protected void onDestroy()
 	{
@@ -114,7 +119,6 @@ public class GroupsActivity extends ActionBarActivity
 		super.onDestroy();
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -134,7 +138,7 @@ public class GroupsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		if (id == R.id.action_logout)
 		{
-		
+
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
 			global.setDeclineEmail("");
@@ -149,7 +153,7 @@ public class GroupsActivity extends ActionBarActivity
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("up", "false");
 			intent.putExtra("ParentClassName", "GroupsActivity");
-			global.addToParentStackGroups(parentIntent);
+			global.addToParentStack(groups, parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -167,8 +171,6 @@ public class GroupsActivity extends ActionBarActivity
 		return false;
 	}
 
-
-
 	/* Start activity methods for group sub-activities */
 	public void startGroupCreateActivity(View view)
 	{
@@ -178,58 +180,61 @@ public class GroupsActivity extends ActionBarActivity
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
-		global.addToParentStackGroups(parentIntent);
+		global.addToParentStack(groups, parentIntent);
 		startActivity(intent);
 	}
-	
+
 	public void startGroupInvitesActivity(View view)
 	{
-		Global global = (Global)getApplicationContext();
+		Global global = (Global) getApplicationContext();
 		Intent intent = new Intent(this, GroupInvitesActivity.class);
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "GroupsActivity");
-	//	intent.putExtra("mod", "true");
+		// intent.putExtra("mod", "true");
 		startActivity(intent);
-		global.addToParentStackGroups(parentIntent);
+		global.addToParentStack(groups, parentIntent);
 	}
-	
+
 	public void startGroupsCurrentActivity(View view)
 	{
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("ParentClassName", "GroupsActivity");
-		intent.putExtra("email", global.getCurrentUser());//specifies which email for the list of groups
-		intent.putExtra("mod", "true");//gives user ability admin in the current groups screen
+		intent.putExtra("email", global.getCurrentUser());// specifies which
+															// email for the
+															// list of groups
+		intent.putExtra("mod", "true");// gives user ability admin in the
+										// current groups screen
 		intent.putExtra("up", "false");
 		intent.putExtra("Name", global.getName());
-		global.addToParentStackGroups(parentIntent);
+		global.addToParentStack(groups, parentIntent);
 		System.out.println("Adding parent intent to stack");
 		startActivity(intent);
 	}
-	
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 
 }

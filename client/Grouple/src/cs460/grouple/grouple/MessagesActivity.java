@@ -19,22 +19,27 @@ import android.widget.TextView;
 /*
  * MessagesActivity has not been implemented yet.
  */
-public class MessagesActivity extends ActionBarActivity {
+public class MessagesActivity extends ActionBarActivity
+{
 	BroadcastReceiver broadcastReceiver;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_messages);
-		/*Action bar*/
+		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 
 				startParentActivity(view);
 
@@ -47,14 +52,14 @@ public class MessagesActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.messages, menu);
 		return true;
-		
+
 	}
 
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -64,9 +69,10 @@ public class MessagesActivity extends ActionBarActivity {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
@@ -90,7 +96,7 @@ public class MessagesActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
@@ -105,8 +111,8 @@ public class MessagesActivity extends ActionBarActivity {
 			{
 				newIntent.putExtra("email", extras.getString("ParentEmail"));
 			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			// newIntent.putExtra("email", extras.getString("email"));
+			// newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("ParentClassName", "MessagesActivity");
 		} catch (ClassNotFoundException e)
 		{
@@ -114,28 +120,29 @@ public class MessagesActivity extends ActionBarActivity {
 		}
 		startActivity(newIntent);
 	}
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 
 }

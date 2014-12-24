@@ -52,7 +52,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_requests);
 
-
 		// display friend requests
 		// Create helper and if successful, will bring the correct home
 		// activity.
@@ -60,7 +59,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 		load(friendRequests);
 
 	}
-	//Start the action bar.
+
+	// Start the action bar.
 	public void initActionBar()
 	{
 		ActionBar ab = getSupportActionBar();
@@ -70,47 +70,58 @@ public class FriendRequestsActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friend Requests");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				startActivity(upIntent);
 				finish();
 			}
 		});
 	}
-	//Gets the friends requests and displays them to the user
+
+	// Gets the friends requests and displays them to the user
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
 
-		
-		//backstack of intents
-		//each class has a stack of intents lifo method used to execute them at start of activity
-		//intents need to include everything like ParentClassName, things for current page (email, ...)
-		//if check that friends
+		// backstack of intents
+		// each class has a stack of intents lifo method used to execute them at
+		// start of activity
+		// intents need to include everything like ParentClassName, things for
+		// current page (email, ...)
+		// if check that friends
 		parentIntent = getIntent();
 		upIntent = new Intent(this, FriendsActivity.class);
 		upIntent.putExtra("up", "true");
-		
 
-		
 		String receiver = global.getCurrentUser();
-		//Php call that gets the users friend requests.
-		new getFriendRequestsTask().execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
+		// Php call that gets the users friend requests.
+		new getFriendRequestsTask()
+				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
 						+ receiver);
 
 		View friendRequests = findViewById(R.id.friendRequestsLayout);
 		View friends = ((View) friendRequests.getParent());
 		View home = ((View) friends.getParent());
-		global.setNotifications(friendRequests);
-		global.setNotifications(friends);
-		global.setNotifications(home);
-		initKillswitchListener();
-		
+		if (global.setNotifications(friendRequests) == 1)
+			{
+			;
+			}
+		if(global.setNotifications(friends) == 1)
+			{
+			;
+			}
+		if (global.setNotifications(home) ==1)
+			{
+			;
+			}
+
 		initActionBar();
 		initKillswitchListener();
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
@@ -153,9 +164,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	/*
-	 * Using the user's email address, we get the user's current friend requests.
-	 * On success we display the user's current friends request, if there are any.
+	 * Using the user's email address, we get the user's current friend
+	 * requests. On success we display the user's current friends request, if
+	 * there are any.
 	 */
 	private class getFriendRequestsTask extends AsyncTask<String, Void, String>
 	{
@@ -163,7 +176,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0],null);
+			return global.readJSONFeed(urls[0], null);
 		}
 
 		@Override
@@ -178,8 +191,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					System.out.println("We are in the success");
 					ArrayList<String> senders = new ArrayList<String>();
-					JSONArray jsonSenders = jsonObject
-							.getJSONArray("senders").getJSONArray(0);
+					JSONArray jsonSenders = jsonObject.getJSONArray("senders")
+							.getJSONArray(0);
 					Global global = ((Global) getApplicationContext());
 
 					if (jsonSenders != null)
@@ -192,9 +205,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 						// looping thru json and adding to an array
 						for (int i = 0; i < jsonSenders.length(); i++)
 						{
-							//This is a hackish way of getting the friend request from the json object.
-							//This was before we had a good understanding of JSON
-							//TODO: clean this up.
+							// This is a hackish way of getting the friend
+							// request from the json object.
+							// This was before we had a good understanding of
+							// JSON
+							// TODO: clean this up.
 							String raw = jsonSenders.get(i).toString()
 									.replace("\"", "").replace("]", "")
 									.replace("[", "");
@@ -203,7 +218,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 							senders.add(row);
 							System.out.println("Row: " + row + "\nCount: " + i);
 						}
-						
+
 						// looping thru array and inflating listitems to the
 						// friend requests list
 						for (int i = 0; i < senders.size(); i++)
@@ -223,22 +238,23 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 						// Setting text of each friend request to the email
 						// of the sender
-						//((ImageView) sadGuy
-							//	.findViewById(R.id.sadGuyImageView))
-								//.setText("You have no new friend requests.");
+						// ((ImageView) sadGuy
+						// .findViewById(R.id.sadGuyImageView))
+						// .setText("You have no new friend requests.");
 						global.setNumFriendRequests(0);
 					}
 				} else
 				{
 					System.out.println("No friends found");
 					GridLayout sadGuy = (GridLayout) li.inflate(
-					R.layout.listitem_sadguy, null);
+							R.layout.listitem_sadguy, null);
 					sadGuy.findViewById(R.id.sadGuyTextView);
 					friendRequestsLayout.addView(sadGuy);
 					// If no friend requests are found, display no friends
 					// message
-					//TextView noFriends = (TextView) findViewById(R.id.noFriendRequestsTextViewFRA);
-					//noFriends.setVisibility(0);
+					// TextView noFriends = (TextView)
+					// findViewById(R.id.noFriendRequestsTextViewFRA);
+					// noFriends.setVisibility(0);
 				}
 			} catch (Exception e)
 			{
@@ -248,7 +264,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 	}
 
 	/*
-	 *On click listener that determines if the user declined or accepted the code.
+	 * On click listener that determines if the user declined or accepted the
+	 * code.
 	 */
 	public void onClick(View view)
 	{
@@ -273,9 +290,10 @@ public class FriendRequestsActivity extends ActionBarActivity
 			break;
 		}
 	}
+
 	/*
-	 * Code for declining a friend request.
-	 * On success, we remove the friend request and refresh the friend requests activity.
+	 * Code for declining a friend request. On success, we remove the friend
+	 * request and refresh the friend requests activity.
 	 */
 	private class getDeclineFriendTask extends AsyncTask<String, Void, String>
 	{
@@ -371,9 +389,9 @@ public class FriendRequestsActivity extends ActionBarActivity
 	}
 
 	/*
-	 * Code for accepting a friend request.
-	 * On success, we remove the friend request and refresh the friend requests activity.
-	 * We also confirm the friendship in the database.
+	 * Code for accepting a friend request. On success, we remove the friend
+	 * request and refresh the friend requests activity. We also confirm the
+	 * friendship in the database.
 	 */
 
 	private class getAcceptFriendTask extends AsyncTask<String, Void, String>
@@ -422,7 +440,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 	}
 
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -453,8 +470,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 			View friends = ((View) friendRequests.getParent());
 			global.fetchNumFriendRequests(global.getCurrentUser());
 			global.setNotifications(friendRequests);
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			// newIntent.putExtra("email", extras.getString("email"));
+			// newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("ParentClassName", "FriendRequestsActivity");
 		} catch (ClassNotFoundException e)
 		{
@@ -462,8 +479,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 		startActivity(newIntent);
 	}
-	
-	
+
 	/*
 	 * Start activity functions for refreshing friend requests, going back and
 	 * logging out
@@ -479,7 +495,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendsActivity.class);
 		startActivity(intent);
 	}
-	
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
@@ -497,11 +513,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 					// System.exit(1);
 					finish();
 				}
-	
+
 			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
 		// End Kill switch listener
 	}
-	
+
 }

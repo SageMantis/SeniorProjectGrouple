@@ -32,37 +32,40 @@ import android.widget.TextView;
 /*
  * UserActivity displays the profile page of the logged-in user.
  */
-public class UserActivity extends ActionBarActivity 
+public class UserActivity extends ActionBarActivity
 {
 	private ImageView iv;
 	private Bitmap bmp;
 	BroadcastReceiver broadcastReceiver;
 	Intent parentIntent;
 	Intent upIntent;
+	View user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user);
-		
-		View user = findViewById(R.id.userContainer);
+
+		user = findViewById(R.id.userContainer);
 		load(user);
 	}
 
 	public void initActionBar()
 	{
 		Global global = ((Global) getApplicationContext());
-		/*Action bar*/
+		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
 				finish();
@@ -70,34 +73,34 @@ public class UserActivity extends ActionBarActivity
 		});
 		actionbarTitle.setText(global.getCurrentName() + "'s Profile");
 	}
-	
+
 	public void load(View view)
 	{
 
 		Global global = ((Global) getApplicationContext());
 
-		
-		//backstack of intents
-		//each class has a stack of intents lifo method used to execute them at start of activity
-		//intents need to include everything like ParentClassName, things for current page (email, ...)
-		//if check that friends
+		// backstack of intents
+		// each class has a stack of intents lifo method used to execute them at
+		// start of activity
+		// intents need to include everything like ParentClassName, things for
+		// current page (email, ...)
+		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		//do a check that it is not from a back push
+		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
-			//pull a new intent from the stack
-			//load in everything from that intent
+			// pull a new intent from the stack
+			// load in everything from that intent
 			parentIntent = global.getNextParentIntent(view);
-		}
-		else
+		} else
 		{
-			//add to stack
+			// add to stack
 			parentIntent = intent;
-		}	
+		}
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
-		
+
 		try
 		{
 			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
@@ -108,24 +111,24 @@ public class UserActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 
-		/*Notifications*/
+		/* Notifications */
 		global.fetchNumFriends(global.getCurrentUser());
 		global.fetchNumGroups(global.getCurrentUser());
 
 		View user = findViewById(R.id.userContainer);
 
 		global.setNotifications(user);
-		
+
 		// execute php script, using the current users email address to populate
 		// the textviews
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
-		//initializing the action bar and killswitch listener
+		// initializing the action bar and killswitch listener
 		initActionBar();
-		initKillswitchListener();	
+		initKillswitchListener();
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
@@ -193,11 +196,11 @@ public class UserActivity extends ActionBarActivity
 
 	public void startEditProfileActivity(View view)
 	{
-		Global global = ((Global)getApplicationContext());
-		Intent intent = new Intent(this, EditProfileActivity.class);
+		Global global = ((Global) getApplicationContext());
+		Intent intent = new Intent(this, ProfileEditActivity.class);
 		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "UserActivity");
-		global.addToParentStackUser(parentIntent);
+		global.addToParentStack(user, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -216,8 +219,7 @@ public class UserActivity extends ActionBarActivity
 
 			Global global = ((Global) getApplicationContext());
 			String email = global.getCurrentUser();
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-					1);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 			nameValuePairs.add(new BasicNameValuePair("email", email));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
@@ -235,8 +237,8 @@ public class UserActivity extends ActionBarActivity
 					JSONArray jsonProfileArray = jsonObject
 							.getJSONArray("profile");
 
-					//String name = jsonProfileArray.getString(0) + " "
-						//	+ jsonProfileArray.getString(1);
+					// String name = jsonProfileArray.getString(0) + " "
+					// + jsonProfileArray.getString(1);
 					String age = jsonProfileArray.getString(2);
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
@@ -291,7 +293,7 @@ public class UserActivity extends ActionBarActivity
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
-		global.addToParentStackUser(parentIntent);
+		global.addToParentStack(user, parentIntent);
 		intent.putExtra("ParentEmail", global.getCurrentUser());
 		startActivity(intent);
 		bmp = null;
@@ -300,10 +302,10 @@ public class UserActivity extends ActionBarActivity
 
 	public void startCurrentFriendsActivity(View view)
 	{
-		Intent intent = new Intent(this, CurrentFriendsActivity.class);
+		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
 		String email = global.getCurrentUser();
-		global.addToParentStackUser(parentIntent);
+		global.addToParentStack(user, parentIntent);
 		intent.putExtra("ParentClassName", "UserActivity");
 		intent.putExtra("ParentEmail", email);
 		intent.putExtra("Name", global.getName());
@@ -320,34 +322,34 @@ public class UserActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, EventsActivity.class);
 		intent.putExtra("ParentClassName", "UserActivity");
-		global.addToParentStackUser(parentIntent);
+		global.addToParentStack(user, parentIntent);
 		intent.putExtra("up", "false");
 		startActivity(intent);
 		bmp = null;
 		iv = null;
 	}
-	
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }

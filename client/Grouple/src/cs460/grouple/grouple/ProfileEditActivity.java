@@ -45,10 +45,10 @@ import android.widget.TextView;
 /*
  * EditProfileActivity allows user to make changes to his/her profile.
  */
-public class EditProfileActivity extends ActionBarActivity implements
+public class ProfileEditActivity extends ActionBarActivity implements
 		View.OnClickListener
 {
-	//Set up fields. Most are just for the camera.
+	// Set up fields. Most are just for the camera.
 	private Button b;
 	private ImageView iv;
 	private final static int CAMERA_DATA = 0;
@@ -60,19 +60,21 @@ public class EditProfileActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		//Set the activity layout to activity_edit_profile.
+		// Set the activity layout to activity_edit_profile.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
-		//Set up the action bar.
+		// Set up the action bar.
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 
 				startParentActivity(view);
 
@@ -85,10 +87,11 @@ public class EditProfileActivity extends ActionBarActivity implements
 
 		initKillswitchListener();
 
-
-		// execute php script, using the current users email address to populate the textviews for editing.
-		//We NEED to execute this before displaying the activity.
-		new getProfileTask().execute("http://98.213.107.172/android_connect/get_profile.php");
+		// execute php script, using the current users email address to populate
+		// the textviews for editing.
+		// We NEED to execute this before displaying the activity.
+		new getProfileTask()
+				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
 	}
 
@@ -99,7 +102,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	//Executed when hitting the back button.
+
+	// Executed when hitting the back button.
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
@@ -121,15 +125,15 @@ public class EditProfileActivity extends ActionBarActivity implements
 		}
 		startActivity(newIntent);
 	}
-	
-	
+
 	/*
 	 * Get profile executes get_profile.php. It uses the current users email
 	 * address to retrieve the users name, age, and bio.
 	 */
 	private class getProfileTask extends AsyncTask<String, Void, String>
 	{
-		//Pass the current user's email address to the php so we can get their info from the database.
+		// Pass the current user's email address to the php so we can get their
+		// info from the database.
 		@Override
 		protected String doInBackground(String... urls)
 		{
@@ -141,8 +145,9 @@ public class EditProfileActivity extends ActionBarActivity implements
 		}
 
 		/*
-		 * If the result is success, the we grab the user's info and add it to the editiable textview.
-		 * If it fails, then something went wrong. Could be connection error or incorrect user email address..
+		 * If the result is success, the we grab the user's info and add it to
+		 * the editiable textview. If it fails, then something went wrong. Could
+		 * be connection error or incorrect user email address..
 		 */
 		@Override
 		protected void onPostExecute(String result)
@@ -156,7 +161,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 					// Success
 					JSONArray jsonProfileArray = jsonObject
 							.getJSONArray("profile");
-					//Get the information so we can add it to the editable textviews.
+					// Get the information so we can add it to the editable
+					// textviews.
 					String name = jsonProfileArray.getString(0) + " "
 							+ jsonProfileArray.getString(1);
 					String age = jsonProfileArray.getString(2);
@@ -185,7 +191,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 						decodedString = null;
 					}
 					Log.d("scott", "6th");
-					//Find the text views.
+					// Find the text views.
 					TextView nameTextView = (TextView) findViewById(R.id.nameEditTextEPA);
 					TextView ageTextView = (TextView) findViewById(R.id.ageEditTextEPA);
 					TextView locationTextView = (TextView) findViewById(R.id.locationEditTextEPA);
@@ -195,7 +201,7 @@ public class EditProfileActivity extends ActionBarActivity implements
 						Log.d("scott", "7th");
 						iv = (ImageView) findViewById(R.id.profilePhoto);
 					}
-					//Add the info to the textviews for editing.
+					// Add the info to the textviews for editing.
 					nameTextView.setText(name);
 					ageTextView.setText(age);
 					bioTextView.setText(bio);
@@ -293,7 +299,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 
 			return readJSONFeed(urls[0]);
 		}
-		//Grab the data from the textviews and push it to the database.
+
+		// Grab the data from the textviews and push it to the database.
 		public String readJSONFeed(String URL)
 		{
 
@@ -382,7 +389,8 @@ public class EditProfileActivity extends ActionBarActivity implements
 			}
 			return stringBuilder.toString();
 		}
-		//need to do more error checking.
+
+		// need to do more error checking.
 		@Override
 		protected void onPostExecute(String result)
 		{
@@ -435,24 +443,24 @@ public class EditProfileActivity extends ActionBarActivity implements
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }

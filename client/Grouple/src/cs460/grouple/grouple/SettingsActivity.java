@@ -22,22 +22,25 @@ import android.widget.TextView;
 public class SettingsActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		initKillswitchListener();
 		setContentView(R.layout.activity_settings);
-		/*Action bar*/
+		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 
 				startParentActivity(view);
 
@@ -47,7 +50,7 @@ public class SettingsActivity extends ActionBarActivity
 
 		actionbarTitle.setText("Settings");
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -57,8 +60,7 @@ public class SettingsActivity extends ActionBarActivity
 		}
 		return false;
 	}
-	
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -95,7 +97,7 @@ public class SettingsActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void startParentActivity(View view)
 	{
 
@@ -113,29 +115,29 @@ public class SettingsActivity extends ActionBarActivity
 		startActivity(newIntent);
 		finish();
 	}
-	
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 
 }
