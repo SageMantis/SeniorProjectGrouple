@@ -42,7 +42,7 @@ import android.widget.TextView;
 /*
  * GroupProfileActivity displays the profile of a user's group.
  */
-public class GroupProfileActivity extends ActionBarActivity 
+public class GroupProfileActivity extends ActionBarActivity
 {
 
 	private ImageView iv;
@@ -58,27 +58,25 @@ public class GroupProfileActivity extends ActionBarActivity
 	private LinearLayout membersToAdd;
 	Intent upIntent;
 	Intent parentIntent;
-
-
+	View groupProfile;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_profile);
-		
+
 		Global global = ((Global) getApplicationContext());
 		Bundle extras = getIntent().getExtras();
 		gname = extras.getString("gname");
 
-		View groupProfile = findViewById(R.id.groupProfileContainer);
+		groupProfile = findViewById(R.id.groupProfileContainer);
 		load(groupProfile);
 	}
-	
-	
+
 	public void initActionBar()
 	{
 
-		/*Action bar*/
+		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -86,16 +84,17 @@ public class GroupProfileActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText(gname);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
-	
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				startActivity(upIntent);
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -109,51 +108,59 @@ public class GroupProfileActivity extends ActionBarActivity
 	public void load(View view)
 	{
 		Log.d("message", "00000000000000001");
-		
+
 		inflater = getLayoutInflater();
 		membersToAdd = (LinearLayout) findViewById(R.id.linearLayoutNested2);
-		
+
 		Global global = ((Global) getApplicationContext());
-		//backstack of intents
-		//each class has a stack of intents lifo method used to execute them at start of activity
-		//intents need to include everything like ParentClassName, things for current page (email, ...)
-		//if check that friends
+		// backstack of intents
+		// each class has a stack of intents lifo method used to execute them at
+		// start of activity
+		// intents need to include everything like ParentClassName, things for
+		// current page (email, ...)
+		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		//do a check that it is not from a back push
+		// do a check that it is not from a back push
 
-		
-		if (getGroupCount() == 1){System.out.println("waiting");}
+		if (getGroupCount() == 1)
+		{
+			System.out.println("waiting");
+		}
 		getGroupContents();
 		upIntent = new Intent(this, GroupsCurrentActivity.class);
 		upIntent.putExtra("up", "true");
 		upIntent.putExtra("mod", "true");
-		//startActivity(upIntent);
+		// startActivity(upIntent);
 		initActionBar();
 		initKillswitchListener();
-		
+
 	}
-	
-	public int getGroupCount(){
-		new getProfileTask().execute("http://98.213.107.172/" +
-				"android_connect/count_group_members.php");
+
+	public int getGroupCount()
+	{
+		new getProfileTask().execute("http://98.213.107.172/"
+				+ "android_connect/count_group_members.php");
 		return 1;
 	}
-	
-	public void getGroupContents(){
-		if(index < gcount){//for(; index < gcount; index++){
-			Log.d("hello", "hellohello1 " + ";index = " + index + ";gcount = " + gcount);
-			new getProfileTask().execute("http://98.213.107.172/" +
-					"android_connect/get_group_contents.php");
-			//index++;
-		}
-		else{
 
-			TextView tv = (TextView)findViewById(R.id.bioTextView);
+	public void getGroupContents()
+	{
+		if (index < gcount)
+		{// for(; index < gcount; index++){
+			Log.d("hello", "hellohello1 " + ";index = " + index + ";gcount = "
+					+ gcount);
+			new getProfileTask().execute("http://98.213.107.172/"
+					+ "android_connect/get_group_contents.php");
+			// index++;
+		} else
+		{
+
+			TextView tv = (TextView) findViewById(R.id.bioTextView);
 			tv.setText(bio);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
@@ -203,13 +210,12 @@ public class GroupProfileActivity extends ActionBarActivity
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("ParentClassName", "GroupProfileActivity");
 			intent.putExtra("up", "false");
-			//add to stack
-			global.addToParentStackGroupProfile(intent);
+			// add to stack
+			global.addToParentStack(groupProfile, intent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 
 	/* Start activity functions for going back to home and logging out */
 	public void startHomeActivity(View view)
@@ -218,7 +224,7 @@ public class GroupProfileActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "GroupProfileActivity");
 		intent.putExtra("up", "false");
 		Global global = ((Global) getApplicationContext());
-		global.addToParentStackGroupProfile(parentIntent);
+		global.addToParentStack(groupProfile, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -227,10 +233,10 @@ public class GroupProfileActivity extends ActionBarActivity
 
 	public void startEditProfileActivity(View view)
 	{
-		Intent intent = new Intent(this, EditProfileActivity.class);
-		intent.putExtra("up", "false");//test
+		Intent intent = new Intent(this, ProfileEditActivity.class);
+		intent.putExtra("up", "false");// test
 		Global global = ((Global) getApplicationContext());
-		global.addToParentStackGroupProfile(parentIntent);
+		global.addToParentStack(groupProfile, parentIntent);
 		intent.putExtra("ParentClassName", "GroupProfileActivity");
 		startActivity(intent);
 		bmp = null;
@@ -246,50 +252,53 @@ public class GroupProfileActivity extends ActionBarActivity
 		HttpPost httpPost = new HttpPost(URL);
 		try
 		{
-			if(URL.equals("http://98.213.107.172/android_connect/count_group_members.php")){
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+			if (URL.equals("http://98.213.107.172/android_connect/count_group_members.php"))
+			{
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						1);
 				nameValuePairs.add(new BasicNameValuePair("gname", gname));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			}
-			else if(URL.equals("http://98.213.107.172/android_connect/get_group_contents.php")){
+			} else if (URL
+					.equals("http://98.213.107.172/android_connect/get_group_contents.php"))
+			{
 				Log.d("hello", "hellohello2");
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
 				nameValuePairs.add(new BasicNameValuePair("gname", gname));
 				nameValuePairs.add(new BasicNameValuePair("index", "" + index));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				index++;
 			}
-				HttpResponse response = httpClient.execute(httpPost);
-				StatusLine statusLine = response.getStatusLine();
-				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200)
+			HttpResponse response = httpClient.execute(httpPost);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200)
+			{
+				HttpEntity entity = response.getEntity();
+				InputStream inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream));
+				String line;
+				while ((line = reader.readLine()) != null)
 				{
-					HttpEntity entity = response.getEntity();
-					InputStream inputStream = entity.getContent();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(inputStream));
-					String line;
-					while ((line = reader.readLine()) != null)
-					{
-						Log.d("whatis", "The response is: " + line);
-						stringBuilder.append(line);
-					}
-					inputStream.close();
-					reader.close();
-				} else
-				{
-					Log.d("JSON", "Failed to download file");
+					Log.d("whatis", "The response is: " + line);
+					stringBuilder.append(line);
 				}
-			
-			
+				inputStream.close();
+				reader.close();
+			} else
+			{
+				Log.d("JSON", "Failed to download file");
+			}
+
 		} catch (Exception e)
 		{
 			Log.d("readJSONFeed", e.getLocalizedMessage());
 		}
-		
+
 		return stringBuilder.toString();
 	}
-	
+
 	/*
 	 * Get profile executes get_profile.php.
 	 */
@@ -310,88 +319,90 @@ public class GroupProfileActivity extends ActionBarActivity
 			{
 				Log.d("message", "00000000000000004");
 				JSONObject jsonObject = new JSONObject(result);
-				
+
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					String gnumTemp = (jsonObject.getString("gcount"));
 					gcount = Integer.parseInt(gnumTemp);
-					Log.d("count group members", "There are " + gnumTemp + " gmembers.");
-					
-				}
-				else if(jsonObject.getString("success").toString().equals("2")){
+					Log.d("count group members", "There are " + gnumTemp
+							+ " gmembers.");
+
+				} else if (jsonObject.getString("success").toString()
+						.equals("2"))
+				{
 					String grow = (jsonObject.getString("grow"));
-					//JSONArray grow = (JSONArray) jsonObject.getJSONArray("grow");
+					// JSONArray grow = (JSONArray)
+					// jsonObject.getJSONArray("grow");
 					String tokens = ",";
 					String[] contents = grow.split(tokens);
-					for(int i = 0; i < contents.length; i++){
-						if(contents[i].contains("\"")){
+					for (int i = 0; i < contents.length; i++)
+					{
+						if (contents[i].contains("\""))
+						{
 							contents[i] = contents[i].replaceAll("\"", "");
 						}
 					}
-					
+
 					bio = contents[2];
 					String role = contents[5];
 					String member = contents[7];
-					Log.d("count group members", "The contents of this row is:\n" + 
-							contents[7] + ".");
-					
-					//<<<<<<<<<< here >>>>>>>>>>//
-					GridLayout rowView = (GridLayout) inflater.inflate(R.layout.listitem_groupprofile, null);
-					Button removeFriendButton = (Button) rowView.findViewById(R.id.removeFriendButtonNoAccess);
-					Button friendNameButton = (Button) rowView.findViewById(R.id.friendNameButtonNoAccess);
+					Log.d("count group members",
+							"The contents of this row is:\n" + contents[7]
+									+ ".");
+
+					// <<<<<<<<<< here >>>>>>>>>>//
+					GridLayout rowView = (GridLayout) inflater.inflate(
+							R.layout.listitem_groupprofile, null);
+					Button removeFriendButton = (Button) rowView
+							.findViewById(R.id.removeFriendButtonNoAccess);
+					Button friendNameButton = (Button) rowView
+							.findViewById(R.id.friendNameButtonNoAccess);
 					friendNameButton.setText(member);
-					if(role.equals("C")){
+					if (role.equals("C"))
+					{
 						removeFriendButton.setText("C");
-						removeFriendButton.setTextColor(getResources().getColor(R.color.black));
-					}
-					else if(role.equals("A")){
+						removeFriendButton.setTextColor(getResources()
+								.getColor(R.color.black));
+					} else if (role.equals("A"))
+					{
 						removeFriendButton.setText("A");
-						removeFriendButton.setTextColor(getResources().getColor(R.color.light_green));
-					}
-					else{
+						removeFriendButton.setTextColor(getResources()
+								.getColor(R.color.light_green));
+					} else
+					{
 						removeFriendButton.setText("-");
-						removeFriendButton.setTextColor(getResources().getColor(R.color.light_blue));
+						removeFriendButton.setTextColor(getResources()
+								.getColor(R.color.light_blue));
 					}
 					removeFriendButton.setId(index);
 					friendNameButton.setId(index);
 					rowView.setId(index);
 					membersToAdd.addView(rowView);
-					
-					//getGroupContents();
+
+					// getGroupContents();
 				}
-					/*
-					// Success
-					JSONArray jsonProfileArray = (JSONArray) jsonObject
-							.getJSONArray("profile");
-
-					//String name = jsonProfileArray.getString(0) + " "
-						//	+ jsonProfileArray.getString(1);
-					String bio = jsonProfileArray.getString(3);
-					String img = jsonProfileArray.getString(5);
-
-					// decode image back to android bitmap format
-					byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
-					if (decodedString != null)
-					{
-						bmp = BitmapFactory.decodeByteArray(decodedString, 0,
-								decodedString.length);
-					}
-					// set the image
-					if (bmp != null)
-					{
-						if (iv == null)
-						{
-							iv = (ImageView) findViewById(R.id.profilePhoto);
-
-						}
-						iv.setImageBitmap(bmp);
-						img = null;
-						decodedString = null;
-					}
-
-					TextView bioTextView = (TextView) findViewById(R.id.bioTextView);
-					bioTextView.setText(bio);
-					*/
+				/*
+				 * // Success JSONArray jsonProfileArray = (JSONArray)
+				 * jsonObject .getJSONArray("profile");
+				 * 
+				 * //String name = jsonProfileArray.getString(0) + " " // +
+				 * jsonProfileArray.getString(1); String bio =
+				 * jsonProfileArray.getString(3); String img =
+				 * jsonProfileArray.getString(5);
+				 * 
+				 * // decode image back to android bitmap format byte[]
+				 * decodedString = Base64.decode(img, Base64.DEFAULT); if
+				 * (decodedString != null) { bmp =
+				 * BitmapFactory.decodeByteArray(decodedString, 0,
+				 * decodedString.length); } // set the image if (bmp != null) {
+				 * if (iv == null) { iv = (ImageView)
+				 * findViewById(R.id.profilePhoto);
+				 * 
+				 * } iv.setImageBitmap(bmp); img = null; decodedString = null; }
+				 * 
+				 * TextView bioTextView = (TextView)
+				 * findViewById(R.id.bioTextView); bioTextView.setText(bio);
+				 */
 				else
 				{
 					// Fail
@@ -402,12 +413,12 @@ public class GroupProfileActivity extends ActionBarActivity
 			}
 		}
 	}
-	
-	
-	public void toggleAdmin(View view){
-		
+
+	public void toggleAdmin(View view)
+	{
+
 	}
-	
+
 	public void editGroupProfileButton(View v)
 	{
 		// TODO Auto-generated method stub
@@ -433,28 +444,28 @@ public class GroupProfileActivity extends ActionBarActivity
 			iv.setImageBitmap(bmp);
 		}
 	}
-	
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }

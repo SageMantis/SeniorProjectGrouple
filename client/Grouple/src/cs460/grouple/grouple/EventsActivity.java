@@ -29,16 +29,18 @@ public class EventsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
-		/*Action bar*/
+		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 
 				startParentActivity(view);
 
@@ -47,8 +49,6 @@ public class EventsActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 
 		actionbarTitle.setText("Events");
-		
-
 
 		initKillswitchListener();
 	}
@@ -60,7 +60,7 @@ public class EventsActivity extends ActionBarActivity
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
-	
+
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
@@ -79,7 +79,7 @@ public class EventsActivity extends ActionBarActivity
 		startActivity(newIntent);
 		finish();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -115,7 +115,6 @@ public class EventsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -125,7 +124,7 @@ public class EventsActivity extends ActionBarActivity
 		}
 		return false;
 	}
-	
+
 	/* Start activity functions for going back and logging out */
 	public void startHomeActivity(View view)
 	{
@@ -137,24 +136,24 @@ public class EventsActivity extends ActionBarActivity
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }

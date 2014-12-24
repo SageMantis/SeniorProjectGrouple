@@ -24,24 +24,23 @@ public class FriendsActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 	Intent parentIntent;
 	Intent upIntent;
+	View friends; 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
 
-
-
-		View friends = findViewById(R.id.friendsContainer);
+		friends = findViewById(R.id.friendsContainer);
 		load(friends);
-
 
 		initKillswitchListener();
 	}
 
 	public void initActionBar()
 	{
-		//Actionbar settings
+		// Actionbar settings
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
@@ -49,45 +48,49 @@ public class FriendsActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Friends");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		upButton.setOnClickListener(new OnClickListener() {
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 				upIntent.putExtra("up", "true");
 				startActivity(upIntent);
 				finish();
 			}
 		});
 	}
-	
+
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
 		View friends = findViewById(R.id.friendsContainer);
 
-		//backstack of intents
-		//each class has a stack of intents lifo method used to execute them at start of activity
-		//intents need to include everything like ParentClassName, things for current page (email, ...)
-		//if check that friends
+		// backstack of intents
+		// each class has a stack of intents lifo method used to execute them at
+		// start of activity
+		// intents need to include everything like ParentClassName, things for
+		// current page (email, ...)
+		// if check that friends
 		String email;
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		//do a check that it is not from a back push
+		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
-			//pull a new intent from the stack
-			//load in everything from that intent
+			// pull a new intent from the stack
+			// load in everything from that intent
 			parentIntent = global.getNextParentIntent(view);
 			System.out.println("Up was true, fetching parent intent...");
-			
-			System.out.println("ParentName = " +parentIntent.getExtras().getString("ParentClassName"));
-		}
-		else
+
+			System.out.println("ParentName = "
+					+ parentIntent.getExtras().getString("ParentClassName"));
+		} else
 		{
 			System.out.println("Up was false... not fetching parent");
 			parentIntent = intent;
-		}	
-		
+		}
+
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 		try
@@ -102,12 +105,11 @@ public class FriendsActivity extends ActionBarActivity
 		global.fetchNumFriendRequests(global.getCurrentUser());
 		global.fetchNumFriends(global.getCurrentUser());
 		global.setNotifications(friends);
-		
-		
-		
+
 		initActionBar();
 		initKillswitchListener();
 	}
+
 	@Override
 	protected void onDestroy()
 	{
@@ -141,7 +143,7 @@ public class FriendsActivity extends ActionBarActivity
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -180,25 +182,23 @@ public class FriendsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
 	/*
 	 * Start activity functions for friends sub activities, going back and
 	 * logging out
 	 */
-	public void startAddFriendActivity(View view)
+	public void startFriendAddActivity(View view)
 	{
 		Global global = ((Global) getApplicationContext());
-		Intent intent = new Intent(this, AddFriendActivity.class);
+		Intent intent = new Intent(this, FriendAddActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		intent.putExtra("up", "false");
-		global.addToParentStackFriends(parentIntent);
+		global.addToParentStack(friends, parentIntent);
 		startActivity(intent);
 	}
 
-	public void startCurrentFriendsActivity(View view)
+	public void startFriendsCurrentActivity(View view)
 	{
-		Intent intent = new Intent(this, CurrentFriendsActivity.class);
+		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("email", global.getCurrentUser());
@@ -206,7 +206,7 @@ public class FriendsActivity extends ActionBarActivity
 		intent.putExtra("ParentEmail", global.getCurrentUser());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
-		global.addToParentStackFriends(parentIntent);
+		global.addToParentStack(friends, parentIntent);
 		startActivity(intent);
 	}
 
@@ -216,13 +216,12 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
 		intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("ParentClassName", "FriendsActivity");
-		global.addToParentStackFriends(parentIntent);
+		global.addToParentStack(friends, parentIntent);
 		intent.putExtra("up", "false");
-		//intent.putExtra("mod", "true");
+		// intent.putExtra("mod", "true");
 		startActivity(intent);
 	}
-	
-	
+
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
@@ -240,7 +239,7 @@ public class FriendsActivity extends ActionBarActivity
 					// System.exit(1);
 					finish();
 				}
-	
+
 			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);

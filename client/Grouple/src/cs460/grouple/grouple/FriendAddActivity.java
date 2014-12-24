@@ -26,36 +26,39 @@ import android.widget.TextView;
 /*
  * AddFriendActivity allows user to add another user as a friend.
  */
-public class AddFriendActivity extends ActionBarActivity
+public class FriendAddActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		//Set the activity layout.
+		// Set the activity layout.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
-		//Set up the action bar. 
+		// Set up the action bar.
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
-		//Set up the back button listener for the action bar.
-		upButton.setOnClickListener(new OnClickListener() {
+		// Set up the back button listener for the action bar.
+		upButton.setOnClickListener(new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View view) {
+			public void onClick(View view)
+			{
 
 				startParentActivity(view);
 
 			}
 		});
-		//Set the action bar title.
+		// Set the action bar title.
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Add Friend");
-		//Initialize the kill switch. The kill switch will kill all open activities.
+		// Initialize the kill switch. The kill switch will kill all open
+		// activities.
 		initKillswitchListener();
 	}
 
@@ -85,7 +88,8 @@ public class AddFriendActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			//If the user hits the logout button, then clear global and go to the logout screen.
+			// If the user hits the logout button, then clear global and go to
+			// the logout screen.
 			Global global = ((Global) getApplicationContext());
 			global.setAcceptEmail("");
 			global.setCurrentUser("");
@@ -103,7 +107,9 @@ public class AddFriendActivity extends ActionBarActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	//This function helps the action bar back button go back to the correct activity.
+
+	// This function helps the action bar back button go back to the correct
+	// activity.
 	public void startParentActivity(View view)
 	{
 		Bundle extras = getIntent().getExtras();
@@ -118,8 +124,8 @@ public class AddFriendActivity extends ActionBarActivity
 			{
 				newIntent.putExtra("email", extras.getString("ParentEmail"));
 			}
-			//newIntent.putExtra("email", extras.getString("email"));
-			//newIntent.putExtra("ParentEmail", extras.getString("email"));
+			// newIntent.putExtra("email", extras.getString("email"));
+			// newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("up", "true");
 		} catch (ClassNotFoundException e)
 		{
@@ -127,7 +133,8 @@ public class AddFriendActivity extends ActionBarActivity
 		}
 		startActivity(newIntent);
 	}
-	//Adds a friend.
+
+	// Adds a friend.
 	public void addFriendButton(View view)
 	{
 		EditText emailEditTextAFA = (EditText) findViewById(R.id.emailEditTextAFA);
@@ -136,12 +143,12 @@ public class AddFriendActivity extends ActionBarActivity
 		String senderEmail = global.getCurrentUser();
 		System.out.println("Email:" + email + "\nSender Email:" + senderEmail);
 
-		//Execute the add friend php
-		new getAddFriendTask().execute("http://98.213.107.172/android_connect/add_friend.php");
+		// Execute the add friend php
+		new getAddFriendTask()
+				.execute("http://98.213.107.172/android_connect/add_friend.php");
 	}
 
-	
-	//This task sends a friend request to the given user.
+	// This task sends a friend request to the given user.
 	private class getAddFriendTask extends AsyncTask<String, Void, String>
 	{
 		@Override
@@ -154,7 +161,7 @@ public class AddFriendActivity extends ActionBarActivity
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
-				
+
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
@@ -175,18 +182,19 @@ public class AddFriendActivity extends ActionBarActivity
 				{
 					// friend added or already friends (user's goal)
 					System.out.println("success!");
-					addFriendMessage.setTextColor(getResources().getColor(R.color.light_green));
-				} 
-				else if (jsonObject.getString("success").toString()
-								.equals("2"))
+					addFriendMessage.setTextColor(getResources().getColor(
+							R.color.light_green));
+				} else if (jsonObject.getString("success").toString()
+						.equals("2"))
 				{
-					addFriendMessage.setTextColor(getResources().getColor(R.color.orange));
-				}
-				else
+					addFriendMessage.setTextColor(getResources().getColor(
+							R.color.orange));
+				} else
 				{
 					// user does not exist, self request, or sql error
 					System.out.println("fail!");
-					addFriendMessage.setTextColor(getResources().getColor(R.color.red));
+					addFriendMessage.setTextColor(getResources().getColor(
+							R.color.red));
 				}
 				addFriendMessage.setVisibility(0);
 
@@ -198,7 +206,8 @@ public class AddFriendActivity extends ActionBarActivity
 	}
 
 	@Override
-	//If the user hits the back button (not the one in the action bar, then go back to the parent activity.
+	// If the user hits the back button (not the one in the action bar, then go
+	// back to the parent activity.
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
@@ -208,35 +217,27 @@ public class AddFriendActivity extends ActionBarActivity
 		return false;
 	}
 
-	/* Start activity functions for going back and logging out */
-
-	public void startFriendsActivity(View view)
-	{
-		Intent intent = new Intent(this, FriendsActivity.class);
-		startActivity(intent);
-	}
-	
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER
-				IntentFilter intentFilter = new IntentFilter();
-				intentFilter.addAction("CLOSE_ALL");
-				broadcastReceiver = new BroadcastReceiver()
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("CLOSE_ALL");
+		broadcastReceiver = new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				// close activity
+				if (intent.getAction().equals("CLOSE_ALL"))
 				{
-					@Override
-					public void onReceive(Context context, Intent intent)
-					{
-						// close activity
-						if (intent.getAction().equals("CLOSE_ALL"))
-						{
-							Log.d("app666", "we killin the login it");
-							// System.exit(1);
-							finish();
-						}
+					Log.d("app666", "we killin the login it");
+					// System.exit(1);
+					finish();
+				}
 
-					}
-				};
-				registerReceiver(broadcastReceiver, intentFilter);
-				// End Kill switch listener
+			}
+		};
+		registerReceiver(broadcastReceiver, intentFilter);
+		// End Kill switch listener
 	}
 }

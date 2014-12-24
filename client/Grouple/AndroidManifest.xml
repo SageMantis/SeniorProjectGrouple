@@ -108,7 +108,7 @@
                 android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
-            android:name=".AddFriendActivity"
+            android:name=".FriendAddActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_add_friend"
             android:screenOrientation="portrait" >
@@ -117,7 +117,7 @@
                 android:value="cs460.grouple.grouple.FriendsActivity" />
         </activity>
         <activity
-            android:name=".CurrentFriendsActivity"
+            android:name=".FriendsCurrentActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_current_friends"
             android:screenOrientation="portrait" >
@@ -149,7 +149,7 @@
                 android:value="cs460.grouple.grouple.HomeActivity" />
         </activity>
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".ProfileEditActivity"
             android:label="@string/title_activity_edit_profile" 
             android:screenOrientation="portrait" >
         </activity>

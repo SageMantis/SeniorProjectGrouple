@@ -15,9 +15,9 @@
 	    android:layout_marginTop="97dp"
 	    android:background="@drawable/button_border"
 	    android:fontFamily="sans-serif-condensed"
-	   	android:textColor="@color/button_text_color"
-	    android:onClick="startAddFriendActivity"
+	    android:onClick="startFriendAddActivity"
 	    android:text="Add Friend"
+	    android:textColor="@color/button_text_color"
 	    android:textSize="20sp" />
 
 	<Button
@@ -29,7 +29,7 @@
 	    android:layout_marginTop="14dp"
 	    android:background="@drawable/button_border"
 	    android:fontFamily="sans-serif-condensed"
-	    android:onClick="startCurrentFriendsActivity"
+	    android:onClick="startFriendsCurrentActivity"
 	    android:text="My Friends"
 	    android:textColor="@color/button_text_color"
 	    android:textSize="20sp" />
