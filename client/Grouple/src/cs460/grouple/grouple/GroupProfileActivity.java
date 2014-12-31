@@ -194,9 +194,7 @@ public class GroupProfileActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			bmp = null;

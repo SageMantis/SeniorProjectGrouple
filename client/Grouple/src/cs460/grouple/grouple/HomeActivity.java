@@ -21,22 +21,30 @@ import android.widget.TextView;
 public class HomeActivity extends ActionBarActivity
 {
 	LayoutInflater li;
+	User user;
 	BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		//need to sync these !! TODD
+		try
+		{
+			Thread.sleep(2000);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.d("HomeActivity", "1");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-
 		Global global = ((Global) getApplicationContext());
 		// Updating notifications
-		View home = findViewById(R.id.homeLayout);
-		global.fetchNumFriendRequests(global.getCurrentUser());
-		global.fetchNumFriends(global.getCurrentUser());
-		global.fetchNumGroupInvites(global.getCurrentUser());
-		global.setNotifications(home);
-
+		//View home = findViewById(R.id.homeLayout);
+		Bundle extras = getIntent().getExtras(); 
+		user = global.getUser(extras.getString("email"));
+		System.out.println("User isCurrentUser: " + user.isCurrentUser());
 		initActionBar();
 		initKillswitchListener();
 	}
@@ -49,8 +57,8 @@ public class HomeActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		// ab.setDisplayHomeAsUpEnabled(true);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		Global global = ((Global) getApplicationContext());
-		actionbarTitle.setText("Welcome, " + global.getName() + "!");
+		//Global global = ((Global) getApplicationContext());
+		actionbarTitle.setText("Welcome, " + user.getFullName() + "!"); //PANDA
 	}
 
 	@Override
@@ -88,9 +96,7 @@ public class HomeActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -109,14 +115,15 @@ public class HomeActivity extends ActionBarActivity
 	public void onResume()
 	{
 		super.onResume(); // Always call the superclass method first
-		System.out.println("In Home onResume()");
+		Log.d("onResume()","after superonresume");
 		Global global = ((Global) getApplicationContext());
+		Log.d("onResume()","after global declaratione");
 		View home = findViewById(R.id.homeLayout);
-		global.fetchNumFriendRequests(global.getCurrentUser());
-		global.fetchNumFriends(global.getCurrentUser());
+		//global.fetchNumFriendRequests(global.getCurrentUser());
+		//global.fetchNumFriends(global.getCurrentUser());
 		// friendRequests = global.getNumFriendRequests();
-
-		global.setNotifications(home);
+		Log.d("onResume()","after after all");
+		//global.setNotifications(home); PANDA
 	}
 
 	/*

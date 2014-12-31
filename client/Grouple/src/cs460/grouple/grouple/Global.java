@@ -3,6 +3,7 @@ package cs460.grouple.grouple;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class Global extends Application
 	private LinkedList<Intent> parentStackFriends = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroups = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupInvites = new LinkedList<Intent>();
+	private ArrayList<User> users; //contains all the users that have been loaded into the current run of the program
 	private int numFriendRequests;
 	private int numFriends;
 	private int numGroupInvites;
@@ -74,6 +76,92 @@ public class Global extends Application
 	{
 		numGroups = num;
 	}
+	public void addToUsers(User u)
+	{
+		//Only add user if they are not in the array
+		//probably check for this in the loadUser
+		users.add(u);
+	}
+	//takes in an email and returns that user if user is in the system
+	public User getUser(String email)
+	{
+		User u = null;
+		//searching through the users to find the 1 that matches given email
+		for (int i = 0; i < users.size(); i++)
+		{
+			if (users.get(i).getEmail().equals(email))
+			{
+				u = users.get(i);
+			}
+		}
+		return u; //returns null if user was not found
+	}
+	//using the email of user, load them up into our array of pertinent users
+	public User loadUser(String email)
+	{	
+		//check that user is not already loaded
+		User user = checkGetUser(email);//null if user not loaded
+		if (user == null)
+		{
+			//user was not previously loaded
+			
+			//instantiate a new user
+			user = new User(email); //changes that null to something fresh
+			//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
+			//this is next
+			
+			int success;
+			//there is currently no wait for this to complete and it returns a user before these get set
+			success = user.fetchUserInfo();
+			
+			if (success == 1)
+				Log.d("loadUser", "after fetchUserInfo()");
+			
+			//json call to populate users friendKeys / friendNames
+			//this is implemented so do it and test
+			success = user.fetchFriends();
+			if (success == 1)
+				Log.d("loadUser","after fetchFriends()");
+			
+			//json call to populate users groupKeys / groupNames
+			
+			//json call to populate users friendRequestKeys / names
+					
+			//json call to populate users groupInviteKeys / names
+		}
+		else
+		{
+			//user is already loaded
+			//it is already set to what it needs
+		}
+		//set isCurrentUser to false unless the OG user
+		return user;
+	}
+	
+	//takes in user email, if found in users -> returns true, else false
+	private User checkGetUser(String email)
+	{
+		User user = null;
+		
+		//if users has not yet been made, initialize it
+		if (users == null)
+		{
+			users = new ArrayList<User>();
+		}
+		
+		//loop through users
+		for (User u : users)
+		{
+			//if emails match
+			if (u.getEmail().equals(email))
+				user = u; //makes return statement the user
+		}
+		
+		//return null if user was not found
+		return user;
+	}
+	/*
+	 * Old code for most things we are going to update
 
 	public int getNumFriendRequests()
 	{
@@ -114,9 +202,8 @@ public class Global extends Application
 	{
 		this.name = name;
 	}
-
-	/* PANDA */
-	public void setDeclineEmail(String email)
+	
+		public void setDeclineEmail(String email)
 	{
 		declineEmail = email;
 	}
@@ -140,6 +227,8 @@ public class Global extends Application
 	{
 		this.numFriends = numFriends;
 	}
+
+	*/
 
 	/*
 	 * Adding an intent to the stack of parents for a specific activity (differentiated using its view)
@@ -243,13 +332,26 @@ public class Global extends Application
 
 	}
 
-	public int setNotifications(View view)
+	//think: may need to move this to the user class
+		/*
+		 * would look like
+		 * 	user u = global.getUser("email");
+		 * 	u.setNotifications();
+		 */
+	//or could take in email and grab the user through global and do this
+		/*
+		 * 	would look like
+		 * 		global.setNotifications("view", "email");
+		 */
+	//gotta be consistent thorughout so,... same on loading each friendprofile... either grab user or go to global first
+	//I like grabbing it first, makes it like the user is really there
+	public int setNotifications(View view, User user)
 	{
 		// todo: If I can pass an email in here and skip setting current user
-		int numFriendRequests = getNumFriendRequests();
-		int numFriends = getNumFriends();
-		int numGroupInvites = getNumGroupInvites();
-		int numGroups = getNumGroups();
+		int numFriendRequests = user.getNumFriendRequests();
+		int numFriends = user.getNumFriends();
+		int numGroupInvites = user.getNumGroupInvites();
+		int numGroups = user.getNumGroups();
 
 		// Home Activity
 		if (numFriendRequests > 0
@@ -301,7 +403,7 @@ public class Global extends Application
 			Button currentFriendsButton = (Button) view
 					.findViewById(R.id.currentFriendsButtonFA);
 			currentFriendsButton
-					.setText("My Friends (" + getNumFriends() + ")");
+					.setText("My Friends (" + user.getNumFriends() + ")"); //PANDA
 		}
 
 		// User Profile Buttons
@@ -344,240 +446,10 @@ public class Global extends Application
 		// else do nothing, keep that invisible
 	}
 
-	/* Takes in email of user, and sets the friend requests */
-	// Should switch this to return the number
-	public int fetchNumFriendRequests(String email)
-	{
-		new getNumFriendRequestsTask()
-				.execute("http://98.213.107.172/android_connect/get_count_friend_requests.php?email="
-						+ email);
-		return 1;
-	}
+	
 
-	private class getNumFriendRequestsTask extends
-			AsyncTask<String, Void, String>
-	{
-		@Override
-		protected String doInBackground(String... urls)
-		{
-			return readJSONFeed(urls[0], null);
-		}
 
-		@Override
-		protected void onPostExecute(String result)
-		{
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
 
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					System.out.println("Just success on json return");
-					String numRequests = jsonObject.getString("numRequests");
-					System.out.println("Set it to " + numRequests);
-					setNumFriendRequests(Integer.parseInt(numRequests));
-					System.out.println("Number of Friend Requests: "
-							+ numRequests);
-
-					// successful
-				} else
-				{
-					// fetching from server failed
-					Log.d("DB Error",
-							"Error fetching number of requests from server");
-					setNumFriendRequests(0);
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
-		}
-	}
-
-	// Get numFriends, TODO: work on returning the integer
-	public int fetchNumFriends(String email)
-	{
-		new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_count_friends.php?email="
-						+ email);
-		return 1;
-	}
-
-	private class getFriendsTask extends AsyncTask<String, Void, String>
-	{
-		@Override
-		protected String doInBackground(String... urls)
-		{
-			return readJSONFeed(urls[0], null);
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					String numFriends = jsonObject.getString("numFriends")
-							.toString();
-					System.out.println("Should be setting the num friends to "
-							+ numFriends);
-					setNumFriends(Integer.parseInt(numFriends));
-
-				}
-				// user has no friends
-				if (jsonObject.getString("success").toString().equals("2"))
-				{
-					setNumFriends(0);
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
-		}
-	}
-
-	public int fetchNumGroupInvites(String email) // Should take in email
-	{
-		new getNumGroupInvitesTask()
-				.execute("http://98.213.107.172/android_connect/get_count_group_invites.php?email="
-						+ email);
-		return 1;
-	}
-
-	private class getNumGroupInvitesTask extends
-			AsyncTask<String, Void, String>
-	{
-		@Override
-		protected String doInBackground(String... urls)
-		{
-			return readJSONFeed(urls[0], null);
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
-
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					System.out.println("Just success on json return");
-					String numGroupInvites = jsonObject
-							.getString("numGroupInvites");
-					System.out.println("Set # of group invites to "
-							+ numGroupInvites);
-					setNumGroupInvites(Integer.parseInt(numGroupInvites));
-
-					// successful
-				} else
-				{
-					// fetching from server failed
-					Log.d("DB Error", "Error fetching num requests from server");
-					setNumGroupInvites(0);
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
-		}
-	}
-
-	public int fetchNumGroups(String email) // Should take in email
-	{
-		new getNumGroupsTask()
-				.execute("http://98.213.107.172/android_connect/get_count_groups.php?email="
-						+ email);
-		return 1;
-	}
-
-	private class getNumGroupsTask extends AsyncTask<String, Void, String>
-	{
-		@Override
-		protected String doInBackground(String... urls)
-		{
-			return readJSONFeed(urls[0], null);
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
-
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					System.out.println("Just success on json return");
-					String numGroups = jsonObject.getString("numGroups");
-					System.out.println("Set it to " + numGroups);
-					setNumGroups(Integer.parseInt(numGroups));
-					System.out.println("Number of Groups " + numGroups);
-
-					// successful
-				} else
-				{
-					// fetching from server failed
-					Log.d("DB Error", "Error fetching num groups from server");
-					setNumGroupInvites(0);
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
-		}
-	}
-
-	// Get name, should change to take in email
-	public int fetchName(String email)
-	{
-		new getNameTask()
-				.execute("http://98.213.107.172/android_connect/get_user_by_email.php?email="
-						+ email);
-		return 1;
-	}
-
-	private class getNameTask extends AsyncTask<String, Void, String>
-	{
-		@Override
-		protected String doInBackground(String... urls)
-		{
-			return readJSONFeed(urls[0], null);
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					// successful
-					String temp = jsonObject.getString("users");
-					// Do not need to replace out double quotes or brackets
-					String raw = temp.replace("\"", "").replace("]", "")
-							.replace("[", "").replace(",", " ");
-
-					// String raw = jsonFriends.get(i).toString();
-					// String row = raw.substring(0,1).toUpperCase() +
-					// raw.substring(1);
-
-					setName(raw);
-				} else
-				{
-					// failed
-
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
-		}
-	}
 
 	public String readJSONFeed(String URL, List<NameValuePair> nameValuePairs)
 	{

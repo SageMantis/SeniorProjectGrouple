@@ -75,7 +75,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 		});
 		// upButton.setOnClickListener
 		// global.fetchNumFriends(email)
-		actionbarTitle.setText(global.getName() + "'s Group Invites");
+		//actionbarTitle.setText(global.getName() + "'s Group Invites"); //PANDA
 	}
 
 	public void load(View view)
@@ -151,9 +151,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -226,7 +224,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 					{
 						View groupInvites = findViewById(R.id.groupInvitesContainer);
 						global.setNumGroupInvites(jsonGroupInvites.length());
-						global.setNotifications(groupInvites);
+					//	global.setNotifications(groupInvites); PANDA
 						System.out.println(jsonGroupInvites.toString() + "\n"
 								+ jsonGroupInvites.length());
 
@@ -300,7 +298,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 			View parent = (View) view.getParent();
 			TextView declineEmail = (TextView) parent
 					.findViewById(R.id.emailTextViewGRLI);
-			global.setDeclineEmail(declineEmail.getText().toString());
+		//	global.setDeclineEmail(declineEmail.getText().toString());
 			new getDeclineGroupTask()
 					.execute("http://98.213.107.172/android_connect/decline_group_request.php");
 			break;
@@ -308,7 +306,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 			View parent2 = (View) view.getParent();
 			TextView acceptEmail = (TextView) parent2
 					.findViewById(R.id.emailTextViewGRLI);
-			global.setAcceptEmail(acceptEmail.getText().toString());
+			//global.setAcceptEmail(acceptEmail.getText().toString()); PANDA
 			new getAcceptGroupTask()
 					.execute("http://98.213.107.172/android_connect/accept_group_request.php");
 			break;
@@ -323,11 +321,11 @@ public class GroupInvitesActivity extends ActionBarActivity
 		{
 			Global global = ((Global) getApplicationContext());
 			String receiver = global.getCurrentUser();
-			String groupName = global.getDeclineEmail();
+			//String groupName = global.getDeclineEmail(); PANDA
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("mem", receiver));
 			// pass the group name...
-			nameValuePairs.add(new BasicNameValuePair("gname", groupName));
+		//	nameValuePairs.add(new BasicNameValuePair("gname", groupName)); PANDA NEeds to be gid anyway
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
@@ -368,11 +366,11 @@ public class GroupInvitesActivity extends ActionBarActivity
 		{
 			Global global = ((Global) getApplicationContext());
 			String receiver = global.getCurrentUser();
-			String groupName = global.getAcceptEmail();
+			//String groupName = global.getAcceptEmail(); PANDA
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("mem", receiver));
-			nameValuePairs.add(new BasicNameValuePair("gname", groupName));
+			//nameValuePairs.add(new BasicNameValuePair("gname", groupName)); PANDA gid 
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 

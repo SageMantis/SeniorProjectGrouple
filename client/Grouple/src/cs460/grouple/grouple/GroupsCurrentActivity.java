@@ -63,7 +63,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText(global.getName() + "'s Groups");
+	//	actionbarTitle.setText(global.getName() + "'s Groups"); //PANDA
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener()
 		{
@@ -107,7 +107,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 		email = parentExtras.getString("email");
-		global.fetchName(email);
+		//global.fetchName(email);PANDA
 		try
 		{
 			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
@@ -167,9 +167,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");

@@ -68,7 +68,7 @@ public class FriendProfileActivity extends ActionBarActivity
 
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText(global.getName() + "'s Profile");
+		//actionbarTitle.setText(global.getName() + "'s Profile"); //PANDA gotta do this differently
 
 		// handling up navigation
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
@@ -117,10 +117,10 @@ public class FriendProfileActivity extends ActionBarActivity
 		String email = parentExtras.getString("email");
 		System.out.println("In FPA GlobalUser: " + global.getCurrentUser()
 				+ "intentEmail:" + email);
-		global.fetchName(email);
-		global.fetchNumFriends(email);
-		global.fetchNumGroups(email);
-		global.setNotifications(view);
+		//global.fetchName(email);
+		//global.fetchNumFriends(email); PANDA
+		//global.fetchNumGroups(email);
+		//global.setNotifications(view);
 
 		try
 		{
@@ -132,7 +132,7 @@ public class FriendProfileActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 
-		global.setNotifications(view);
+		//global.setNotifications(view); PANDA
 
 		// execute php script, using the current users email address to populate
 		// the textviews
@@ -172,9 +172,7 @@ public class FriendProfileActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			bmp = null;

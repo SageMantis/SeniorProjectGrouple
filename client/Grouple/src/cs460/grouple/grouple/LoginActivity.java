@@ -62,9 +62,11 @@ public class LoginActivity extends Activity
 		startActivity(intent);
 	}
 
-	public void startHomeActivity()
+	public void startHomeActivity(String email)
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
+		System.out.println("Email: " + email);
+		intent.putExtra("email", email);
 		startActivity(intent);
 	}
 
@@ -86,13 +88,11 @@ public class LoginActivity extends Activity
 		// String email = "test001@gmail.com";
 		// String password="password";
 		Global global = ((Global) getApplicationContext());
-		global.setCurrentUser(email);
-		if (global.fetchName(email) == 1)
-		{
-			new getLoginTask()
+
+		new getLoginTask()
 					.execute("http://98.213.107.172/android_connect/get_login.php?email="
 							+ email + "&password=" + password);
-		}
+
 	}
 
 	private class getLoginTask extends AsyncTask<String, Void, String>
@@ -110,26 +110,13 @@ public class LoginActivity extends Activity
 			try
 			{
 				JSONObject jsonObject = new JSONObject(result);
+				//validated for login
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// successful
 					Global global = ((Global) getApplicationContext());
-					// check for current number of friend requests
-					if (global.fetchNumFriendRequests(global.getCurrentUser()) == 1)
-					{
-						if (global.fetchNumFriends(global.getCurrentUser()) == 1)
-							if (global.fetchNumGroups(global.getCurrentUser()) == 1)
-								if (global.fetchNumGroupInvites(global
-										.getCurrentUser()) == 1)
-								{
-								}
-					}
 
-					// Sets this users name.
-
-					global.setCurrentName(global.getName());
-					System.out.println("Setting current name to "
-							+ global.getName());
+					
 					// Login processing finished: progress bar disappear again
 					progBar.setVisibility(View.VISIBLE);
 					// display message from json (successful login message)
@@ -137,12 +124,30 @@ public class LoginActivity extends Activity
 					loginFail.setTextColor(getResources().getColor(
 							R.color.light_green));
 					loginFail.setVisibility(View.VISIBLE);
-					startHomeActivity();
-					finish(); // Finishing login (possibly save some memory)
-				} else
-				{
-					// failed
 
+					//get the email
+					EditText emailEditText = (EditText) findViewById(R.id.emailEditTextLA);
+					String email = emailEditText.getText().toString();
+
+					//load the user into the system
+					User user = global.loadUser(email);
+					System.out.println("user name in login is currently " + user.getFullName());
+					//can't do below here
+					user.setIsCurrentUser(true);//hopefully it is pass-by-reference PANDA
+					global.addToUsers(user);
+					
+					Log.d("LoginActivity", "after adding to users in global");
+					// Sets this users name.
+					
+					//starting the home activity with the current users email
+					startHomeActivity(email);
+					Log.d("LoginActivity", "after startHomeActivity");
+					//finish(); // Finishing login (possibly save some memory)
+					Log.d("LoginActivity", "after finish");
+				} 
+				else
+				{
+					//login validation failed
 					// Login processing finished: progress bar disappear again
 					progBar.setVisibility(View.GONE);
 					System.out.println("failed");
