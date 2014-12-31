@@ -91,9 +91,7 @@ public class FriendAddActivity extends ActionBarActivity
 			// If the user hits the logout button, then clear global and go to
 			// the logout screen.
 			Global global = ((Global) getApplicationContext());
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");

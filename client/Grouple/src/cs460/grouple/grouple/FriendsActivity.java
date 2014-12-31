@@ -102,9 +102,9 @@ public class FriendsActivity extends ActionBarActivity
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		global.fetchNumFriendRequests(global.getCurrentUser());
-		global.fetchNumFriends(global.getCurrentUser());
-		global.setNotifications(friends);
+		//global.fetchNumFriendRequests(global.getCurrentUser()); PANDA
+		//global.fetchNumFriends(global.getCurrentUser());
+		//global.setNotifications(friends);
 
 		initActionBar();
 		initKillswitchListener();
@@ -125,9 +125,9 @@ public class FriendsActivity extends ActionBarActivity
 		System.out.println("In Friends onResume()");
 		Global global = ((Global) getApplicationContext());
 		View friends = findViewById(R.id.friendsContainer);
-		global.fetchNumFriendRequests(global.getCurrentUser());
+		//global.fetchNumFriendRequests(global.getCurrentUser()); PANDA
 		// friendRequests = global.getNumFriendRequests();
-		global.setNotifications(friends);
+		//global.setNotifications(friends);
 
 	}
 
@@ -163,9 +163,7 @@ public class FriendsActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -202,7 +200,7 @@ public class FriendsActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("email", global.getCurrentUser());
-		intent.putExtra("Name", global.getName());
+	//	intent.putExtra("Name", global.getName()); //PANDA
 		intent.putExtra("ParentEmail", global.getCurrentUser());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");

@@ -76,7 +76,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 		// Grabs your name and sets it in the action bar's title.
-		actionbarTitle.setText(global.getName() + "'s Friends");
+		//actionbarTitle.setText(global.getName() + "'s Friends"); //PANDA
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		// On click listener for the action bar's back button.
 		upButton.setOnClickListener(new OnClickListener()
@@ -124,7 +124,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 		String email = parentExtras.getString("email");
-		global.fetchName(email);
+		//global.fetchName(email); PANDA
 		try
 		{
 			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
@@ -183,9 +183,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -441,8 +439,8 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "FriendsCurrentActivity");
 		Global global = ((Global) getApplicationContext());
 		global.addToParentStack(friendsCurrent, parentIntent);
-		global.fetchNumFriends(friendEmail);
-		global.fetchNumGroups(friendEmail);
+		//global.fetchNumFriends(friendEmail); PANDA
+		//global.fetchNumGroups(friendEmail);
 		// Another sleep that way the php has time to execute. We need to start
 		// the activity when the PHP returns..
 		Thread.sleep(500);

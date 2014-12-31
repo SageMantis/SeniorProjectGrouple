@@ -1,19 +1,28 @@
 package cs460.grouple.grouple;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-public class Group
+import org.json.JSONObject;
+
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.util.Log;
+
+public class Group extends Activity
 {
+	private int groupID; //id of the group
 	private String name; //name for the group
 	private String bio; //bio for the group
-	private ArrayList<User> members; //array of all of the current members of the group
+	private Map<String, String> members; //members of the groups' email->name pair
 
 	/*
 	 * Constructor for Group class
 	 */
-	public Group(String name)
+	public Group(int groupID)
 	{
-		this.name = name;
+		this.groupID = groupID;
 		System.out.println("Initializing new group.");
 	}
 	
@@ -28,14 +37,14 @@ public class Group
 	{
 		this.bio = bio;
 	}
-	public void addMember(User u)
-	{
-		members.add(u);
-	}
 	
 	/*
 	 * Getters for group class below
 	 */
+	public int getGroupID()
+	{
+		return groupID;
+	}
 	public String getName()
 	{
 		return name;
@@ -44,15 +53,111 @@ public class Group
 	{
 		return bio;
 	}
-	public User getMember(int idx)
+
+	/*
+	 * 
+	 * will be fetching the members email->name pairs
+	 * 
+	 */
+	// Get numFriends, TODO: work on returning the integer
+	public int fetchMembers()
 	{
-		return members.get(idx);
+		new getMembersTask()
+				.execute("http://98.213.107.172/android_connect/get_group_members.php?gid="
+						+ getGroupID());
+		return 1;
 	}
-	public ArrayList<User> getMembers()
+
+	private class getMembersTask extends AsyncTask<String, Void, String>
 	{
-		return members;
+		@Override
+		protected String doInBackground(String... urls)
+		{
+			Global global = ((Global) getApplicationContext());
+			return global.readJSONFeed(urls[0], null);
+		}
+
+		@Override
+		protected void onPostExecute(String result)
+		{
+
+			try
+			{
+				JSONObject jsonObject = new JSONObject(result);
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
+					String numFriends = jsonObject.getString("numFriends")
+							.toString();
+					System.out.println("Should be setting the num friends to "
+							+ numFriends);
+					//setNumFriends(Integer.parseInt(numFriends)); //PANDA need to set the user class not global
+					//change this to populate the friends key->val list
+
+				}
+				// user has no friends
+				if (jsonObject.getString("success").toString().equals("2"))
+				{
+					//setNumFriends(0); //PANDA need to set the user class not global
+				}
+			} catch (Exception e)
+			{
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
 	}
 	
+	
+	/*
+	 * 
+	 * will be fetching the group info
+	 * 
+	 */
+	// Get numFriends, TODO: work on returning the integer
+	public int fetchGroupInfo()
+	{
+		new getGroupInfoTask()
+				.execute("http://98.213.107.172/android_connect/get_group_info.php?gid="
+						+ getGroupID());
+		return 1;
+	}
+
+	private class getGroupInfoTask extends AsyncTask<String, Void, String>
+	{
+		@Override
+		protected String doInBackground(String... urls)
+		{
+			Global global = ((Global) getApplicationContext());
+			return global.readJSONFeed(urls[0], null);
+		}
+
+		@Override
+		protected void onPostExecute(String result)
+		{
+			try
+			{
+				JSONObject jsonObject = new JSONObject(result);
+				//successful run
+				if (jsonObject.getString("success").toString().equals("1"))
+				{
+					//set group name
+					String name = jsonObject.getString("groupName").toString();
+					setName(name);
+					//set group bio
+					String bio = jsonObject.getString("groupBio").toString();
+					setBio(bio);
+
+				}
+				//unsuccessful
+				if (jsonObject.getString("success").toString().equals("2"))
+				{
+					//shouldnt
+				}
+			} catch (Exception e)
+			{
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+			}
+		}
+	}
 	/*
 	 * To delete group and all arrays within
 	 */

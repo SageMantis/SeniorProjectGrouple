@@ -103,8 +103,8 @@ public class GroupsActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 
-		global.fetchNumGroupInvites(global.getCurrentUser());
-		global.setNotifications(view);
+		//global.fetchNumGroupInvites(global.getCurrentUser()); PANDA
+		//global.setNotifications(view);
 
 		initActionBar();
 		initKillswitchListener();
@@ -138,10 +138,7 @@ public class GroupsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		if (id == R.id.action_logout)
 		{
-
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -207,7 +204,7 @@ public class GroupsActivity extends ActionBarActivity
 		intent.putExtra("mod", "true");// gives user ability admin in the
 										// current groups screen
 		intent.putExtra("up", "false");
-		intent.putExtra("Name", global.getName());
+		//intent.putExtra("Name", global.getName()); //PANDA
 		global.addToParentStack(groups, parentIntent);
 		System.out.println("Adding parent intent to stack");
 		startActivity(intent);

@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 /*
  * UserActivity displays the profile page of the logged-in user.
+ * NEED TO CHANGE THIS TO USERPROFILEACTIVITY AND JUST REMOVE FRIENDPROFILE
+ * CHECK .isCurrentUser() and then enable / disable EDIT PROFILE
  */
 public class UserActivity extends ActionBarActivity
 {
@@ -71,7 +73,7 @@ public class UserActivity extends ActionBarActivity
 				finish();
 			}
 		});
-		actionbarTitle.setText(global.getCurrentName() + "'s Profile");
+		//actionbarTitle.setText(global.getCurrentName() + "'s Profile"); //PANDA
 	}
 
 	public void load(View view)
@@ -112,12 +114,12 @@ public class UserActivity extends ActionBarActivity
 		}
 
 		/* Notifications */
-		global.fetchNumFriends(global.getCurrentUser());
-		global.fetchNumGroups(global.getCurrentUser());
+		//global.fetchNumFriends(global.getCurrentUser());
+		//global.fetchNumGroups(global.getCurrentUser());
 
 		View user = findViewById(R.id.userContainer);
 
-		global.setNotifications(user);
+		//global.setNotifications(user); PANDA
 
 		// execute php script, using the current users email address to populate
 		// the textviews
@@ -161,9 +163,7 @@ public class UserActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			bmp = null;
@@ -308,7 +308,7 @@ public class UserActivity extends ActionBarActivity
 		global.addToParentStack(user, parentIntent);
 		intent.putExtra("ParentClassName", "UserActivity");
 		intent.putExtra("ParentEmail", email);
-		intent.putExtra("Name", global.getName());
+		//intent.putExtra("Name", global.getName()); //PANDA
 		intent.putExtra("email", email);
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");

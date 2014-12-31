@@ -105,7 +105,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		View friendRequests = findViewById(R.id.friendRequestsLayout);
 		View friends = ((View) friendRequests.getParent());
 		View home = ((View) friends.getParent());
-		if (global.setNotifications(friendRequests) == 1)
+		/*if (global.setNotifications(friendRequests) == 1)
 			{
 			;
 			}
@@ -116,7 +116,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		if (global.setNotifications(home) ==1)
 			{
 			;
-			}
+			} PANDA */
 
 		initActionBar();
 		initKillswitchListener();
@@ -148,9 +148,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setAcceptEmail("");
 			global.setCurrentUser("");
-			global.setDeclineEmail("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -198,7 +196,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 					if (jsonSenders != null)
 					{
 						global.setNumFriendRequests(jsonSenders.length());
-						global.setNotifications(friendRequestsLayout);
+					//	global.setNotifications(friendRequestsLayout); PANDA
 						System.out.println(jsonSenders.toString() + "\n"
 								+ jsonSenders.length());
 
@@ -276,7 +274,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 			View parent = (View) view.getParent();
 			TextView declineEmail = (TextView) parent
 					.findViewById(R.id.emailTextViewFRLI);
-			global.setDeclineEmail(declineEmail.getText().toString());
+			//global.setDeclineEmail(declineEmail.getText().toString()); //PANDA
 			new getDeclineFriendTask()
 					.execute("http://98.213.107.172/android_connect/decline_friend_request.php");
 			break;
@@ -284,7 +282,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 			View parent2 = (View) view.getParent();
 			TextView acceptEmail = (TextView) parent2
 					.findViewById(R.id.emailTextViewFRLI);
-			global.setAcceptEmail(acceptEmail.getText().toString());
+			//global.setAcceptEmail(acceptEmail.getText().toString()); //PANDA
 			new getAcceptFriendTask()
 					.execute("http://98.213.107.172/android_connect/accept_friend_request.php");
 			break;
@@ -302,7 +300,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		{
 			Global global = ((Global) getApplicationContext());
 			String receiver = global.getCurrentUser();
-			String sender = global.getDeclineEmail();
+			String sender = "test"; //PANDA
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
@@ -322,8 +320,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 					View friends = (View) findViewById(
 							R.id.friendRequestsLayout).getParent();
 					View home = (View) friends.getParent();
-					global.setNotifications(friends);
-					global.setNotifications(home);
+					//global.setNotifications(friends); PANDA
+					//global.setNotifications(home);
 					System.out.println("success in decline!");
 					startFriendRequestsActivity();
 
@@ -343,50 +341,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 	}
 
-	public String readJSONFeedDecline(String URL)
-	{
-		// Get all the fields and store locally
-		Global global = ((Global) getApplicationContext());
-		String receiver = global.getCurrentUser();
-		String sender = global.getDeclineEmail();
-		System.out.println("Send: " + sender + "\nRec: " + receiver);
-
-		StringBuilder stringBuilder = new StringBuilder();
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(URL);
-		try
-		{
-			// Add your data
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			HttpResponse response = httpClient.execute(httpPost);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200)
-			{
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					stringBuilder.append(line);
-				}
-				inputStream.close();
-			} else
-			{
-				Log.d("JSON", "Failed to download file");
-			}
-		} catch (Exception e)
-		{
-			Log.d("readJSONFeed", e.getLocalizedMessage());
-		}
-		return stringBuilder.toString();
-	}
+	
 
 	/*
 	 * Code for accepting a friend request. On success, we remove the friend
@@ -401,7 +356,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		{
 			Global global = ((Global) getApplicationContext());
 			String receiver = global.getCurrentUser();
-			String sender = global.getAcceptEmail();
+			String sender = "test"; //PANDA
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
@@ -424,8 +379,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 					View friends = (View) findViewById(
 							R.id.friendRequestsLayout).getParent();
 					View home = (View) friends.getParent();
-					global.setNotifications(friends);
-					global.setNotifications(home);
+					//global.setNotifications(friends); PANDA
+					//global.setNotifications(home);
 					startFriendRequestsActivity();
 
 				} else
@@ -468,8 +423,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 			Global global = ((Global) getApplicationContext());
 			View friendRequests = findViewById(R.id.friendRequestsLayout);
 			View friends = ((View) friendRequests.getParent());
-			global.fetchNumFriendRequests(global.getCurrentUser());
-			global.setNotifications(friendRequests);
+			//global.fetchNumFriendRequests(global.getCurrentUser()); PANDA
+			//global.setNotifications(friendRequests);
 			// newIntent.putExtra("email", extras.getString("email"));
 			// newIntent.putExtra("ParentEmail", extras.getString("email"));
 			newIntent.putExtra("ParentClassName", "FriendRequestsActivity");

@@ -159,6 +159,12 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_friend_profile" >
         </activity>
+        <activity
+            android:name=".User" >
+        </activity>
+      	<activity
+            android:name=".Group" >
+        </activity>
     </application>
 
 </manifest>
