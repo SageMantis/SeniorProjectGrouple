@@ -54,7 +54,7 @@ public class User extends Activity
 	private String lName;
 	private String bio;
 	private String location;
-	int age;
+	private int age;
 	private Map <String, String> friends; //friends emails(key) -> friends names(value)
 	private Map<Integer, String> groups; //need to implement the fucking gids correctly friend groupids->groupnames
 	private Map<String, String> friendRequests; //friendRequest emails->names
@@ -239,7 +239,7 @@ public class User extends Activity
 
 					//at each iteration set to hashmap friendEmail -> 'first last'
 					JSONObject o = (JSONObject) jsonArray.get(0);
-					//grabbing o at 0
+
 					//set first name
 					String fName = o.getString("first");
 					Log.d("getUserInfoOnPost", "after sgrabbinging fname to: " + fName);
@@ -249,6 +249,10 @@ public class User extends Activity
 					//set last name
 					String lName = o.getString("last");
 					setLastName(lName);
+					
+					//set bio
+					String bio = o.getString("bio");
+					setBio(bio);
 					
 					//set location
 					String location = o.getString("location");
@@ -277,11 +281,7 @@ public class User extends Activity
 			//do next thing here
 		}
 	}
-	
-	
-	
-	
-	
+
 	/*
 	 * 
 	 * will be fetching the friends key->val stuff here
@@ -345,9 +345,7 @@ public class User extends Activity
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
-	}
-	
-	
+	}	
 	
 	/*
 	 * 

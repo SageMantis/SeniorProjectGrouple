@@ -70,13 +70,11 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras(); 
 		//grabbing the user with the given email in the extras
-		user = global.getUser(extras.getString("email"));
+		user = global.loadUser(extras.getString("email"));
 		
 		//Test set some stuff
 		// Friends Activity
-		if (view.findViewById(R.id.friendRequestsButtonFA) != null
-				&& view.findViewById(R.id.currentFriendsButtonFA) != null)
-		{
+
 			//Button friendRequestsButton = (Button) view
 				//	.findViewById(R.id.friendRequestsButtonFA);
 			//friendRequestsButton.setText("Friend Requests ("
@@ -85,7 +83,7 @@ public class FriendsActivity extends ActionBarActivity
 					.findViewById(R.id.currentFriendsButtonFA);
 			currentFriendsButton
 					.setText("My Friends (" + user.getNumFriends() + ")"); //PANDA
-		}
+		
 		
 		// backstack of intents
 		// each class has a stack of intents lifo method used to execute them at

@@ -40,7 +40,7 @@ public class HomeActivity extends ActionBarActivity
 		//grabbing extras from intent
 		Bundle extras = getIntent().getExtras(); 
 		//grabbing the user with the given email in the extras
-		user = global.getUser(extras.getString("email"));
+		user = global.loadUser(extras.getString("email"));
 
 		//initializing action bar and killswitch listener
 		initActionBar();

@@ -49,35 +49,34 @@ public class Global extends Application
 	 */
 	public void addToUsers(User u)
 	{
+		//if users has not yet been made, initialize it
+		if (users == null)
+		{
+			users = new ArrayList<User>();
+		}
+		
 		users.add(u);
 	}
 	
-	//takes in an email and returns that user if user is in the system
-	public User getUser(String email)
-	{
-		User u = null;
-		//searching through the users to find the 1 that matches given email
-		for (int i = 0; i < users.size(); i++)
-		{
-			if (users.get(i).getEmail().equals(email))
-			{
-				u = users.get(i);
-			}
-		}
-		return u; //returns null if user was not found
-	}
 	
 	//using the email of user, load them up into our array of pertinent users
 	public User loadUser(String email)
 	{	
 		//check that user is not already loaded
-		User user = checkGetUser(email);//null if user not loaded
+		User user = checkGetUser(email);//returns null, if user not loaded//user, if user was loaded
 		if (user == null) 
 		{
 			//user was not previously loaded
+			//need to set a flag to be sure to add this to the users array
 			
 			//instantiate a new user
 			user = new User(email); //changes that null to something fresh
+			
+			//check if current user
+			if (users.size() == 0)
+			{
+				user.setIsCurrentUser(true);
+			}
 			
 			//initialize success
 			int success = 0;
@@ -125,7 +124,11 @@ public class Global extends Application
 			
 			//json call to populate users friendRequestKeys / names
 					
-			//json call to populate users groupInviteKeys / names
+			//json call to populate users groupInviteKeys / names\
+			
+			//put user in users
+			addToUsers(user);
+			
 		}
 		else 
 		{	
@@ -172,7 +175,7 @@ public class Global extends Application
 			case R.id.friendProfileContainer:
 				parentStackFriendProfile.push(intent);
 				break;
-			case R.id.userContainer:
+			case R.id.userProfileContainer:
 				parentStackUser.push(intent);
 				break;
 			case R.id.groupsCurrentContainer:
@@ -234,7 +237,7 @@ public class Global extends Application
 				parentIntent = parentStackFriends.pop();
 			}
 			break;
-		case R.id.userContainer:
+		case R.id.userProfileContainer:
 			if (parentStackUser.size() >= 1)
 			{
 				parentIntent = parentStackUser.pop();

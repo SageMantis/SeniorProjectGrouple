@@ -101,7 +101,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		//grabbing the user with the given email in the extras
-		user = global.getUser(extras.getString("email"));
+		user = global.loadUser(extras.getString("email"));
 		
 		//would probably need to populate those friends things now, or in profile
 		
@@ -134,16 +134,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try
-		{
-			// Sleep is added so the php is executed before the page is loaded.
-			// This NEEDS to be replaced with sequential programming.
-			Thread.sleep(500);
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 
 		// Pass the current users email and execute the get friends php.
 		populateFriendsCurrent();
@@ -202,6 +193,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 	{
 					//JSONArray jsonFriends = jsonObject.getJSONArray("friends");
 		LayoutInflater li = getLayoutInflater();
+		Global global = ((Global) getApplicationContext());
 		/*
 		 * If jsonFriends isn't null, then we have friends and we
 		 * loop through the friends and add them to the current
@@ -220,6 +212,9 @@ public class FriendsCurrentActivity extends ActionBarActivity
 				 String email = (String) pair.getKey();
 				 String fullName = (String) pair.getValue();
 				 friendsEmailList.add(index, email);
+				 String pri = "index: " + index + ": " + email;
+				 Log.d("friendscurrent set friend", pri);
+				 global.loadUser(email);//preloading user
 				 GridLayout rowView;
 
 				 /*
@@ -257,6 +252,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 				 friendNameButton.setId(index);
 				 rowView.setId(index);
 				 friendsCurrentRL.addView(rowView);	
+				 index++;
 			 }
 		}
 		else
@@ -294,8 +290,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		final String friendEmail = friendsEmailList.get(id);
 
 		// refreshing the current friends layout
-		Bundle extras = parentIntent.getExtras();
-		final String email = extras.getString("email");
+		final String email = user.getEmail();
 		// delete confirmation. If the user hits yes then execute the
 		// delete_friend php, else do nothing.
 		new AlertDialog.Builder(this)
