@@ -79,10 +79,12 @@ public class FriendsActivity extends ActionBarActivity
 				//	.findViewById(R.id.friendRequestsButtonFA);
 			//friendRequestsButton.setText("Friend Requests ("
 				//	+ user.getNumFriendRequests() + ")");
-			Button currentFriendsButton = (Button) view
-					.findViewById(R.id.currentFriendsButtonFA);
+			Button currentFriendsButton = (Button) findViewById(R.id.currentFriendsButtonFA);
 			currentFriendsButton
 					.setText("My Friends (" + user.getNumFriends() + ")"); //PANDA
+			Button friendRequestsButton = (Button) findViewById(R.id.friendRequestsButtonFA);
+			friendRequestsButton
+					.setText("Friend Requests (" + user.getNumFriendRequests() + ")"); //PANDA
 		
 		
 		// backstack of intents
@@ -190,6 +192,7 @@ public class FriendsActivity extends ActionBarActivity
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("ParentClassName", "FriendsActivity");
+			intent.putExtra("email", user.getEmail());
 			intent.putExtra("up", "false");
 			startActivity(intent);
 		}
@@ -206,6 +209,7 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendAddActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		intent.putExtra("up", "false");
+		intent.putExtra("email", user.getEmail());
 		global.addToParentStack(friends, parentIntent);
 		startActivity(intent);
 	}
@@ -231,6 +235,7 @@ public class FriendsActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		global.addToParentStack(friends, parentIntent);
 		intent.putExtra("up", "false");
+		intent.putExtra("email", user.getEmail());
 		// intent.putExtra("mod", "true");
 		startActivity(intent);
 	}

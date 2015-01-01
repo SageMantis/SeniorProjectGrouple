@@ -51,6 +51,11 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		// Set the activity layout to activity_current_friends.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_current_friends);
+		
+		/*
+		 * 
+		 * NEED TO HARD UPDATE THE FRIENDS ARRAY WHEN THEY GET NEW ONES / DELETE THEM
+		 */
 
 		// Grabs the current friends container and passes it to load.
 		friendsCurrent = findViewById(R.id.currentFriendsContainer);
@@ -71,7 +76,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 
 		// Grabs your name and sets it in the action bar's title.
-		actionbarTitle.setText(user.getFullName() + "'s Friends"); //PANDA
+		actionbarTitle.setText(user.getFirstName() + "'s Friends"); //PANDA
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		// On click listener for the action bar's back button.
 		upButton.setOnClickListener(new OnClickListener()

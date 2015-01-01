@@ -29,13 +29,26 @@ import android.widget.TextView;
 public class FriendAddActivity extends ActionBarActivity
 {
 	BroadcastReceiver broadcastReceiver;
-
+	User user; //current user
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		// Set the activity layout.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
+
+		Global global = ((Global) getApplicationContext());
+		Intent parentIntent = getIntent();
+		Bundle extras = parentIntent.getExtras();
+		user = global.loadUser(extras.getString("email"));
+		initActionBar();
+		// Initialize the kill switch. The kill switch will kill all open
+		// activities.
+		initKillswitchListener();
+	}
+
+	public void initActionBar()
+	{
 		// Set up the action bar.
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -57,11 +70,7 @@ public class FriendAddActivity extends ActionBarActivity
 		// Set the action bar title.
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 		actionbarTitle.setText("Add Friend");
-		// Initialize the kill switch. The kill switch will kill all open
-		// activities.
-		initKillswitchListener();
 	}
-
 	@Override
 	protected void onDestroy()
 	{
@@ -158,7 +167,7 @@ public class FriendAddActivity extends ActionBarActivity
 			//String sender = global.getCurrentUser(); PANDA same as above user.getEmail()
 			String receiver = emailEditText.getText().toString();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			//nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			nameValuePairs.add(new BasicNameValuePair("sender", user.getEmail()));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 
 			return global.readJSONFeed(urls[0], nameValuePairs);

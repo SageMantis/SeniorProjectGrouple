@@ -33,6 +33,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -56,8 +57,8 @@ public class User extends Activity
 	private String location;
 	private int age;
 	private Map <String, String> friends; //friends emails(key) -> friends names(value)
-	private Map<Integer, String> groups; //need to implement the fucking gids correctly friend groupids->groupnames
-	private Map<String, String> friendRequests; //friendRequest emails->names
+	private SparseArray<String> groups; //need to implement the fucking gids correctly friend groupids->groupnames
+	private ArrayList<String> friendRequests; //friendRequest emails->names
 	private Map<Integer, String> groupInvites; //group invite ids->names
 	private boolean isCurrentUser;
 	
@@ -114,6 +115,23 @@ public class User extends Activity
 		friends.put(email, name);
 		Log.d("Name for " + email, friends.get(email));
 	}
+	public void addToFriendRequests(String email)
+	{
+		if (friendRequests == null)
+		{
+			friendRequests = new ArrayList<String>();
+		}
+		friendRequests.add(email);
+	}
+	public void addToGroups(String id, String name)
+	{
+		if (groups == null)
+		{
+			groups = new SparseArray<String>();
+		}
+		int idNum = Integer.parseInt(id);
+		groups.put(idNum, name);
+	}
 	
 	/*
 	 * Getters for user class below
@@ -153,23 +171,39 @@ public class User extends Activity
 	}
 	public int getNumFriends()
 	{
-		return friends.size(); 
+		if (friends != null)
+			return friends.size(); 
+		else
+			return 0;
 	}
 	public int getNumGroups()
 	{
-		return groups.size();
+		if (groups != null)
+			return groups.size();
+		else
+			return 0;
 	}
 	public int getNumFriendRequests()
 	{
-		return friendRequests.size();
+		if (friendRequests != null)
+			return friendRequests.size();
+		else
+			return 0;
 	}
 	public int getNumGroupInvites()
 	{
-		return groupInvites.size();
+		if (groupInvites != null)
+			return groupInvites.size();
+		else
+			return 0;
 	}
 	public Map<String, String> getFriends()
 	{
 		return friends;
+	}
+	public ArrayList<String> getFriendRequests()
+	{
+		return friendRequests;
 	}
 	
 
@@ -307,11 +341,6 @@ public class User extends Activity
 			
 		}
 		
-
-
-		
-
-
 		@Override
 		protected void onPostExecute(String result)
 		{
@@ -348,17 +377,17 @@ public class User extends Activity
 	}	
 	
 	/*
-	 * 
-	 * 
 	 * Should be getting the friendRequest key->vals here
 	 */
-
-	// Get numFriends, TODO: work on returning the integer
-	public int fetchFriendRequests()
+	public int fetchFriendRequests() throws InterruptedException, ExecutionException, TimeoutException
 	{
-		new getFriendRequestsTask()
-				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?email="
-						+ getEmail());
+		AsyncTask<String, Void, String> task = new getFriendRequestsTask()
+		.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
+				+ getEmail());
+
+		task.get(4000, TimeUnit.MILLISECONDS);
+
+		
 		return 1;
 	}
 
@@ -367,8 +396,7 @@ public class User extends Activity
 		@Override
 		protected String doInBackground(String... urls)
 		{
-			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
+			return readJSONFeed(urls[0], null);
 		}
 
 		@Override
@@ -379,18 +407,22 @@ public class User extends Activity
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					String numFriends = jsonObject.getString("numFriends")
-							.toString();
-					System.out.println("Should be setting the num friends to "
-							+ numFriends);
-					//setNumFriends(Integer.parseInt(numFriends)); //PANDA need to set the user class not global
-					//change this to populate the friends key->val list
-
+					//gotta make a json array
+					JSONArray jsonArray = jsonObject.getJSONArray("friendRequests");
+					
+					//looping thru array
+					for (int i = 0; i < jsonArray.length(); i++)
+					{
+						//at each iteration set to hashmap friendEmail -> 'first last'
+						JSONObject o = (JSONObject) jsonArray.get(i);
+						//function adds friend to the friends map
+						addToFriendRequests(o.getString("email"));
+					}
 				}
-				// user has no friends
+				// user has no friend requests
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
-					//setNumFriends(0); //PANDA need to set the user class not global
+					//no friend requests
 				}
 			} catch (Exception e)
 			{
@@ -402,16 +434,16 @@ public class User extends Activity
 	
 	
 	/*
-	 * 
-	 * 
 	 * should be getting the groups key->vals here
-	 * 
 	 */
-	public int fetchGroups()
+	public int fetchGroups() throws InterruptedException, ExecutionException, TimeoutException
 	{
-		new getGroupsTask()
-				.execute("http://98.213.107.172/android_connect/get_groups.php?email="
-						+ getEmail());
+		AsyncTask<String, Void, String> task = new getGroupsTask()
+		.execute("http://98.213.107.172/android_connect/get_groups.php?email="
+				+ getEmail());
+		task.get(4000, TimeUnit.MILLISECONDS);
+
+		
 		return 1;
 	}
 
@@ -430,14 +462,22 @@ public class User extends Activity
 
 			try
 			{
+
+				//need to get gid, gname for each and put them in hashmap
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					String numFriends = jsonObject.getString("numFriends")
-							.toString();
-
-					//setNumFriends(Integer.parseInt(numFriends)); //PANDA need to set the user class not global
-					//change this to populate the friends key->val list
+					//gotta make a json array
+					JSONArray jsonArray = jsonObject.getJSONArray("groups");
+					
+					//looping thru array
+					for (int i = 0; i < jsonArray.length(); i++)
+					{
+						//at each iteration set to hashmap friendEmail -> 'first last'
+						JSONObject o = (JSONObject) jsonArray.get(i);
+						//function adds friend to the friends map
+						addToGroups(o.getString("id"), o.getString("name"));
+					}
 
 				}
 				// user has no friends
