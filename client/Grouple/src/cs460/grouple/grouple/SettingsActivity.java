@@ -79,7 +79,6 @@ public class SettingsActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");

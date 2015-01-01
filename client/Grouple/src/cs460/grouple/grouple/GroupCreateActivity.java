@@ -132,7 +132,6 @@ public class GroupCreateActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -633,7 +632,7 @@ public class GroupCreateActivity extends ActionBarActivity
 	{
 		// Get all the fields and store locally
 		Global global = ((Global) getApplicationContext());
-		String sender = global.getCurrentUser();
+		//String sender = global.getCurrentUser(); getEmail() PANDA
 
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpClient httpClient = new DefaultHttpClient();
@@ -641,10 +640,10 @@ public class GroupCreateActivity extends ActionBarActivity
 		try
 		{
 			// Add your data
-			System.out.println("Receiver Email: " + friendEmail
-					+ "Sender Email: " + sender);
+			//System.out.println("Receiver Email: " + friendEmail
+					//+ "Sender Email: " + sender); PANDA
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+		//	nameValuePairs.add(new BasicNameValuePair("sender", sender)); PANDA
 			nameValuePairs.add(new BasicNameValuePair("receiver", friendEmail));
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 

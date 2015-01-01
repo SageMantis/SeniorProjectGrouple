@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -25,13 +26,14 @@ public class FriendsActivity extends ActionBarActivity
 	Intent parentIntent;
 	Intent upIntent;
 	View friends; 
+	User user; //the current user
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends);
-
+		
 		friends = findViewById(R.id.friendsContainer);
 		load(friends);
 
@@ -64,8 +66,27 @@ public class FriendsActivity extends ActionBarActivity
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
-		View friends = findViewById(R.id.friendsContainer);
-
+		//grabbing extras from intent
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras(); 
+		//grabbing the user with the given email in the extras
+		user = global.getUser(extras.getString("email"));
+		
+		//Test set some stuff
+		// Friends Activity
+		if (view.findViewById(R.id.friendRequestsButtonFA) != null
+				&& view.findViewById(R.id.currentFriendsButtonFA) != null)
+		{
+			//Button friendRequestsButton = (Button) view
+				//	.findViewById(R.id.friendRequestsButtonFA);
+			//friendRequestsButton.setText("Friend Requests ("
+				//	+ user.getNumFriendRequests() + ")");
+			Button currentFriendsButton = (Button) view
+					.findViewById(R.id.currentFriendsButtonFA);
+			currentFriendsButton
+					.setText("My Friends (" + user.getNumFriends() + ")"); //PANDA
+		}
+		
 		// backstack of intents
 		// each class has a stack of intents lifo method used to execute them at
 		// start of activity
@@ -73,8 +94,6 @@ public class FriendsActivity extends ActionBarActivity
 		// current page (email, ...)
 		// if check that friends
 		String email;
-		Intent intent = getIntent();
-		Bundle extras = intent.getExtras();
 		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
@@ -163,7 +182,6 @@ public class FriendsActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -199,9 +217,8 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		Global global = ((Global) getApplicationContext());
-		intent.putExtra("email", global.getCurrentUser());
-	//	intent.putExtra("Name", global.getName()); //PANDA
-		intent.putExtra("ParentEmail", global.getCurrentUser());
+		intent.putExtra("email", user.getEmail());
+		intent.putExtra("ParentEmail", user.getEmail());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
 		global.addToParentStack(friends, parentIntent);
@@ -212,7 +229,7 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
-		intent.putExtra("email", global.getCurrentUser());
+		//intent.putExtra("email", global.getCurrentUser()); PANDA getEmail()
 		intent.putExtra("ParentClassName", "FriendsActivity");
 		global.addToParentStack(friends, parentIntent);
 		intent.putExtra("up", "false");

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,11 +31,9 @@ import android.widget.Button;
  */
 public class Global extends Application
 {
-	private String currentUser;
-	private String currentName;
 	private String acceptEmail;
 	private String declineEmail;
-	private String name;
+
 	private LinkedList<Intent> parentStackFriendsCurrent = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackFriendProfile = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupsCurrent = new LinkedList<Intent>();
@@ -43,45 +43,15 @@ public class Global extends Application
 	private LinkedList<Intent> parentStackGroups = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupInvites = new LinkedList<Intent>();
 	private ArrayList<User> users; //contains all the users that have been loaded into the current run of the program
-	private int numFriendRequests;
-	private int numFriends;
-	private int numGroupInvites;
-	private int numGroups;
 
-	// TODO: Add getParentFriendsActivity
-
-	public String getCurrentUser()
-	{
-		return currentUser;
-	}
-
-	public void setCurrentUser(String email)
-	{
-		currentUser = email;
-	}
-
-	public void setNumFriendRequests(int num)
-	{
-		numFriendRequests = num;
-		// System.out.println("Friend requests: " + num);
-		// Setting that userNotification
-	}
-
-	public void setNumGroupInvites(int num)
-	{
-		numGroupInvites = num;
-	}
-
-	public void setNumGroups(int num)
-	{
-		numGroups = num;
-	}
+	/*
+	 * Adds a user to the users arraylist
+	 */
 	public void addToUsers(User u)
 	{
-		//Only add user if they are not in the array
-		//probably check for this in the loadUser
 		users.add(u);
 	}
+	
 	//takes in an email and returns that user if user is in the system
 	public User getUser(String email)
 	{
@@ -96,30 +66,58 @@ public class Global extends Application
 		}
 		return u; //returns null if user was not found
 	}
+	
 	//using the email of user, load them up into our array of pertinent users
 	public User loadUser(String email)
 	{	
 		//check that user is not already loaded
 		User user = checkGetUser(email);//null if user not loaded
-		if (user == null)
+		if (user == null) 
 		{
 			//user was not previously loaded
 			
 			//instantiate a new user
 			user = new User(email); //changes that null to something fresh
-			//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
-			//this is next
 			
-			int success;
-			//there is currently no wait for this to complete and it returns a user before these get set
-			success = user.fetchUserInfo();
+			//initialize success
+			int success = 0;
+			try
+			{
+				//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
+				success = user.fetchUserInfo();
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				e.printStackTrace();
+			} catch (TimeoutException e)
+			{
+				e.printStackTrace();
+			}
 			
+			//was successful in fetching user info
 			if (success == 1)
 				Log.d("loadUser", "after fetchUserInfo()");
+
+			//reset success
+			success = 0;
+			try
+			{
+				//json call to populate users friendKeys / friendNames
+				success = user.fetchFriends();
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				e.printStackTrace();
+			} catch (TimeoutException e)
+			{
+				e.printStackTrace();
+			}
 			
-			//json call to populate users friendKeys / friendNames
-			//this is implemented so do it and test
-			success = user.fetchFriends();
+			//was successful in fetching friends
 			if (success == 1)
 				Log.d("loadUser","after fetchFriends()");
 			
@@ -129,8 +127,8 @@ public class Global extends Application
 					
 			//json call to populate users groupInviteKeys / names
 		}
-		else
-		{
+		else 
+		{	
 			//user is already loaded
 			//it is already set to what it needs
 		}
@@ -160,76 +158,7 @@ public class Global extends Application
 		//return null if user was not found
 		return user;
 	}
-	/*
-	 * Old code for most things we are going to update
-
-	public int getNumFriendRequests()
-	{
-		return numFriendRequests;
-	}
-
-	public int getNumGroupInvites()
-	{
-		return numGroupInvites;
-	}
-
-	public int getNumFriends()
-	{
-		return numFriends;
-	}
-
-	public int getNumGroups()
-	{
-		return numGroups;
-	}
-
-	public String getCurrentName()
-	{
-		return currentName;
-	}
-
-	public void setCurrentName(String name)
-	{
-		currentName = name;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
 	
-		public void setDeclineEmail(String email)
-	{
-		declineEmail = email;
-	}
-
-	public String getDeclineEmail()
-	{
-		return declineEmail;
-	}
-
-	public void setAcceptEmail(String email)
-	{
-		acceptEmail = email;
-	}
-
-	public String getAcceptEmail()
-	{
-		return acceptEmail;
-	}
-
-	public void setNumFriends(int numFriends)
-	{
-		this.numFriends = numFriends;
-	}
-
-	*/
-
 	/*
 	 * Adding an intent to the stack of parents for a specific activity (differentiated using its view)
 	 */
@@ -331,20 +260,8 @@ public class Global extends Application
 		return parentIntent;
 
 	}
-
-	//think: may need to move this to the user class
-		/*
-		 * would look like
-		 * 	user u = global.getUser("email");
-		 * 	u.setNotifications();
-		 */
-	//or could take in email and grab the user through global and do this
-		/*
-		 * 	would look like
-		 * 		global.setNotifications("view", "email");
-		 */
-	//gotta be consistent thorughout so,... same on loading each friendprofile... either grab user or go to global first
-	//I like grabbing it first, makes it like the user is really there
+	
+	//may be outdated, can either update notifications here or in each activity itself
 	public int setNotifications(View view, User user)
 	{
 		// todo: If I can pass an email in here and skip setting current user
@@ -448,9 +365,9 @@ public class Global extends Application
 
 	
 
-
-
-
+	//probably not going to use this as much, 
+	//maybe none if groups / users both have their own and everything goes through those
+	//wouldn't let me use global from them, could change that too i suppose, maybe
 	public String readJSONFeed(String URL, List<NameValuePair> nameValuePairs)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
@@ -488,10 +405,8 @@ public class Global extends Application
 			}
 
 		}
-
 		else
 		{
-
 			HttpPost httpPost = new HttpPost(URL);
 			try
 			{
@@ -512,16 +427,17 @@ public class Global extends Application
 						stringBuilder.append(line);
 					}
 					inputStream.close();
-				} else
+				} 
+				else
 				{
 					Log.d("JSON", "Failed to download file");
 				}
-			} catch (Exception e)
+			} 
+			catch (Exception e)
 			{
 				Log.d("readJSONFeed", e.getLocalizedMessage());
 			}
 		}
 		return stringBuilder.toString();
-	}
-
-}
+	}//end readJSONFeed
+}//end Global class

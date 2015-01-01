@@ -1,7 +1,9 @@
 package cs460.grouple.grouple;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -39,6 +41,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 	Intent upIntent;
 	BroadcastReceiver broadcastReceiver;
 	View friendsCurrent;
+	User user; //owner of the list of friends
 	// An array list that holds your friends by email address.
 	private ArrayList<String> friendsEmailList = new ArrayList<String>();
 
@@ -67,16 +70,8 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
 
-		try
-		{
-			Thread.sleep(300);
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		// Grabs your name and sets it in the action bar's title.
-		//actionbarTitle.setText(global.getName() + "'s Friends"); //PANDA
+		actionbarTitle.setText(user.getFullName() + "'s Friends"); //PANDA
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		// On click listener for the action bar's back button.
 		upButton.setOnClickListener(new OnClickListener()
@@ -105,6 +100,11 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
+		//grabbing the user with the given email in the extras
+		user = global.getUser(extras.getString("email"));
+		
+		//would probably need to populate those friends things now, or in profile
+		
 		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
@@ -146,10 +146,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		}
 
 		// Pass the current users email and execute the get friends php.
-		new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
-						+ email);
-
+		populateFriendsCurrent();
 		// Start the action bar and kill switch.
 		initActionBar();
 		initKillswitchListener();
@@ -183,7 +180,6 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -202,130 +198,77 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	/* Code for getting the user's current friends */
-	private class getFriendsTask extends AsyncTask<String, Void, String>
+	public void populateFriendsCurrent()
 	{
-		@Override
-		protected String doInBackground(String... urls)
+					//JSONArray jsonFriends = jsonObject.getJSONArray("friends");
+		LayoutInflater li = getLayoutInflater();
+		/*
+		 * If jsonFriends isn't null, then we have friends and we
+		 * loop through the friends and add them to the current
+		 * friends container.
+		 */
+		Map<String, String> friends = user.getFriends();
+		if (!friends.isEmpty())
 		{
-			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
-		}
+			LinearLayout friendsCurrentRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
+			Bundle extras = parentIntent.getExtras();
+			// looping thru json and adding to an array
+			 Iterator it = friends.entrySet().iterator();
+			 int index = 0;
+			 while (it.hasNext()) {
+				 Map.Entry pair = (Map.Entry)it.next();
+				 String email = (String) pair.getKey();
+				 String fullName = (String) pair.getValue();
+				 friendsEmailList.add(index, email);
+				 GridLayout rowView;
 
-		@Override
-		protected void onPostExecute(String result)
-		{
-			LayoutInflater li = getLayoutInflater();
-			try
-			{
-				/*
-				 * jsonObject contains the result of get_friends.php. If the
-				 * result is successful, then we add our friends to the current
-				 * friends container (if the user has any). If the result is
-				 * fail, then something went wrong is executing the php. An
-				 * example is passing an incorrect email address to the php.
+				 /*
+				 * If you are the mod, add the friend button and the
+				 * remove button. If you aren't the mod, then add
+				 * the friend of a friend button without the remove
+				 * button. In this instance, mod means whether or
+				 * not these or your friends. You don't want the
+				 * option to delete a friend's friend.
 				 */
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					// ArrayList<String> friends = new ArrayList<String>();
-					JSONArray jsonFriends = jsonObject.getJSONArray("friends");
+				 if (extras.getString("mod").equals("true"))
+				 {
+					 rowView = (GridLayout) li.inflate(
+							 R.layout.listitem_friend, null);
+					 Button removeFriendButton = (Button) rowView
+							.findViewById(R.id.removeFriendButton);
+					 removeFriendButton.setId(index);
+				 } 
+				 else
+				 {
+					rowView = (GridLayout) li.inflate(
+							R.layout.listitem_friends_friend, null);
+				 }
+				 // Add the information to the friendnamebutton and
+				 // add it to the next row.
+				 Button friendNameButton = (Button) rowView
+						 .findViewById(R.id.friendNameButton);
 
-					/*
-					 * If jsonFriends isn't null, then we have friends and we
-					 * loop through the friends and add them to the current
-					 * friends container.
-					 */
-					if (jsonFriends != null)
-					{
-						LinearLayout friendsCurrentRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
-						Bundle extras = parentIntent.getExtras();
-						// looping thru json and adding to an array
-						for (int i = 0; i < jsonFriends.length(); i++)
-						{
-							/*
-							 * Get the friend's first name, last name, and email
-							 * address Although we don't display the email
-							 * address, we store it in an array that way we have
-							 * it so we can use the email address to get the
-							 * friends profile. The email address is a UID,
-							 * unlike the names.
-							 */
-							String firstraw = jsonFriends.getJSONObject(i)
-									.getString("first");
-							String lastraw = jsonFriends.getJSONObject(i)
-									.getString("last");
-							String friendEmail = jsonFriends.getJSONObject(i)
-									.getString("email");
-							friendsEmailList.add(i, friendEmail);
-
-							// Concatenate the friend's first and last name and
-							// force the names to be capitalize.
-							String fullName = firstraw.substring(0, 1)
-									.toUpperCase() + firstraw.substring(1);
-							fullName = fullName + " ";
-							fullName = fullName
-									+ lastraw.substring(0, 1).toUpperCase()
-									+ lastraw.substring(1);
-
-							GridLayout rowView;
-
-							/*
-							 * If you are the mod, add the friend button and the
-							 * remove button. If you aren't the mod, then add
-							 * the friend of a friend button without the remove
-							 * button. In this instance, mod means whether or
-							 * not these or your friends. You don't want the
-							 * option to delete a friend's friend.
-							 */
-							if (extras.getString("mod").equals("true"))
-							{
-								rowView = (GridLayout) li.inflate(
-										R.layout.listitem_friend, null);
-								Button removeFriendButton = (Button) rowView
-										.findViewById(R.id.removeFriendButton);
-								removeFriendButton.setId(i);
-							} else
-							{
-								rowView = (GridLayout) li.inflate(
-										R.layout.listitem_friends_friend, null);
-
-							}
-							// Add the information to the friendnamebutton and
-							// add it to the next row.
-							Button friendNameButton = (Button) rowView
-									.findViewById(R.id.friendNameButton);
-
-							friendNameButton.setText(fullName);
-							/*
-							 * Setting the ID to i makes it so we can use i to
-							 * figure out the friend's email. Important for
-							 * finding a friend's profile.
-							 */
-							friendNameButton.setId(i);
-							rowView.setId(i);
-							friendsCurrentRL.addView(rowView);
-						}
-					}
-				}
-				// user has no friends
-				if (jsonObject.getString("success").toString().equals("2"))
-				{
-					// Double check 2 is the no friends code
-					// inflate the new no friends layout
-					LinearLayout friendsCurrentRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
-
-					// The user has no friend's so display the sad guy image.
-					View row = li.inflate(R.layout.listitem_sadguy, null);
-					((TextView) row.findViewById(R.id.sadGuyTextView))
-							.setText("You do not have any friends.");
-					friendsCurrentRL.addView(row);
-
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
-			}
+				 friendNameButton.setText(fullName);
+				 /*
+				 * Setting the ID to i makes it so we can use i to
+				 * figure out the friend's email. Important for
+				 * finding a friend's profile.
+				 */
+				 friendNameButton.setId(index);
+				 rowView.setId(index);
+				 friendsCurrentRL.addView(rowView);	
+			 }
+		}
+		else
+		{		
+			// user has no friends
+			LinearLayout friendsCurrentRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
+	
+			// The user has no friend's so display the sad guy image.
+			View row = li.inflate(R.layout.listitem_sadguy, null);
+			((TextView) row.findViewById(R.id.sadGuyTextView))
+				.setText("You do not have any friends.");
+			friendsCurrentRL.addView(row);
 		}
 	}
 
@@ -372,9 +315,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 						LinearLayout friendsCurrentLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 						friendsCurrentLayout.removeAllViews();
 						// calling getFriends to repopulate view
-						new getFriendsTask()
-								.execute("http://98.213.107.172/android_connect/get_friends_firstlast.php?email="
-										+ email);
+						populateFriendsCurrent();
 					}
 				}).setNegativeButton("Cancel", null).show();
 	}
@@ -425,7 +366,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 	}
 
 	// When you click on a friend, this loads up the friend's profile.
-	public void startFriendProfileActivity(View view)
+	public void startUserProfileActivity(View view)
 			throws InterruptedException
 	{
 		// need to get access to this friends email
@@ -435,7 +376,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		// to the activity
 		Bundle extras = parentIntent.getExtras();
 		String friendEmail = friendsEmailList.get(id);
-		Intent intent = new Intent(this, FriendProfileActivity.class);
+		Intent intent = new Intent(this, UserProfileActivity.class);
 		intent.putExtra("ParentClassName", "FriendsCurrentActivity");
 		Global global = ((Global) getApplicationContext());
 		global.addToParentStack(friendsCurrent, parentIntent);
@@ -443,11 +384,9 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		//global.fetchNumGroups(friendEmail);
 		// Another sleep that way the php has time to execute. We need to start
 		// the activity when the PHP returns..
-		Thread.sleep(500);
 		intent.putExtra("email", friendEmail);
 		intent.putExtra("up", "false");
 		startActivity(intent);
-
 	}
 
 	public void initKillswitchListener()

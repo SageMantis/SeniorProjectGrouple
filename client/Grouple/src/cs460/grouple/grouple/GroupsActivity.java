@@ -138,7 +138,6 @@ public class GroupsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		if (id == R.id.action_logout)
 		{
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -174,7 +173,7 @@ public class GroupsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, GroupCreateActivity.class);
 		intent.putExtra("ParentClassName", "GroupsActivity");
-		intent.putExtra("email", global.getCurrentUser());
+		//intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
 		global.addToParentStack(groups, parentIntent);
@@ -185,7 +184,7 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		Global global = (Global) getApplicationContext();
 		Intent intent = new Intent(this, GroupInvitesActivity.class);
-		intent.putExtra("email", global.getCurrentUser());
+		//intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "GroupsActivity");
 		// intent.putExtra("mod", "true");
@@ -198,7 +197,7 @@ public class GroupsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("ParentClassName", "GroupsActivity");
-		intent.putExtra("email", global.getCurrentUser());// specifies which
+		//intent.putExtra("email", global.getCurrentUser());// specifies which
 															// email for the
 															// list of groups
 		intent.putExtra("mod", "true");// gives user ability admin in the
