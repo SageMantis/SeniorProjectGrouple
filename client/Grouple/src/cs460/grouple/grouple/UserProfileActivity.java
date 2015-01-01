@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,10 +49,11 @@ public class UserProfileActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user);
-
-		view = findViewById(R.id.userContainer);
+		setContentView(R.layout.activity_user_profile);
+		
+		view = findViewById(R.id.userProfileContainer);
 		load(view);
+		//Can we do our user load in the profile to save loading time from earlier or will the sync be off?
 	}
 
 	public void initActionBar()
@@ -74,7 +76,7 @@ public class UserProfileActivity extends ActionBarActivity
 				finish();
 			}
 		});
-		//actionbarTitle.setText(global.getCurrentName() + "'s Profile"); //PANDA
+		actionbarTitle.setText(user.getFullName() + "'s Profile"); //PANDA
 	}
 
 	public void load(View view)
@@ -91,8 +93,9 @@ public class UserProfileActivity extends ActionBarActivity
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		//grabbing the user with the given email in the extras
-		user = global.getUser(extras.getString("email"));
-		
+		user = global.loadUser(extras.getString("email"));
+		//if (global.check)
+		//user.isCurrentUser() = false;
 		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
@@ -113,22 +116,27 @@ public class UserProfileActivity extends ActionBarActivity
 					+ className));
 		} catch (ClassNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		/* Notifications */
 		//global.fetchNumFriends(global.getCurrentUser());
 		//global.fetchNumGroups(global.getCurrentUser());
-
-		View user = findViewById(R.id.userContainer);
+		// User Profile Buttons
+		Log.d("userprofileload", "friendsbuttonupa below");
+		((Button) view.findViewById(R.id.friendsButtonUPA)).setText("Friends\n(" + user.getNumFriends() + ")");
+		//((Button) view.findViewById(R.id.groupsButtonUPA))
+			//	.setText("Groups\n(" + numGroups + ")");
+		// set numfriends, numgroups, and numevents
+		
+		
+		//View user = findViewById(R.id.userContainer);
 
 		//global.setNotifications(user); PANDA
 
 		// execute php script, using the current users email address to populate
 		// the textviews
-		new getProfileTask()
-				.execute("http://98.213.107.172/android_connect/get_profile.php");
+		initProfile();
 
 		// initializing the action bar and killswitch listener
 		initActionBar();
@@ -213,79 +221,44 @@ public class UserProfileActivity extends ActionBarActivity
 	 * Get profile executes get_profile.php. It uses the current users email
 	 * address to retrieve the users name, age, and bio.
 	 */
-	private class getProfileTask extends AsyncTask<String, Void, String>
+	public void initProfile()
 	{
+		//grab all of the values from the user
+		String bio = user.getBio();
+		//String age = jsonProfileArray.getString(2);
+		String location = user.getLocation();
+		String img = null;//jsonProfileArray.getString(5);
 
-		@Override
-		protected String doInBackground(String... urls)
+		// decode image back to android bitmap format
+		/*byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+		if (decodedString != null)
 		{
-
-			Global global = ((Global) getApplicationContext());
-			//String email = global.getCurrentUser(); PANDA
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			//nameValuePairs.add(new BasicNameValuePair("email", email)); PANDA
-			return global.readJSONFeed(urls[0], nameValuePairs);
+			bmp = BitmapFactory.decodeByteArray(decodedString, 0,
+					decodedString.length);
 		}
-
-		@Override
-		protected void onPostExecute(String result)
+		// set the image
+		if (bmp != null)
 		{
-			try
+			if (iv == null)
 			{
-				JSONObject jsonObject = new JSONObject(result);
-				System.out.println(jsonObject.getString("success"));
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					// Success
-					JSONArray jsonProfileArray = jsonObject
-							.getJSONArray("profile");
+				iv = (ImageView) findViewById(R.id.profilePhoto);
 
-					// String name = jsonProfileArray.getString(0) + " "
-					// + jsonProfileArray.getString(1);
-					String age = jsonProfileArray.getString(2);
-					String bio = jsonProfileArray.getString(3);
-					String location = jsonProfileArray.getString(4);
-					String img = jsonProfileArray.getString(5);
-
-					// decode image back to android bitmap format
-					byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
-					if (decodedString != null)
-					{
-						bmp = BitmapFactory.decodeByteArray(decodedString, 0,
-								decodedString.length);
-					}
-					// set the image
-					if (bmp != null)
-					{
-						if (iv == null)
-						{
-							iv = (ImageView) findViewById(R.id.profilePhoto);
-
-						}
-						iv.setImageBitmap(bmp);
-						img = null;
-						decodedString = null;
-					}
-
-					// TextView nameTextView = (TextView)
-					// findViewById(R.id.nameEditTextEPA);
-					TextView ageTextView = (TextView) findViewById(R.id.ageTextView);
-					TextView locationTextView = (TextView) findViewById(R.id.locationTextView);
-					TextView bioTextView = (TextView) findViewById(R.id.bioTextView);
-					// JSONObject bioJson = jsonProfileArray.getJSONObject(0);
-					// nameTextView.setText(name);
-					ageTextView.setText(age + " years old");
-					bioTextView.setText(bio);
-					locationTextView.setText(location);
-				} else
-				{
-					// Fail
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
+			iv.setImageBitmap(bmp);
+			img = null;
+			decodedString = null;
 		}
+*/
+		// TextView nameTextView = (TextView)
+		// findViewById(R.id.nameEditTextEPA);
+		TextView ageTextView = (TextView) findViewById(R.id.ageTextView);
+		TextView locationTextView = (TextView) findViewById(R.id.locationTextView);
+		TextView bioTextView = (TextView) findViewById(R.id.bioTextView);
+		// JSONObject bioJson = jsonProfileArray.getJSONObject(0);
+		// nameTextView.setText(name);
+	//	ageTextView.setText(age + " years old");
+		bioTextView.setText(bio);
+		locationTextView.setText(location);	
 	}
 
 	public void startGroupsCurrentActivity(View view)
@@ -303,7 +276,7 @@ public class UserProfileActivity extends ActionBarActivity
 		iv = null;
 	}
 
-	public void startCurrentFriendsActivity(View view)
+	public void startFriendsCurrentActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
@@ -312,7 +285,7 @@ public class UserProfileActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "UserActivity");
 		//intent.putExtra("ParentEmail", email);
 		//intent.putExtra("Name", global.getName()); //PANDA
-		//intent.putExtra("email", email);
+		intent.putExtra("email", user.getEmail());
 		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
 		startActivity(intent);
