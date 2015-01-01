@@ -27,24 +27,22 @@ public class HomeActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		//need to sync these !! TODD
-		try
-		{
-			Thread.sleep(2000);
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Log.d("HomeActivity", "1");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		Global global = ((Global) getApplicationContext());
-		// Updating notifications
-		//View home = findViewById(R.id.homeLayout);
+		
+		/* Updating notifications
+		 * Not sure how I want to do this yet so they will not exist yet.
+		 * View home = findViewById(R.id.homeLayout);
+		 */
+		
+		//grabbing extras from intent
 		Bundle extras = getIntent().getExtras(); 
+		//grabbing the user with the given email in the extras
 		user = global.getUser(extras.getString("email"));
-		System.out.println("User isCurrentUser: " + user.isCurrentUser());
+
+		//initializing action bar and killswitch listener
 		initActionBar();
 		initKillswitchListener();
 	}
@@ -80,7 +78,6 @@ public class HomeActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
 		return true;
@@ -96,7 +93,6 @@ public class HomeActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -155,48 +151,47 @@ public class HomeActivity extends ActionBarActivity
 
 	public void navigate(View view)
 	{
+		//originally setting intent to null
 		Intent intent = null;
 
 		switch (view.getId())
 		{
 		case R.id.friendsButtonHA:
 			intent = new Intent(this, FriendsActivity.class);
-
-			startActivity(intent);
 			break;
 		case R.id.settingsButtonHA:
 			intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
 			break;
 		case R.id.eventsButtonHA:
 			intent = new Intent(this, EventsActivity.class);
-			startActivity(intent);
 			break;
 		case R.id.messagesButtonHA:
 			intent = new Intent(this, MessagesActivity.class);
-			startActivity(intent);
 			break;
 		case R.id.groupsButtonHA:
 			intent = new Intent(this, GroupsActivity.class);
-			startActivity(intent);
 			break;
 		case R.id.userButtonHA:
-			intent = new Intent(this, UserActivity.class);
-
+			intent = new Intent(this, UserProfileActivity.class);
 			break;
-		default:
-
+		default: //default just break out
 			break;
 		}
+		
+		//checking that intent was assigned
 		if (intent != null)
 		{
 			intent.putExtra("ParentClassName", "HomeActivity");
 			intent.putExtra("up", "false");
+			intent.putExtra("email", user.getEmail());
 			startActivity(intent);
 		}
-
+		//else do nothing
 	}
 
+	/*
+	 * Initializing the killswitch listener for shutting down
+	 */
 	public void initKillswitchListener()
 	{
 		// START KILL SWITCH LISTENER

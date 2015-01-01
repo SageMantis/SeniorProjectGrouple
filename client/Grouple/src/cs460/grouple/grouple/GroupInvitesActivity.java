@@ -115,7 +115,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 		}
 
 		// Get the current users email address
-		receiver = global.getCurrentUser();
+		//receiver = global.getCurrentUser(); user.getEmail() PANDA
 		// Execute the php to get the the number of group invites.
 		new getGroupInvitesTask()
 				.execute("http://98.213.107.172/android_connect/get_groups_requests.php?email="
@@ -151,7 +151,6 @@ public class GroupInvitesActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -223,7 +222,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 					if (jsonGroupInvites != null)
 					{
 						View groupInvites = findViewById(R.id.groupInvitesContainer);
-						global.setNumGroupInvites(jsonGroupInvites.length());
+						//global.setNumGroupInvites(jsonGroupInvites.length()); PANDA NOT HERE
 					//	global.setNotifications(groupInvites); PANDA
 						System.out.println(jsonGroupInvites.toString() + "\n"
 								+ jsonGroupInvites.length());
@@ -256,8 +255,8 @@ public class GroupInvitesActivity extends ActionBarActivity
 					} else
 					// no friend requests
 					{
-						global.setNumGroupInvites(0);
-
+						//global.setNumGroupInvites(0);
+						//PANDA
 						GridLayout row = (GridLayout) li.inflate(
 								R.id.sadGuyGridLayout, null);
 						// Setting text of each friend request to the email
@@ -270,7 +269,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 				} else
 				{
 					System.out.println("No groups found");
-					global.setNumGroupInvites(0);
+					//global.setNumGroupInvites(0); PANDA
 
 					GridLayout row = (GridLayout) li.inflate(
 							R.layout.listitem_sadguy, null);
@@ -320,7 +319,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			String receiver = global.getCurrentUser();
+			//String receiver = global.getCurrentUser(); getEmail() PANDA
 			//String groupName = global.getDeclineEmail(); PANDA
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("mem", receiver));
@@ -365,7 +364,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			String receiver = global.getCurrentUser();
+			//String receiver = global.getCurrentUser(); PANDA
 			//String groupName = global.getAcceptEmail(); PANDA
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);

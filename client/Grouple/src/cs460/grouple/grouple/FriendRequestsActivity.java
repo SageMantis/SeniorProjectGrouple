@@ -96,11 +96,12 @@ public class FriendRequestsActivity extends ActionBarActivity
 		upIntent = new Intent(this, FriendsActivity.class);
 		upIntent.putExtra("up", "true");
 
-		String receiver = global.getCurrentUser();
+		//String receiver = global.getCurrentUser(); PANDA getEmail()
 		// Php call that gets the users friend requests.
-		new getFriendRequestsTask()
-				.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
-						+ receiver);
+		//new getFriendRequestsTask()
+				//.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
+					//	+ receiver);
+		//need to sync that and change receiver PANDA
 
 		View friendRequests = findViewById(R.id.friendRequestsLayout);
 		View friends = ((View) friendRequests.getParent());
@@ -148,7 +149,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -195,7 +195,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 					if (jsonSenders != null)
 					{
-						global.setNumFriendRequests(jsonSenders.length());
+						//global.setNumFriendRequests(jsonSenders.length());
+						//no PANDA
 					//	global.setNotifications(friendRequestsLayout); PANDA
 						System.out.println(jsonSenders.toString() + "\n"
 								+ jsonSenders.length());
@@ -239,7 +240,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 						// ((ImageView) sadGuy
 						// .findViewById(R.id.sadGuyImageView))
 						// .setText("You have no new friend requests.");
-						global.setNumFriendRequests(0);
+						//global.setNumFriendRequests(0); PANDA
 					}
 				} else
 				{
@@ -299,11 +300,12 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			String receiver = global.getCurrentUser();
+			//String receiver = global.getCurrentUser(); PANDA
+			//should get Email
 			String sender = "test"; //PANDA
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
+			//nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
@@ -355,12 +357,12 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			String receiver = global.getCurrentUser();
+			//String receiver = global.getCurrentUser(); PANDA getEmail();
 			String sender = "test"; //PANDA
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
+		//	nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 

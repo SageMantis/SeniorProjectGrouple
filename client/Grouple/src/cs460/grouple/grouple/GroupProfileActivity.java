@@ -194,7 +194,6 @@ public class GroupProfileActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			bmp = null;

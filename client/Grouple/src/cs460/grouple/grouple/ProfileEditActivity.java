@@ -138,9 +138,9 @@ public class ProfileEditActivity extends ActionBarActivity implements
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			String email = global.getCurrentUser();
+			//String email = global.getCurrentUser(); getEmail() PANDA
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("email", email));
+			//nameValuePairs.add(new BasicNameValuePair("email", email)); PANDA
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
@@ -244,7 +244,6 @@ public class ProfileEditActivity extends ActionBarActivity implements
 		if (id == R.id.action_logout)
 		{
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -277,7 +276,7 @@ public class ProfileEditActivity extends ActionBarActivity implements
 		{
 			new setProfileTask()
 					.execute("http://98.213.107.172/android_connect/update_profile.php");
-			Intent intent = new Intent(this, UserActivity.class);
+			Intent intent = new Intent(this, UserProfileActivity.class);
 			intent.putExtra("up", "true");
 			startActivity(intent);
 		}
@@ -309,7 +308,7 @@ public class ProfileEditActivity extends ActionBarActivity implements
 			try
 			{
 				Global global = ((Global) getApplicationContext());
-				String email = global.getCurrentUser();
+		//		String email = global.getCurrentUser(); PANDA
 				TextView nameTextView = (TextView) findViewById(R.id.nameEditTextEPA);
 				TextView ageTextView = (TextView) findViewById(R.id.ageEditTextEPA);
 				TextView bioTextView = (TextView) findViewById(R.id.bioEditTextEPA);
@@ -354,7 +353,7 @@ public class ProfileEditActivity extends ActionBarActivity implements
 				builder.addTextBody("bio", bio, ContentType.TEXT_PLAIN);
 				builder.addTextBody("location", location,
 						ContentType.TEXT_PLAIN);
-				builder.addTextBody("email", email, ContentType.TEXT_PLAIN);
+				//builder.addTextBody("email", email, ContentType.TEXT_PLAIN); PANDA
 
 				httpPost.setEntity(builder.build());
 

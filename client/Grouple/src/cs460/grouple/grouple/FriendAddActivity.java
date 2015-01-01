@@ -91,7 +91,6 @@ public class FriendAddActivity extends ActionBarActivity
 			// If the user hits the logout button, then clear global and go to
 			// the logout screen.
 			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			Intent intent = new Intent("CLOSE_ALL");
@@ -138,10 +137,12 @@ public class FriendAddActivity extends ActionBarActivity
 		EditText emailEditTextAFA = (EditText) findViewById(R.id.emailEditTextAFA);
 		String email = emailEditTextAFA.getText().toString();
 		Global global = ((Global) getApplicationContext());
-		String senderEmail = global.getCurrentUser();
-		System.out.println("Email:" + email + "\nSender Email:" + senderEmail);
+		//String senderEmail = global.getCurrentUser(); PANDA
+		//will need to be 	 = user.getEmail();
+		//System.out.println("Email:" + email + "\nSender Email:" + senderEmail);
 
 		// Execute the add friend php
+		//need to sync this PANDA
 		new getAddFriendTask()
 				.execute("http://98.213.107.172/android_connect/add_friend.php");
 	}
@@ -154,10 +155,10 @@ public class FriendAddActivity extends ActionBarActivity
 		{
 			EditText emailEditText = (EditText) findViewById(R.id.emailEditTextAFA);
 			Global global = ((Global) getApplicationContext());
-			String sender = global.getCurrentUser();
+			//String sender = global.getCurrentUser(); PANDA same as above user.getEmail()
 			String receiver = emailEditText.getText().toString();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			//nameValuePairs.add(new BasicNameValuePair("sender", sender));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 
 			return global.readJSONFeed(urls[0], nameValuePairs);

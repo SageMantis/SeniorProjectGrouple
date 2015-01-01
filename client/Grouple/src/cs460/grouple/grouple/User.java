@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -164,6 +167,10 @@ public class User extends Activity
 	{
 		return groupInvites.size();
 	}
+	public Map<String, String> getFriends()
+	{
+		return friends;
+	}
 	
 
 	/*
@@ -186,14 +193,20 @@ public class User extends Activity
 	 * 
 	 * 
 	 * fetches the user name, bio, and everything
+	 * @throws TimeoutException 
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 * 
 	 * 
 	 */
-	public int fetchUserInfo()
+	public int fetchUserInfo() throws InterruptedException, ExecutionException, TimeoutException
 	{
-		new getUserInfoTask()
-				.execute("http://98.213.107.172/android_connect/get_user_info.php?email="
-						+ getEmail());
+		
+        AsyncTask<String, Void, String> task = new getUserInfoTask()
+		.execute("http://98.213.107.172/android_connect/get_user_info.php?email="
+				+ getEmail());
+        
+       task.get(4000, TimeUnit.MILLISECONDS);
 	
 		
 		return 1;
@@ -235,7 +248,7 @@ public class User extends Activity
 					
 					//set last name
 					String lName = o.getString("last");
-					setFirstName(lName);
+					setLastName(lName);
 					
 					//set location
 					String location = o.getString("location");
@@ -275,11 +288,13 @@ public class User extends Activity
 	 * 
 	 */
 	// Get numFriends, TODO: work on returning the integer
-	public int fetchFriends()
+	public int fetchFriends() throws InterruptedException, ExecutionException, TimeoutException
 	{
-		new getFriendsTask()
+		AsyncTask<String, Void, String> task = new getFriendsTask()
 				.execute("http://98.213.107.172/android_connect/get_friends.php?email="
 						+ getEmail());
+		
+		task.get(4000, TimeUnit.MILLISECONDS);
 		return 1;
 	}
 

@@ -2,7 +2,6 @@ package cs460.grouple.grouple;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -30,38 +29,48 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /*
- * UserActivity displays the profile page of the logged-in user.
- * NEED TO CHANGE THIS TO USERPROFILEACTIVITY AND JUST REMOVE FRIENDPROFILE
- * CHECK .isCurrentUser() and then enable / disable EDIT PROFILE
+ * FriendProfileActivity displays the profile page of a user's friend.
  */
-public class UserActivity extends ActionBarActivity
+public class FriendProfileActivity_BAK extends ActionBarActivity
 {
-	private ImageView iv;
-	private Bitmap bmp;
+	// Set up the fields.
 	BroadcastReceiver broadcastReceiver;
+	private Bitmap bmp;
+	private ImageView iv;
 	Intent parentIntent;
 	Intent upIntent;
-	View user;
+	String profileName;
+	View friendProfile;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user);
+		setContentView(R.layout.activity_friend_profile);
 
-		user = findViewById(R.id.userContainer);
-		load(user);
+		// actionbarTitle.setText(global.getName()+"'s Profile");
+		// This where we add our friends email. not ours.
+		// Bundle extras = getIntent().getExtras();
+		// String email = extras.getString("email");
+
+		// grabbing current container to load
+		friendProfile = findViewById(R.id.friendProfileContainer);
+		load(friendProfile);
+
 	}
 
 	public void initActionBar()
 	{
 		Global global = ((Global) getApplicationContext());
-		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		ab.setCustomView(R.layout.actionbar);
+
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		//actionbarTitle.setText(global.getName() + "'s Profile"); //PANDA gotta do this differently
+
+		// handling up navigation
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener()
 		{
@@ -73,12 +82,11 @@ public class UserActivity extends ActionBarActivity
 				finish();
 			}
 		});
-		//actionbarTitle.setText(global.getCurrentName() + "'s Profile"); //PANDA
 	}
 
+	/* loading in necessary components of the friend profile */
 	public void load(View view)
 	{
-
 		Global global = ((Global) getApplicationContext());
 
 		// backstack of intents
@@ -88,20 +96,31 @@ public class UserActivity extends ActionBarActivity
 		// current page (email, ...)
 		// if check that friends
 		Intent intent = getIntent();
-		Bundle extras = intent.getExtras();
+		Bundle extras = getIntent().getExtras();
 		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
+
 			// pull a new intent from the stack
 			// load in everything from that intent
 			parentIntent = global.getNextParentIntent(view);
+
 		} else
 		{
 			// add to stack
+
 			parentIntent = intent;
+			// use info from this intent
 		}
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
+		String email = parentExtras.getString("email");
+	//	System.out.println("In FPA GlobalUser: " + global.getCurrentUser()
+				//+ "intentEmail:" + email);
+		//global.fetchName(email);
+		//global.fetchNumFriends(email); PANDA
+		//global.fetchNumGroups(email);
+		//global.setNotifications(view);
 
 		try
 		{
@@ -113,21 +132,16 @@ public class UserActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 
-		/* Notifications */
-		//global.fetchNumFriends(global.getCurrentUser());
-		//global.fetchNumGroups(global.getCurrentUser());
-
-		View user = findViewById(R.id.userContainer);
-
-		//global.setNotifications(user); PANDA
+		//global.setNotifications(view); PANDA
 
 		// execute php script, using the current users email address to populate
 		// the textviews
 		new getProfileTask()
 				.execute("http://98.213.107.172/android_connect/get_profile.php");
 
-		// initializing the action bar and killswitch listener
+		// load in actionbar
 		initActionBar();
+		// starting killswitch listener
 		initKillswitchListener();
 	}
 
@@ -143,13 +157,8 @@ public class UserActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
+		// getMenuInflater().inflate(R.menu.friend_profile, menu);
 		getMenuInflater().inflate(R.menu.navigation_actions, menu);
-
-		// Set up the image view
-		if (iv == null)
-		{
-			iv = (ImageView) findViewById(R.id.profilePhoto);
-		}
 		return true;
 	}
 
@@ -159,11 +168,10 @@ public class UserActivity extends ActionBarActivity
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		Global global = ((Global) getApplicationContext());
 		int id = item.getItemId();
 		if (id == R.id.action_logout)
 		{
-			Global global = ((Global) getApplicationContext());
-			global.setCurrentUser("");
 			Intent login = new Intent(this, LoginActivity.class);
 			startActivity(login);
 			bmp = null;
@@ -175,9 +183,11 @@ public class UserActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
-			intent.putExtra("ParentClassName", "UserActivity");
 			intent.putExtra("up", "false");
+			intent.putExtra("ParentClassName", "FriendProfileActivity");
+			global.addToParentStack(friendProfile, parentIntent);
 			startActivity(intent);
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -187,11 +197,24 @@ public class UserActivity extends ActionBarActivity
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
-			upIntent.putExtra("up", "false");
+			upIntent.putExtra("up", "true");
 			startActivity(upIntent);
 			finish();
 		}
 		return false;
+	}
+
+	/* Start activity functions for going back to home and logging out */
+	public void startHomeActivity(View view)
+	{
+		Global global = ((Global) getApplicationContext());
+		Intent intent = new Intent(this, HomeActivity.class);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("up", "false");
+		global.addToParentStack(friendProfile, parentIntent);
+		startActivity(intent);
+		bmp = null;
+		iv = null;
 	}
 
 	public void startEditProfileActivity(View view)
@@ -199,8 +222,8 @@ public class UserActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, ProfileEditActivity.class);
 		intent.putExtra("up", "false");
-		intent.putExtra("ParentClassName", "UserActivity");
-		global.addToParentStack(user, parentIntent);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		global.addToParentStack(friendProfile, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -216,14 +239,20 @@ public class UserActivity extends ActionBarActivity
 		@Override
 		protected String doInBackground(String... urls)
 		{
-
 			Global global = ((Global) getApplicationContext());
-			String email = global.getCurrentUser();
+			Bundle extras = getIntent().getExtras();
+			String email = extras.getString("email");
+
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 			nameValuePairs.add(new BasicNameValuePair("email", email));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
+		/*
+		 * On success, we get the friend's profile and set it to the text views
+		 * in the profile. On fail, the profile is not loaded. It can be a
+		 * connection error or incorrect email address for the php.
+		 */
 		@Override
 		protected void onPostExecute(String result)
 		{
@@ -236,9 +265,15 @@ public class UserActivity extends ActionBarActivity
 					// Success
 					JSONArray jsonProfileArray = jsonObject
 							.getJSONArray("profile");
+					// Get the profile information
+					String first = jsonProfileArray.getString(0);
+					String last = jsonProfileArray.getString(1);
+					first = first.substring(0, 1).toUpperCase()
+							+ first.substring(1);
+					last = last.substring(0, 1).toUpperCase()
+							+ last.substring(1);
 
-					// String name = jsonProfileArray.getString(0) + " "
-					// + jsonProfileArray.getString(1);
+					profileName = first + " " + last;
 					String age = jsonProfileArray.getString(2);
 					String bio = jsonProfileArray.getString(3);
 					String location = jsonProfileArray.getString(4);
@@ -246,8 +281,10 @@ public class UserActivity extends ActionBarActivity
 
 					// decode image back to android bitmap format
 					byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+					Log.d("ReadatherJSONFeedTask", "1");
 					if (decodedString != null)
 					{
+						Log.d("ReadatherJSONFeedTask", "2");
 						bmp = BitmapFactory.decodeByteArray(decodedString, 0,
 								decodedString.length);
 					}
@@ -256,74 +293,101 @@ public class UserActivity extends ActionBarActivity
 					{
 						if (iv == null)
 						{
-							iv = (ImageView) findViewById(R.id.profilePhoto);
-
+							Log.d("ReadatherJSONFeedTask", "3");
+							iv = (ImageView) findViewById(R.id.profilePhotoFPA);
 						}
-						iv.setImageBitmap(bmp);
+						Log.d("ReadatherJSONFeedTask", "4");
 						img = null;
 						decodedString = null;
 					}
 
-					// TextView nameTextView = (TextView)
-					// findViewById(R.id.nameEditTextEPA);
-					TextView ageTextView = (TextView) findViewById(R.id.ageTextView);
-					TextView locationTextView = (TextView) findViewById(R.id.locationTextView);
-					TextView bioTextView = (TextView) findViewById(R.id.bioTextView);
-					// JSONObject bioJson = jsonProfileArray.getJSONObject(0);
-					// nameTextView.setText(name);
-					ageTextView.setText(age + " years old");
-					bioTextView.setText(bio);
-					locationTextView.setText(location);
+					TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+					actionbarTitle.setText(profileName + "'s Profile");
+					TextView ageTextView = (TextView) findViewById(R.id.ageTextViewFPA);
+					TextView locationTextView = (TextView) findViewById(R.id.locationTextViewFPA);
+					TextView bioTextView = (TextView) findViewById(R.id.bioTextViewFPA);
+
+					// We only want to add the profile details if the user
+					// filled them out.
+					// if it's not null, then add the profile info to the the
+					// corresponding text views.
+					if (!age.equalsIgnoreCase("null"))
+					{
+						ageTextView.setText(age + " years old");
+					} else
+					{
+						ageTextView.setText("");
+					}
+					if (!bio.equalsIgnoreCase("null"))
+					{
+						bioTextView.setText(bio);
+					}
+					if (!(location.equalsIgnoreCase("") || location
+							.equalsIgnoreCase("null")))
+					{
+						locationTextView.setText(location);
+					} else
+					{
+						locationTextView.setText("");
+					}
+					iv.setImageBitmap(bmp);
+
 				} else
 				{
 					// Fail
 				}
 			} catch (Exception e)
 			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				Log.d("ReadatherJSONFeedTask", "poop2");
 			}
 		}
 	}
 
+	// Method that handles starting the current groups from the user's profile.
 	public void startGroupsCurrentActivity(View view)
 	{
-		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
-		intent.putExtra("ParentClassName", "UserActivity");
-		intent.putExtra("email", global.getCurrentUser());
-		intent.putExtra("mod", "true");
+		Bundle extras = parentIntent.getExtras();
+		Intent intent = new Intent(this, GroupsCurrentActivity.class);
+		intent.putExtra("email", extras.getString("email"));
 		intent.putExtra("up", "false");
-		global.addToParentStack(user, parentIntent);
-		intent.putExtra("ParentEmail", global.getCurrentUser());
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("ParentEmail", extras.getString("email"));
+		intent.putExtra("mod", "false");
+		global.addToParentStack(friendProfile, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
 	}
 
+	// Method that handles starting the current friends from the user's profile.
 	public void startCurrentFriendsActivity(View view)
 	{
-		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
-		String email = global.getCurrentUser();
-		global.addToParentStack(user, parentIntent);
-		intent.putExtra("ParentClassName", "UserActivity");
-		intent.putExtra("ParentEmail", email);
-		//intent.putExtra("Name", global.getName()); //PANDA
+		Intent intent = new Intent(this, FriendsCurrentActivity.class);
+		Bundle extras = parentIntent.getExtras();
+		String email = extras.getString("email");
+		intent.putExtra("Name", profileName);
 		intent.putExtra("email", email);
-		intent.putExtra("mod", "true");
 		intent.putExtra("up", "false");
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("mod", "false");
 		startActivity(intent);
+		global.addToParentStack(friendProfile, parentIntent);
 		bmp = null;
 		iv = null;
 	}
 
+	// Method that handles starting the current events from the user's profile.
 	public void startEventsActivity(View view)
 	{
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, EventsActivity.class);
-		intent.putExtra("ParentClassName", "UserActivity");
-		global.addToParentStack(user, parentIntent);
 		intent.putExtra("up", "false");
+		intent.putExtra("Name", profileName);
+		intent.putExtra("ParentClassName", "FriendProfileActivity");
+		intent.putExtra("mod", "false");
+		global.addToParentStack(friendProfile, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -346,7 +410,6 @@ public class UserActivity extends ActionBarActivity
 					// System.exit(1);
 					finish();
 				}
-
 			}
 		};
 		registerReceiver(broadcastReceiver, intentFilter);
