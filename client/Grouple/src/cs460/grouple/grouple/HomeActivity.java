@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /*
@@ -41,6 +42,26 @@ public class HomeActivity extends ActionBarActivity
 		Bundle extras = getIntent().getExtras(); 
 		//grabbing the user with the given email in the extras
 		user = global.loadUser(extras.getString("email"));
+		
+		// Home Activity
+		int numFriendRequests = user.getNumFriendRequests();
+		if (numFriendRequests > 0)
+		{
+			if (numFriendRequests == 1)
+			{
+				((Button) findViewById(R.id.friendsButtonHA)).setText("Friends \n(" + numFriendRequests
+								+ " request)");
+			} 
+			else
+			{
+				((Button) findViewById(R.id.friendsButtonHA)).setText("Friends \n(" + numFriendRequests
+								+ " requests)");
+			}
+		} 
+		else if (numFriendRequests == 0)
+		{
+			((Button) findViewById(R.id.friendsButtonHA)).setText("Friends");
+		}
 
 		//initializing action bar and killswitch listener
 		initActionBar();

@@ -45,10 +45,15 @@ public class FriendRequestsActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 	Intent upIntent;
 	Intent parentIntent;
+	User user; //current user
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		/*
+		 * 
+		 * NEED TO HARD UPDATE THE FRIENDREQUESTS ARRAY WHEN REMOVING THEM ACC/DEC
+		 */
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_requests);
 
@@ -68,7 +73,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 		ab.setCustomView(R.layout.actionbar);
 		ab.setDisplayHomeAsUpEnabled(false);
 		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		actionbarTitle.setText("Friend Requests");
+		actionbarTitle.setText(user.getFirstName() + "'s Friend Requests");
 		ImageButton upButton = (ImageButton) findViewById(R.id.actionbarUpButton);
 		upButton.setOnClickListener(new OnClickListener()
 		{
@@ -95,29 +100,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 		parentIntent = getIntent();
 		upIntent = new Intent(this, FriendsActivity.class);
 		upIntent.putExtra("up", "true");
-
+		Bundle extras = parentIntent.getExtras();
+		
+		user = global.loadUser(extras.getString("email"));
+		System.out.println("USER EMAIL in FRIEND REQUESTS AFTER load: " + user.getEmail());
 		//String receiver = global.getCurrentUser(); PANDA getEmail()
 		// Php call that gets the users friend requests.
-		//new getFriendRequestsTask()
-				//.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
-					//	+ receiver);
-		//need to sync that and change receiver PANDA
-
-		View friendRequests = findViewById(R.id.friendRequestsLayout);
-		View friends = ((View) friendRequests.getParent());
-		View home = ((View) friends.getParent());
-		/*if (global.setNotifications(friendRequests) == 1)
-			{
-			;
-			}
-		if(global.setNotifications(friends) == 1)
-			{
-			;
-			}
-		if (global.setNotifications(home) ==1)
-			{
-			;
-			} PANDA */
+		if (user != null)
+			populateFriendRequests();
 
 		initActionBar();
 		initKillswitchListener();
@@ -168,97 +158,32 @@ public class FriendRequestsActivity extends ActionBarActivity
 	 * requests. On success we display the user's current friends request, if
 	 * there are any.
 	 */
-	private class getFriendRequestsTask extends AsyncTask<String, Void, String>
+	public void populateFriendRequests()
 	{
-		@Override
-		protected String doInBackground(String... urls)
+		LinearLayout friendRequestsLayout = (LinearLayout)findViewById(R.id.friendRequestsLayout);
+		LayoutInflater li = getLayoutInflater();
+		if (user.getNumFriendRequests() > 0)
 		{
+			ArrayList<String> friendRequests = user.getFriendRequests();	
 			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
-		}
 
-		@Override
-		protected void onPostExecute(String result)
-		{
-			LayoutInflater li = getLayoutInflater();
-			LinearLayout friendRequestsLayout = (LinearLayout) findViewById(R.id.friendRequestsLayout);
-			try
+			// looping thru array and inflating listitems to the
+			// friend requests list
+			for (int i = 0; i < friendRequests.size(); i++)
 			{
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					System.out.println("We are in the success");
-					ArrayList<String> senders = new ArrayList<String>();
-					JSONArray jsonSenders = jsonObject.getJSONArray("senders")
-							.getJSONArray(0);
-					Global global = ((Global) getApplicationContext());
-
-					if (jsonSenders != null)
-					{
-						//global.setNumFriendRequests(jsonSenders.length());
-						//no PANDA
-					//	global.setNotifications(friendRequestsLayout); PANDA
-						System.out.println(jsonSenders.toString() + "\n"
-								+ jsonSenders.length());
-
-						// looping thru json and adding to an array
-						for (int i = 0; i < jsonSenders.length(); i++)
-						{
-							// This is a hackish way of getting the friend
-							// request from the json object.
-							// This was before we had a good understanding of
-							// JSON
-							// TODO: clean this up.
-							String raw = jsonSenders.get(i).toString()
-									.replace("\"", "").replace("]", "")
-									.replace("[", "");
-							String row = raw.substring(0, 1).toUpperCase()
-									+ raw.substring(1);
-							senders.add(row);
-							System.out.println("Row: " + row + "\nCount: " + i);
-						}
-
-						// looping thru array and inflating listitems to the
-						// friend requests list
-						for (int i = 0; i < senders.size(); i++)
-						{
-							GridLayout row = (GridLayout) li.inflate(
-									R.layout.listitem_friend_request, null);
-							// Setting text of each friend request to the email
-							// of the sender
-							((TextView) row
-									.findViewById(R.id.emailTextViewFRLI))
-									.setText(senders.get(i));
-							friendRequestsLayout.addView(row);
-						}
-					} else
-					// no friend requests
-					{
-
-						// Setting text of each friend request to the email
-						// of the sender
-						// ((ImageView) sadGuy
-						// .findViewById(R.id.sadGuyImageView))
-						// .setText("You have no new friend requests.");
-						//global.setNumFriendRequests(0); PANDA
-					}
-				} else
-				{
-					System.out.println("No friends found");
-					GridLayout sadGuy = (GridLayout) li.inflate(
-							R.layout.listitem_sadguy, null);
-					sadGuy.findViewById(R.id.sadGuyTextView);
-					friendRequestsLayout.addView(sadGuy);
-					// If no friend requests are found, display no friends
-					// message
-					// TextView noFriends = (TextView)
-					// findViewById(R.id.noFriendRequestsTextViewFRA);
-					// noFriends.setVisibility(0);
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				GridLayout row = (GridLayout) li.inflate(R.layout.listitem_friend_request, null);
+				// Setting text of each friend request to the email
+				// of the sender
+				((TextView) row.findViewById(R.id.emailTextViewFRLI)).setText(friendRequests.get(i));
+				friendRequestsLayout.addView(row);
 			}
+		}
+		else
+		{
+			//no friend requests were found
+			GridLayout sadGuy = (GridLayout) li.inflate(R.layout.listitem_sadguy, null);
+			sadGuy.findViewById(R.id.sadGuyTextView);
+			friendRequestsLayout.addView(sadGuy);
 		}
 	}
 
@@ -269,23 +194,23 @@ public class FriendRequestsActivity extends ActionBarActivity
 	public void onClick(View view)
 	{
 		Global global = ((Global) getApplicationContext());
+		View parent = (View) view.getParent();
 		switch (view.getId())
 		{
 		case R.id.declineFriendRequestButtonFRLI:
-			View parent = (View) view.getParent();
-			TextView declineEmail = (TextView) parent
+
+			TextView declineEmailTextView = (TextView) parent
 					.findViewById(R.id.emailTextViewFRLI);
-			//global.setDeclineEmail(declineEmail.getText().toString()); //PANDA
+			String declineEmail = declineEmailTextView.getText().toString(); //PANDA
 			new getDeclineFriendTask()
-					.execute("http://98.213.107.172/android_connect/decline_friend_request.php");
+					.execute("http://98.213.107.172/android_connect/decline_friend_request.php", declineEmail);
 			break;
 		case R.id.acceptFriendRequestButtonFRLI:
-			View parent2 = (View) view.getParent();
-			TextView acceptEmail = (TextView) parent2
+			TextView acceptEmailTextView = (TextView) parent
 					.findViewById(R.id.emailTextViewFRLI);
-			//global.setAcceptEmail(acceptEmail.getText().toString()); //PANDA
+			String acceptEmail = acceptEmailTextView.getText().toString();
 			new getAcceptFriendTask()
-					.execute("http://98.213.107.172/android_connect/accept_friend_request.php");
+					.execute("http://98.213.107.172/android_connect/accept_friend_request.php", acceptEmail);
 			break;
 		}
 	}
@@ -300,12 +225,11 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			//String receiver = global.getCurrentUser(); PANDA
-			//should get Email
-			String sender = "test"; //PANDA
+			String sender = urls[1]; 
+			String receiver = user.getEmail();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-			//nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
+			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
@@ -319,11 +243,7 @@ public class FriendRequestsActivity extends ActionBarActivity
 				System.out.println(jsonObject.getString("success"));
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					View friends = (View) findViewById(
-							R.id.friendRequestsLayout).getParent();
-					View home = (View) friends.getParent();
-					//global.setNotifications(friends); PANDA
-					//global.setNotifications(home);
+					//do something probably
 					System.out.println("success in decline!");
 					startFriendRequestsActivity();
 
@@ -357,12 +277,13 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			//String receiver = global.getCurrentUser(); PANDA getEmail();
-			String sender = "test"; //PANDA
+
+			String sender = urls[1];
+			String receiver = user.getEmail();
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("sender", sender));
-		//	nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
+			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
 
@@ -444,12 +365,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 	public void startFriendRequestsActivity()
 	{
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
+		intent.putExtra("email", user.getEmail());
 		startActivity(intent);
 	}
 
 	public void startFriendsActivity(View view)
 	{
 		Intent intent = new Intent(this, FriendsActivity.class);
+		intent.putExtra("email", user.getEmail());
 		startActivity(intent);
 	}
 

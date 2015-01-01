@@ -133,8 +133,6 @@ public class LoginActivity extends Activity
 					User user = global.loadUser(email);
 					System.out.println("user name in login is currently " + user.getFullName());
 					//can't do below here
-					//user.setIsCurrentUser(true);//hopefully it is pass-by-reference PANDA
-					//global.addToUsers(user);
 					
 					Log.d("LoginActivity", "after adding to users in global");
 					// Sets this users name.

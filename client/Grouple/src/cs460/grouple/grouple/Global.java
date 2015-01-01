@@ -35,10 +35,9 @@ public class Global extends Application
 	private String declineEmail;
 
 	private LinkedList<Intent> parentStackFriendsCurrent = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackFriendProfile = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupsCurrent = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupProfile = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackUser = new LinkedList<Intent>();
+	private LinkedList<Intent> parentStackUserProfile = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackFriends = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroups = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupInvites = new LinkedList<Intent>();
@@ -97,7 +96,7 @@ public class Global extends Application
 			
 			//was successful in fetching user info
 			if (success == 1)
-				Log.d("loadUser", "after fetchUserInfo()");
+				Log.d("loadUser", "success after fetchUserInfo()");
 
 			//reset success
 			success = 0;
@@ -118,12 +117,57 @@ public class Global extends Application
 			
 			//was successful in fetching friends
 			if (success == 1)
-				Log.d("loadUser","after fetchFriends()");
+				Log.d("loadUser","success after fetchFriends()");
 			
+			
+			/*
+			//reset success
+			success = 0;
 			//json call to populate users groupKeys / groupNames
+			try
+			{
+				success = user.fetchGroups();
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TimeoutException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//was successful in fetching groups
+			if (success == 1)
+				Log.d("loadUser","success after fetchGroups()");
+			*/
 			
 			//json call to populate users friendRequestKeys / names
-					
+			//reset success
+			success = 0;
+			try
+			{
+				success = user.fetchFriendRequests();
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TimeoutException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//was successful in fetching groups
+			if (success == 1)
+				Log.d("loadUser","success after fetchFriendRequests()");
+			
 			//json call to populate users groupInviteKeys / names\
 			
 			//put user in users
@@ -172,11 +216,8 @@ public class Global extends Application
 			case R.id.currentFriendsContainer:
 				parentStackFriendsCurrent.push(intent);
 				break;
-			case R.id.friendProfileContainer:
-				parentStackFriendProfile.push(intent);
-				break;
 			case R.id.userProfileContainer:
-				parentStackUser.push(intent);
+				parentStackUserProfile.push(intent);
 				break;
 			case R.id.groupsCurrentContainer:
 				parentStackGroupsCurrent.push(intent);
@@ -211,12 +252,6 @@ public class Global extends Application
 				startActivity(parentIntent);
 			}
 			break;
-		case R.id.friendProfileContainer:
-			if (parentStackFriendProfile.size() >= 1)
-			{
-				parentIntent = parentStackFriendProfile.pop();
-			}
-			break;
 		case R.id.groupsCurrentContainer:
 			if (parentStackGroupsCurrent.size() >= 1)
 			{
@@ -238,9 +273,9 @@ public class Global extends Application
 			}
 			break;
 		case R.id.userProfileContainer:
-			if (parentStackUser.size() >= 1)
+			if (parentStackUserProfile.size() >= 1)
 			{
-				parentIntent = parentStackUser.pop();
+				parentIntent = parentStackUserProfile.pop();
 			}
 			break;
 		case R.id.groupsContainer:
@@ -338,17 +373,6 @@ public class Global extends Application
 			// set numfriends, numgroups, and numevents
 		}
 
-		// Friend Profile Buttons
-		if ((view.findViewById(R.id.friendsButtonFPA) != null)
-				&& (view.findViewById(R.id.groupsButtonFPA) != null)
-				&& (view.findViewById(R.id.eventsButtonFPA) != null))
-		{
-			// set numfriends, numgroups, and numevents
-			((Button) view.findViewById(R.id.friendsButtonFPA))
-					.setText("Friends\n(" + numFriends + ")");
-			((Button) view.findViewById(R.id.groupsButtonFPA))
-					.setText("Groups\n(" + numGroups + ")");
-		}
 
 		// Groups activity
 		if (view.findViewById(R.id.pendingGroupsButton) != null)
