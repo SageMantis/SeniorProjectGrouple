@@ -3,6 +3,7 @@ package cs460.grouple.grouple;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,9 +58,9 @@ public class User extends Activity
 	private String location;
 	private int age;
 	private Map <String, String> friends; //friends emails(key) -> friends names(value)
-	private SparseArray<String> groups; //need to implement the fucking gids correctly friend groupids->groupnames
+	private ArrayList<Integer> groups; 
 	private ArrayList<String> friendRequests; //friendRequest emails->names
-	private Map<Integer, String> groupInvites; //group invite ids->names
+	private ArrayList<Integer> groupInvites; //group invite ids
 	private boolean isCurrentUser;
 	
 	/*
@@ -127,12 +128,22 @@ public class User extends Activity
 	{
 		if (groups == null)
 		{
-			groups = new SparseArray<String>();
+			groups = new ArrayList<Integer>();
 		}
 		int idNum = Integer.parseInt(id);
-		groups.put(idNum, name);
+		groups.add(idNum);
 	}
-	
+	public void addToGroupInvites(String id, String name, String sender)
+	{
+		if (groupInvites == null)
+		{
+			groupInvites = new ArrayList<Integer>();
+		}
+		int idNum = Integer.parseInt(id);
+		//create a new group and throw it in global
+		//Global global = ((Global) getApplicationContext());
+		//groupInvites.put((idNum, name), sender);
+	}
 	/*
 	 * Getters for user class below
 	 */
@@ -205,6 +216,10 @@ public class User extends Activity
 	{
 		return friendRequests;
 	}
+	public ArrayList<Integer> getGroups()
+	{
+		return groups;
+	}
 	
 
 	/*
@@ -218,10 +233,7 @@ public class User extends Activity
 	}
 	
 	
-	
-	
-	
-	
+
 	
 	/**
 	 * 
@@ -236,11 +248,11 @@ public class User extends Activity
 	public int fetchUserInfo() throws InterruptedException, ExecutionException, TimeoutException
 	{
 		
-        AsyncTask<String, Void, String> task = new getUserInfoTask()
-		.execute("http://98.213.107.172/android_connect/get_user_info.php?email="
+       AsyncTask<String, Void, String> task = new getUserInfoTask()
+		.execute("http://68.59.162.183/android_connect/get_user_info.php?email="
 				+ getEmail());
         
-       task.get(4000, TimeUnit.MILLISECONDS);
+       task.get(10000, TimeUnit.MILLISECONDS);
 	
 		
 		return 1;
@@ -325,10 +337,10 @@ public class User extends Activity
 	public int fetchFriends() throws InterruptedException, ExecutionException, TimeoutException
 	{
 		AsyncTask<String, Void, String> task = new getFriendsTask()
-				.execute("http://98.213.107.172/android_connect/get_friends.php?email="
+				.execute("http://68.59.162.183/android_connect/get_friends.php?email="
 						+ getEmail());
 		
-		task.get(4000, TimeUnit.MILLISECONDS);
+		task.get(10000, TimeUnit.MILLISECONDS);
 		return 1;
 	}
 
@@ -382,10 +394,10 @@ public class User extends Activity
 	public int fetchFriendRequests() throws InterruptedException, ExecutionException, TimeoutException
 	{
 		AsyncTask<String, Void, String> task = new getFriendRequestsTask()
-		.execute("http://98.213.107.172/android_connect/get_friend_requests.php?receiver="
+		.execute("http://68.59.162.183/android_connect/get_friend_requests.php?receiver="
 				+ getEmail());
 
-		task.get(4000, TimeUnit.MILLISECONDS);
+		task.get(10000, TimeUnit.MILLISECONDS);
 
 		
 		return 1;
@@ -439,9 +451,9 @@ public class User extends Activity
 	public int fetchGroups() throws InterruptedException, ExecutionException, TimeoutException
 	{
 		AsyncTask<String, Void, String> task = new getGroupsTask()
-		.execute("http://98.213.107.172/android_connect/get_groups.php?email="
+		.execute("http://68.59.162.183/android_connect/get_groups.php?email="
 				+ getEmail());
-		task.get(4000, TimeUnit.MILLISECONDS);
+		task.get(20000, TimeUnit.MILLISECONDS);
 
 		
 		return 1;
@@ -476,13 +488,14 @@ public class User extends Activity
 						//at each iteration set to hashmap friendEmail -> 'first last'
 						JSONObject o = (JSONObject) jsonArray.get(i);
 						//function adds friend to the friends map
-						addToGroups(o.getString("id"), o.getString("name"));
+						addToGroups(o.getString("gid"), o.getString("gname"));
 					}
 
 				}
 				// user has no friends
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
+					Log.d("getGroups", "ERROR WITH JSON");
 					//setNumFriends(0); //PANDA need to set the user class not global
 				}
 			} catch (Exception e)
@@ -491,20 +504,17 @@ public class User extends Activity
 			}
 		}
 	}
-	
 
 	/*
-	 * 
 	 * 
 	 * should be getting the groupInvites key->vals here
 	 * 
 	 */
-
 	// Get numFriends, TODO: work on returning the integer
 	public int fetchGroupInvites(String email)
 	{
 		new getGroupInvitesTask()
-				.execute("http://98.213.107.172/android_connect/get_group_invites.php?email="
+				.execute("http://68.59.162.183/android_connect/get_group_invites.php?email="
 						+ getEmail());
 		return 1;
 	}
@@ -526,15 +536,21 @@ public class User extends Activity
 				JSONObject jsonObject = new JSONObject(result);
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
-					String numFriends = jsonObject.getString("numFriends")
-							.toString();
-					System.out.println("Should be setting the num friends to "
-							+ numFriends);
-					//setNumFriends(Integer.parseInt(numFriends)); //PANDA need to set the user class not global
-					//change this to populate the friends key->val list
+					//gotta make a json array
+					JSONArray jsonArray = jsonObject.getJSONArray("invites");
+					
+					//looping thru array
+					for (int i = 0; i < jsonArray.length(); i++)
+					{
+						//at each iteration set to hashmap friendEmail -> 'first last'
+						JSONObject o = (JSONObject) jsonArray.get(i);
+						//function adds friend to the friends map
+						addToGroupInvites(o.getString("gid"), o.getString("gname"), o.getString("sender"));
+					}
 
 				}
-				// user has no friends
+				
+				// user has no group invites
 				if (jsonObject.getString("success").toString().equals("2"))
 				{
 					//setNumFriends(0); //PANDA need to set the user class not global

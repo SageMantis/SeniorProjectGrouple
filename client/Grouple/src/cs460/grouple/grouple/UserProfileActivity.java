@@ -49,11 +49,12 @@ public class UserProfileActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_user_profile);
+		//Can we do our user load in the profile to save loading time from earlier or will the sync be off?
 		
 		view = findViewById(R.id.userProfileContainer);
 		load(view);
-		//Can we do our user load in the profile to save loading time from earlier or will the sync be off?
 	}
 
 	public void initActionBar()

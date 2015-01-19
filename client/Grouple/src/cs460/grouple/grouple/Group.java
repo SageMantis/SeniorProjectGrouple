@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class Group extends Activity
 {
-	private int groupID; //id of the group
+	private int id; //id of the group
 	private String name; //name for the group
 	private String bio; //bio for the group
 	private Map<String, String> members; //members of the groups' email->name pair
@@ -20,9 +20,9 @@ public class Group extends Activity
 	/*
 	 * Constructor for Group class
 	 */
-	public Group(int groupID)
+	public Group(int id)
 	{
-		this.groupID = groupID;
+		this.id = id;
 		System.out.println("Initializing new group.");
 	}
 	
@@ -41,9 +41,9 @@ public class Group extends Activity
 	/*
 	 * Getters for group class below
 	 */
-	public int getGroupID()
+	public int getID()
 	{
-		return groupID;
+		return id;
 	}
 	public String getName()
 	{
@@ -63,8 +63,8 @@ public class Group extends Activity
 	public int fetchMembers()
 	{
 		new getMembersTask()
-				.execute("http://98.213.107.172/android_connect/get_group_members.php?gid="
-						+ getGroupID());
+				.execute("http://68.59.162.183/android_connect/get_group_members.php?gid="
+						+ getID());
 		return 1;
 	}
 
@@ -116,8 +116,8 @@ public class Group extends Activity
 	public int fetchGroupInfo()
 	{
 		new getGroupInfoTask()
-				.execute("http://98.213.107.172/android_connect/get_group_info.php?gid="
-						+ getGroupID());
+				.execute("http://68.59.162.183/android_connect/get_group_info.php?gid="
+						+ getID());
 		return 1;
 	}
 

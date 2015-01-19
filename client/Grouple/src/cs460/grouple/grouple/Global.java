@@ -42,6 +42,7 @@ public class Global extends Application
 	private LinkedList<Intent> parentStackGroups = new LinkedList<Intent>();
 	private LinkedList<Intent> parentStackGroupInvites = new LinkedList<Intent>();
 	private ArrayList<User> users; //contains all the users that have been loaded into the current run of the program
+	private ArrayList<Group> groups; //same but for groups
 
 	/*
 	 * Adds a user to the users arraylist
@@ -119,13 +120,15 @@ public class Global extends Application
 			if (success == 1)
 				Log.d("loadUser","success after fetchFriends()");
 			
-			
-			/*
+		/*
 			//reset success
 			success = 0;
 			//json call to populate users groupKeys / groupNames
 			try
 			{
+				//could possibly take fetchGroups out of user class
+				//put it in groups, take in the email
+				//and maybe put reference ids in the user
 				success = user.fetchGroups();
 			} catch (InterruptedException e)
 			{
@@ -206,6 +209,82 @@ public class Global extends Application
 		return user;
 	}
 	
+	public void addToGroups(Group g)
+	{
+		//if users has not yet been made, initialize it
+		if (groups == null)
+		{
+			groups = new ArrayList<Group>();
+		}
+	}
+	//using the id of group, load them up into our array of groups
+	public Group loadGroup(int id)
+	{	
+		//check that user is not already loaded
+		Group group = checkGetGroup(id);//returns null, if user not loaded//user, if user was loaded
+		if (group == null) 
+		{
+			
+			//instantiate a new group
+			group = new Group(id); //changes that null to something fresh
+			
+			
+			//initialize success
+			int success = 0;
+		
+			//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
+			success = group.fetchGroupInfo();
+
+			
+			//was successful in fetching user info
+			if (success == 1)
+				Log.d("loadGroup", "success after fetchGroupInfo()");
+
+			//reset success
+			success = 0;
+				//json call to populate users friendKeys / friendNames
+				success = group.fetchMembers();
+			
+			//was successful in fetching user info
+			if (success == 1)
+				Log.d("loadGroup", "success after fetchMembers()");
+			
+			
+			//put user in users
+			addToGroups(group);
+			
+		}
+		else 
+		{	
+			//user is already loaded
+			//it is already set to what it needs
+		}
+		//set isCurrentUser to false unless the OG user
+		return group;
+	}
+		
+		//takes in user email, if found in users -> returns true, else false
+		private Group checkGetGroup(int id)
+		{
+			Group group = null;
+			
+			//if users has not yet been made, initialize it
+			if (groups == null)
+			{
+				groups = new ArrayList<Group>();
+			}
+			
+			//loop through users
+			for (Group g : groups)
+			{
+				//if emails match
+				if (g.getID() == id)
+					group = g; //makes return statement the user
+			}
+			
+			//return null if user was not found
+			return group;
+		}
 	/*
 	 * Adding an intent to the stack of parents for a specific activity (differentiated using its view)
 	 */
