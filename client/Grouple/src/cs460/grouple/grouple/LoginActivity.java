@@ -131,6 +131,7 @@ public class LoginActivity extends Activity
 
 					//load the user into the system
 					User user = global.loadUser(email);
+					
 					System.out.println("user name in login is currently " + user.getFullName());
 					//can't do below here
 					
