@@ -90,7 +90,7 @@ public class LoginActivity extends Activity
 		Global global = ((Global) getApplicationContext());
 
 		new getLoginTask()
-					.execute("http://98.213.107.172/android_connect/get_login.php?email="
+					.execute("http://68.59.162.183/android_connect/get_login.php?email="
 							+ email + "&password=" + password);
 
 	}
@@ -136,7 +136,7 @@ public class LoginActivity extends Activity
 					
 					Log.d("LoginActivity", "after adding to users in global");
 					// Sets this users name.
-					
+					System.out.println("Do we get here, login activity before startHome call");
 					//starting the home activity with the current users email
 					startHomeActivity(email);
 					Log.d("LoginActivity", "after startHomeActivity");
@@ -151,7 +151,7 @@ public class LoginActivity extends Activity
 					System.out.println("failed");
 					// display message from json (failed login reason)
 					loginFail.setText(jsonObject.getString("message"));
-					loginFail.setTextColor(Color.RED);
+					loginFail.setTextColor(getResources().getColor(R.color.red));
 					loginFail.setVisibility(View.VISIBLE);
 				}
 			} catch (Exception e)

@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class HomeActivity extends ActionBarActivity
 {
 	LayoutInflater li;
-	User user;
+	User user; //current user
 	BroadcastReceiver broadcastReceiver;
 
 	@Override

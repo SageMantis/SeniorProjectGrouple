@@ -2,6 +2,7 @@ package cs460.grouple.grouple;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -19,12 +20,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -40,8 +43,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 	Intent parentIntent;
 	Intent upIntent;
 	BroadcastReceiver broadcastReceiver;
-	private ArrayList<String> groupsNameList = new ArrayList<String>();
-	private String email;
+	User user; //user whose current groups displayed
 	View groupsCurrent;
 
 	@Override
@@ -90,6 +92,10 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
+		
+		//grabbing the user with the given email in the extras
+		user = global.loadUser(extras.getString("email"));
+		
 		// do a check that it is not from a back push
 		if (extras.getString("up").equals("true"))
 		{
@@ -106,7 +112,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		}
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
-		email = parentExtras.getString("email");
+
 		//global.fetchName(email);PANDA
 		try
 		{
@@ -119,9 +125,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		}
 		// also need to set the mod privs for the current user -> current list
 		// of groups
-		new getGroupsTask()
-		.execute("http://98.213.107.172/android_connect/get_groups.php?email="
-				+ email);
+		populateGroupsCurrent();
 
 		initActionBar();
 		initKillswitchListener();
@@ -184,100 +188,75 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class getGroupsTask extends AsyncTask<String, Void, String>
+	/*
+	 * Uses the mapping of ids and group names to display the users current groups
+	 * Groups will be loaded into the Group class when profile is viewed,
+	 * 		this could be changed to immediately if we can get the User class communicating with global.
+	 * 		same goes for friends, friend requests and group invites
+	 */
+	public void populateGroupsCurrent()
 	{
-		@Override
-		protected String doInBackground(String... urls)
+		Global global = ((Global) getApplicationContext());
+		LayoutInflater li = getLayoutInflater();
+
+		//grabbing the users groups
+		ArrayList<Integer> groups = user.getGroups();
+		
+		if (groups.size() > 0)
 		{
-			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-			LayoutInflater li = getLayoutInflater();
-			try
-			{
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
+			int i = 0;
+			for (int id : groups) {
+				Group g = global.loadGroup(id);
+			
+				GridLayout rowView;
+				Bundle parentExtras = parentIntent.getExtras();
+				if (parentExtras.getString("mod").equals("true"))
 				{
-					// ArrayList<String> groups = new ArrayList<String>();
-					JSONArray jsonGroups = jsonObject.getJSONArray("groups");
-
-					if (jsonGroups != null)
-					{
-						System.out.println(jsonGroups.toString() + "\n"
-								+ jsonGroups.length());
-						JSONArray cake = (JSONArray) jsonGroups.get(0);
-						LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-						Bundle extras = getIntent().getExtras();
-						// looping thru json and adding to an array
-						for (int i = 0; i < cake.length(); i++)
-						{
-							String groupname = cake.getString(i);
-
-							System.out.println("Idx: " + i + " Group Name: "
-									+ groupname + "\n");
-
-							GridLayout rowView;
-							if (extras.getString("mod").equals("true"))
-							{
-								rowView = (GridLayout) li.inflate(
-										R.layout.listitem_group, null);
-								groupsNameList.add(i, groupname);
-								// Button removeFriendButton = (Button) rowView
-								// .findViewById(R.id.removeFriendButton);
-								// removeFriendButton.setId(i);
-							} else
-							{
-								rowView = (GridLayout) li.inflate(
-										R.layout.listitem_group, null);
-
-							}
-							// Grab the buttons and set their IDs. Their IDs
-							// will fall inline with the array 'groupsNameList'.
-							Button groupNameButton = (Button) rowView
-									.findViewById(R.id.groupNameButton);
-							Button removeButton = (Button) rowView
-									.findViewById(R.id.removeGroupButton);
-							groupNameButton.setText(groupname);
-							removeButton.setId(i);
-							groupNameButton.setId(i);
-							rowView.setId(i);
-							currentGroupsLayout.addView(rowView);
-							// System.out.println("Row: " + row +"\nCount: " +
-							// i);
-
-						}
-
-					}
-				}
-				// user has no groups
-				if (jsonObject.getString("success").toString().equals("2"))
-				{
-					LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-
-					View row = li.inflate(R.layout.listitem_group, null);
-
-					String message = jsonObject.getString("message").toString();
-					((Button) row.findViewById(R.id.groupNameButton))
-							.setText(message);
-					row.findViewById(R.id.removeGroupButton).setVisibility(1);
-					currentGroupsLayout.addView(row);
+					rowView = (GridLayout) li.inflate(
+							R.layout.listitem_group, null);
+					// Button removeFriendButton = (Button) rowView
+					// .findViewById(R.id.removeFriendButton);
+					// removeFriendButton.setId(i);
 				} else
 				{
-					// failed
-					// TextView loginFail = (TextView)
-					// findViewById(R.id.loginFailTextViewLA);
-					// loginFail.setVisibility(0);
+					rowView = (GridLayout) li.inflate(
+							R.layout.listitem_group, null);
+
 				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				// Grab the buttons and set their IDs. Their IDs
+				// will fall inline with the array 'groupsNameList'.
+				Button groupNameButton = (Button) rowView
+						.findViewById(R.id.groupNameButton);
+				Button removeButton = (Button) rowView
+						.findViewById(R.id.removeGroupButton);
+				groupNameButton.setText(g.getName());
+				
+				//setting ids to the id of the group for button functionality
+				removeButton.setId(g.getID());
+				groupNameButton.setId(g.getID());
+				rowView.setId(g.getID());
+				
+				//adding row to view
+				((LinearLayout) groupsCurrent).addView(rowView);
+
+				i++;
 			}
 		}
+		else
+		{
+		
+			//LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
+
+			View row = li.inflate(R.layout.listitem_group, null);
+
+			String message = "No friends to display.";//jsonObject.getString("message").toString();
+			((Button) row.findViewById(R.id.groupNameButton))
+					.setText(message);
+			row.findViewById(R.id.removeGroupButton).setVisibility(1);
+			((LinearLayout) groupsCurrent).addView(row);
+		}	
 	}
+	
 
 	public void initKillswitchListener()
 	{
@@ -303,31 +282,6 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		// End Kill switch listener
 	}
 
-	public void addToGroupTable(View view) throws InterruptedException
-	{
-		Global global = ((Global) getApplicationContext());
-		// launches GroupProfileActivity, loading the page to its corresponding
-		// group
-		int id = view.getId();
-		// got the id, now we need to grab the users email and somehow pass it
-		// to the activity
-		Log.d("message",
-				"Executing the group profile: " + groupsNameList.get(id));
-		//PANDA HERE IS ISSUE ABOVE
-		String groupsName = groupsNameList.get(id);
-		Intent intent = new Intent(this, GroupProfileActivity.class);
-		// global.fetchNumGroupInvites(groupsName);
-		Thread.sleep(500);
-		intent.putExtra("gname", groupsName);
-		intent.putExtra("up", "false");
-		intent.putExtra("ParentClassName", "GroupsCurrentActivity");
-		global.addToParentStack(groupsCurrent, parentIntent);
-
-		startActivity(intent);
-
-		finish();
-	}
-
 	private class deleteGroupTask extends AsyncTask<String, Void, String>
 	{
 		@Override
@@ -350,11 +304,19 @@ public class GroupsCurrentActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					// success: group has been deleted
+					//reload this activity
+					// removing all of the views
+					LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
+					currentGroupsLayout.removeAllViews();
+					// Refresh the page to show the removal of the group.
+					populateGroupsCurrent();
 					Log.d("dbmsg", jsonObject.getString("message"));
 				} else if (jsonObject.getString("success").toString()
 						.equals("2"))
 				{
 					// group was not found in database. Need to throw message
+					
+					
 					// alerting the user.
 					Log.d("dbmsg", jsonObject.getString("message"));
 				} else
@@ -372,9 +334,9 @@ public class GroupsCurrentActivity extends ActionBarActivity
 
 	public void removeGroupButton(View view) throws InterruptedException
 	{
-		// Get the id.
+		//Get the id.
 		int id = view.getId();
-		final String gname = groupsNameList.get(id);
+
 		new AlertDialog.Builder(this)
 				.setMessage("Are you sure you want to delete this group?")
 				.setCancelable(true)
@@ -385,15 +347,8 @@ public class GroupsCurrentActivity extends ActionBarActivity
 					{
 						new deleteGroupTask()
 								.execute(
-										"http://98.213.107.172/android_connect/delete_group.php",
-										gname);
-						// removing all of the views
-						LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-						currentGroupsLayout.removeAllViews();
-						// Refresh the page to show the removal of the group.
-						new getGroupsTask()
-								.execute("http://98.213.107.172/android_connect/get_groups.php?email="
-										+ email);
+										"http://68.59.162.183/android_connect/leave_group.php?email=" + user.getEmail() + "?gid=" + id);
+	
 
 					}
 				}).setNegativeButton("Cancel", null).show();
