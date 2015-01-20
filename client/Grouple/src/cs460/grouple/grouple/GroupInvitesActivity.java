@@ -90,33 +90,16 @@ public class GroupInvitesActivity extends ActionBarActivity
 		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		// do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			// pull a new intent from the stack
-			// load in everything from that intent
-			parentIntent = global.getNextParentIntent(view);
-		} else
-		{
-			// add to stack
-			parentIntent = intent;
-		}
+		
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	
 		// Get the current users email address
 		//receiver = global.getCurrentUser(); user.getEmail() PANDA
 		// Execute the php to get the the number of group invites.
+		//gonna try to load these from the user instead
+		//populateGroupInvites();
 		new getGroupInvitesTask()
 				.execute("http://98.213.107.172/android_connect/get_groups_requests.php?email="
 						+ receiver);
@@ -160,9 +143,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
-			intent.putExtra("up", "false");
 			intent.putExtra("ParentClassName", "GroupInvitesActivity");
-			global.addToParentStack(groupInvites, parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);

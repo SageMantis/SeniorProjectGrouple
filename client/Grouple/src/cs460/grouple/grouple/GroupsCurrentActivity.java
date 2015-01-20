@@ -96,35 +96,10 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		//grabbing the user with the given email in the extras
 		user = global.loadUser(extras.getString("email"));
 		
-		// do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			// pull a new intent from the stack
-			// load in everything from that intent
-			System.out
-					.println("Should be fetching off stack for current friends");
-			parentIntent = global.getNextParentIntent(view);
-		} else
-		{
-			// add to stack
-			parentIntent = intent;
-			// trying to add to stack whenever the page is actually left
-		}
 		Bundle parentExtras = parentIntent.getExtras();
 		String className = parentExtras.getString("ParentClassName");
 
-		//global.fetchName(email);PANDA
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// also need to set the mod privs for the current user -> current list
-		// of groups
+		
 		populateGroupsCurrent();
 
 		initActionBar();
@@ -181,8 +156,6 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("ParentClassName", "GroupsCurrentActivity");
-			intent.putExtra("up", "false");
-			global.addToParentStack(groupsCurrent, parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);

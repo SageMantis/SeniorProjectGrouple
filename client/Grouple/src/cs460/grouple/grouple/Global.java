@@ -34,123 +34,31 @@ public class Global extends Application
 	private String acceptEmail;
 	private String declineEmail;
 
-	private LinkedList<Intent> parentStackFriendsCurrent = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackGroupsCurrent = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackGroupProfile = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackUserProfile = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackFriends = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackGroups = new LinkedList<Intent>();
-	private LinkedList<Intent> parentStackGroupInvites = new LinkedList<Intent>();
-	private ArrayList<User> users; //contains all the users that have been loaded into the current run of the program
+	private User currentUser; //contains the current user, is updated on every pertinent activity call
 	private ArrayList<Group> groups; //same but for groups
 
 	/*
 	 * Adds a user to the users arraylist
 	 */
-	public void addToUsers(User u)
+	public void setCurrentUser(User u)
 	{
-		//if users has not yet been made, initialize it
-		if (users == null)
-		{
-			users = new ArrayList<User>();
-		}
-		
-		users.add(u);
+		currentUser = u;
 	}
 	
 	
-	//using the email of user, load them up into our array of pertinent users
+	//using the email of user, load them in
 	public User loadUser(String email)
 	{	
-		//check that user is not already loaded
-		User user = checkGetUser(email);//returns null, if user not loaded//user, if user was loaded
-		if (user == null) 
+		User user;
+		int success = 0;
+		//instantiate a new user
+		if (currentUser != null && currentUser.getEmail().equals(email))
 		{
-			//user was not previously loaded
-			//need to set a flag to be sure to add this to the users array
+			user = currentUser;
 			
-			//instantiate a new user
-			user = new User(email); //changes that null to something fresh
-			
-			//check if current user
-			if (users.size() == 0)
-			{
-				user.setIsCurrentUser(true);
-			}
-			
-			//initialize success
-			int success = 0;
-			try
-			{
-				//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
-				success = user.fetchUserInfo();
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			} catch (ExecutionException e)
-			{
-				e.printStackTrace();
-			} catch (TimeoutException e)
-			{
-				e.printStackTrace();
-			}
-			
-			//was successful in fetching user info
-			if (success == 1)
-				Log.d("loadUser", "success after fetchUserInfo()");
-
-			//reset success
-			success = 0;
-			try
-			{
-				//json call to populate users friendKeys / friendNames
-				success = user.fetchFriends();
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			} catch (ExecutionException e)
-			{
-				e.printStackTrace();
-			} catch (TimeoutException e)
-			{
-				e.printStackTrace();
-			}
-			
-			//was successful in fetching friends
-			if (success == 1)
-				Log.d("loadUser","success after fetchFriends()");
-			
-		/*
-			//reset success
-			success = 0;
-			//json call to populate users groupKeys / groupNames
-			try
-			{
-				//could possibly take fetchGroups out of user class
-				//put it in groups, take in the email
-				//and maybe put reference ids in the user
-				success = user.fetchGroups();
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TimeoutException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//was successful in fetching groups
-			if (success == 1)
-				Log.d("loadUser","success after fetchGroups()");
-			*/
+			//since this is currentUser we can do update on the group invites / friend requests
 			
 			//json call to populate users friendRequestKeys / names
-			//reset success
-			success = 0;
 			try
 			{
 				success = user.fetchFriendRequests();
@@ -171,212 +79,164 @@ public class Global extends Application
 			if (success == 1)
 				Log.d("loadUser","success after fetchFriendRequests()");
 			
-			//json call to populate users groupInviteKeys / names\
-			
-			//put user in users
-			addToUsers(user);
-			
+			//fetchGroupInvites
 		}
-		else 
-		{	
-			//user is already loaded
-			//it is already set to what it needs
+		else
+		{
+			//instantiate new user
+			user = new User(email);
 		}
-		//set isCurrentUser to false unless the OG user
-		return user;
+		 
+		
+		/**
+		 * Below is just updating / loading all of the user info, friends, groups, pertinent to all loaded users
+		 */
+		
+
+		//reset success to 0
+		success = 0;
+		try
+		{
+			//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
+			success = user.fetchUserInfo();
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} catch (ExecutionException e)
+		{
+			e.printStackTrace();
+		} catch (TimeoutException e)
+		{
+			e.printStackTrace();
+		}
+		
+		//was successful in fetching user info
+		if (success == 1)
+			Log.d("loadUser", "success after fetchUserInfo()");
+
+		//reset success
+		success = 0;
+		try
+		{
+			//json call to populate users friendKeys / friendNames
+			success = user.fetchFriends();
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} catch (ExecutionException e)
+		{
+			e.printStackTrace();
+		} catch (TimeoutException e)
+		{
+			e.printStackTrace();
+		}
+		
+		//was successful in fetching friends
+		if (success == 1)
+			Log.d("loadUser","success after fetchFriends()");
+		
+	/*
+		//reset success
+		success = 0;
+		//json call to populate users groupKeys / groupNames
+		try
+		{
+			//could possibly take fetchGroups out of user class
+			//put it in groups, take in the email
+			//and maybe put reference ids in the user
+			success = user.fetchGroups();
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TimeoutException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//was successful in fetching groups
+		if (success == 1)
+			Log.d("loadUser","success after fetchGroups()");
+		*/
+		
+		
+		
+		//check that currentUser has been initialized
+		if (currentUser == null)
+		{
+			//if null, then this is our current user
+			
+			//getting requests / invites since wasn't triggered above
+			
+			//json call to populate users friendRequestKeys / names
+			try
+			{
+				success = user.fetchFriendRequests();
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TimeoutException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//was successful in fetching groups
+			if (success == 1)
+				Log.d("loadUser","success after fetchFriendRequests()");
+			
+			//fetchGroupInvites
+			
+			setCurrentUser(user);//set the user to current user
+		}	
+		return user; //return the user
 	}
 	
-	//takes in user email, if found in users -> returns true, else false
-	private User checkGetUser(String email)
-	{
-		User user = null;
-		
-		//if users has not yet been made, initialize it
-		if (users == null)
-		{
-			users = new ArrayList<User>();
-		}
-		
-		//loop through users
-		for (User u : users)
-		{
-			//if emails match
-			if (u.getEmail().equals(email))
-				user = u; //makes return statement the user
-		}
-		
-		//return null if user was not found
-		return user;
-	}
-	
-	public void addToGroups(Group g)
-	{
-		//if users has not yet been made, initialize it
-		if (groups == null)
-		{
-			groups = new ArrayList<Group>();
-		}
-	}
 	//using the id of group, load them up into our array of groups
 	public Group loadGroup(int id)
 	{	
-		//check that user is not already loaded
-		Group group = checkGetGroup(id);//returns null, if user not loaded//user, if user was loaded
-		if (group == null) 
-		{
-			
-			//instantiate a new group
-			group = new Group(id); //changes that null to something fresh
-			
-			
-			//initialize success
-			int success = 0;
+		Group group; //declare group variable
 		
-			//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
-			success = group.fetchGroupInfo();
+		//instantiate a new group
+		group = new Group(id);
+		
+		
+		/**
+		 * Below is loading all group information / members...
+		 */
+		
+		
+		int success = 0;//initialize success
+	
+		//json call using email to fetch users fName, lName, bio, location, birthday, profileImage
+		success = group.fetchGroupInfo();
 
-			
-			//was successful in fetching user info
-			if (success == 1)
-				Log.d("loadGroup", "success after fetchGroupInfo()");
+		
+		//was successful in fetching user info
+		if (success == 1)
+			Log.d("loadGroup", "success after fetchGroupInfo()");
 
-			//reset success
-			success = 0;
-				//json call to populate users friendKeys / friendNames
-				success = group.fetchMembers();
-			
-			//was successful in fetching user info
-			if (success == 1)
-				Log.d("loadGroup", "success after fetchMembers()");
-			
-			
-			//put user in users
-			addToGroups(group);
-			
-		}
-		else 
-		{	
-			//user is already loaded
-			//it is already set to what it needs
-		}
-		//set isCurrentUser to false unless the OG user
+		//reset success
+		success = 0;
+			//json call to populate users friendKeys / friendNames
+			success = group.fetchMembers();
+		
+		//was successful in fetching user info
+		if (success == 1)
+			Log.d("loadGroup", "success after fetchMembers()");
+		
+
 		return group;
 	}
 		
-		//takes in user email, if found in users -> returns true, else false
-		private Group checkGetGroup(int id)
-		{
-			Group group = null;
-			
-			//if users has not yet been made, initialize it
-			if (groups == null)
-			{
-				groups = new ArrayList<Group>();
-			}
-			
-			//loop through users
-			for (Group g : groups)
-			{
-				//if emails match
-				if (g.getID() == id)
-					group = g; //makes return statement the user
-			}
-			
-			//return null if user was not found
-			return group;
-		}
-	/*
-	 * Adding an intent to the stack of parents for a specific activity (differentiated using its view)
-	 */
-	public void addToParentStack(View view, Intent intent)
-	{
-		switch (view.getId())
-		{
-			case R.id.currentFriendsContainer:
-				parentStackFriendsCurrent.push(intent);
-				break;
-			case R.id.userProfileContainer:
-				parentStackUserProfile.push(intent);
-				break;
-			case R.id.groupsCurrentContainer:
-				parentStackGroupsCurrent.push(intent);
-				break;
-			case R.id.groupProfileContainer:
-				parentStackGroupProfile.push(intent);
-				break;
-			case R.id.friendsContainer:
-				parentStackFriends.push(intent);
-				break;
-			case R.id.groupsContainer:
-				parentStackGroups.push(intent);
-			case R.id.groupInvitesContainer:
-				parentStackGroupInvites.push(intent);
-				break;
-		}
-	}
-
-	public Intent getNextParentIntent(View view)
-	{
-		Intent parentIntent = null;
-		switch (view.getId())
-		{
-		case R.id.currentFriendsContainer:
-			if (parentStackFriendsCurrent.size() >= 1)
-			{
-				System.out.println("In next parent get of current friends");
-				parentIntent = parentStackFriendsCurrent.pop();
-			} else
-			{
-				parentIntent = new Intent(this, FriendsActivity.class);
-				startActivity(parentIntent);
-			}
-			break;
-		case R.id.groupsCurrentContainer:
-			if (parentStackGroupsCurrent.size() >= 1)
-			{
-				System.out.println("we are in the switch for current groups");
-				System.out.println("Groups current container");
-				parentIntent = parentStackGroupsCurrent.pop();
-			}
-			break;
-		case R.id.groupProfileContainer:
-			if (parentStackGroupProfile.size() >= 1)
-			{
-				parentIntent = parentStackGroupProfile.pop();
-			}
-			break;
-		case R.id.friendsContainer:
-			if (parentStackFriends.size() >= 1)
-			{
-				parentIntent = parentStackFriends.pop();
-			}
-			break;
-		case R.id.userProfileContainer:
-			if (parentStackUserProfile.size() >= 1)
-			{
-				parentIntent = parentStackUserProfile.pop();
-			}
-			break;
-		case R.id.groupsContainer:
-			if (parentStackGroups.size() >= 1)
-			{
-				parentIntent = parentStackGroups.pop();
-			}
-		case R.id.groupInvitesContainer:
-			if (parentStackGroupInvites.size() >= 1)
-			{
-				parentIntent = parentStackGroupInvites.pop();
-			}
-			break;
-		default:
-			parentIntent = new Intent(this, HomeActivity.class);
-			parentIntent.putExtra("ParentClassName", "HomeActivity");
-			break;
-		}
-
-		return parentIntent;
-
-	}
 	
 	//may be outdated, can either update notifications here or in each activity itself
 	public int setNotifications(View view, User user)

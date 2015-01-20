@@ -82,43 +82,18 @@ public class UserProfileActivity extends ActionBarActivity
 
 	public void load(View view)
 	{
-
 		Global global = ((Global) getApplicationContext());
-
-		// backstack of intents
-		// each class has a stack of intents lifo method used to execute them at
-		// start of activity
-		// intents need to include everything like ParentClassName, things for
-		// current page (email, ...)
-		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
+
 		//grabbing the user with the given email in the extras
 		user = global.loadUser(extras.getString("email"));
-		//if (global.check)
-		//user.isCurrentUser() = false;
-		// do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			// pull a new intent from the stack
-			// load in everything from that intent
-			parentIntent = global.getNextParentIntent(view);
-		} else
-		{
-			// add to stack
-			parentIntent = intent;
-		}
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
+		//thinking of loading in the friends names / emails and group names / ids at this time.
+		//user.loadFriends();
+		//user.loadGroups();
+		
+		String className = extras.getString("ParentClassName");
 
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
 
 		/* Notifications */
 		//global.fetchNumFriends(global.getCurrentUser());
@@ -210,9 +185,7 @@ public class UserProfileActivity extends ActionBarActivity
 	{
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, ProfileEditActivity.class);
-		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "UserActivity");
-		global.addToParentStack(view, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -269,8 +242,6 @@ public class UserProfileActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "UserActivity");
 	//	intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
-		intent.putExtra("up", "false");
-		global.addToParentStack(view, parentIntent);
 		//intent.putExtra("ParentEmail", global.getCurrentUser());
 		startActivity(intent);
 		bmp = null;
@@ -282,13 +253,12 @@ public class UserProfileActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
 		//String email = global.getCurrentUser();
-		global.addToParentStack(view, parentIntent);
+
 		intent.putExtra("ParentClassName", "UserActivity");
 		//intent.putExtra("ParentEmail", email);
 		//intent.putExtra("Name", global.getName()); //PANDA
 		intent.putExtra("email", user.getEmail());
 		intent.putExtra("mod", "true");
-		intent.putExtra("up", "false");
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -299,8 +269,6 @@ public class UserProfileActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, EventsActivity.class);
 		intent.putExtra("ParentClassName", "UserActivity");
-		global.addToParentStack(view, parentIntent);
-		intent.putExtra("up", "false");
 		startActivity(intent);
 		bmp = null;
 		iv = null;

@@ -75,33 +75,10 @@ public class GroupsActivity extends ActionBarActivity
 		String email;
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
-		// do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			// pull a new intent from the stack
-			// load in everything from that intent
-			parentIntent = global.getNextParentIntent(view);
-			System.out.println("Up was true, fetching parent intent...");
+		
 
-			System.out.println("ParentName = "
-					+ parentIntent.getExtras().getString("ParentClassName"));
-		} else
-		{
-			System.out.println("Up was false... not fetching parent");
-			parentIntent = intent;
-		}
-
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		String className = extras.getString("ParentClassName");
 
 		//global.fetchNumGroupInvites(global.getCurrentUser()); PANDA
 		//global.setNotifications(view);
@@ -147,9 +124,7 @@ public class GroupsActivity extends ActionBarActivity
 		if (id == R.id.action_home)
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
-			intent.putExtra("up", "false");
 			intent.putExtra("ParentClassName", "GroupsActivity");
-			global.addToParentStack(groups, parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -175,8 +150,6 @@ public class GroupsActivity extends ActionBarActivity
 		intent.putExtra("ParentClassName", "GroupsActivity");
 		//intent.putExtra("email", global.getCurrentUser());
 		intent.putExtra("mod", "true");
-		intent.putExtra("up", "false");
-		global.addToParentStack(groups, parentIntent);
 		startActivity(intent);
 	}
 
@@ -184,12 +157,9 @@ public class GroupsActivity extends ActionBarActivity
 	{
 		Global global = (Global) getApplicationContext();
 		Intent intent = new Intent(this, GroupInvitesActivity.class);
-		//intent.putExtra("email", global.getCurrentUser());
-		intent.putExtra("up", "false");
 		intent.putExtra("ParentClassName", "GroupsActivity");
 		// intent.putExtra("mod", "true");
 		startActivity(intent);
-		global.addToParentStack(groups, parentIntent);
 	}
 
 	public void startGroupsCurrentActivity(View view)
@@ -202,9 +172,7 @@ public class GroupsActivity extends ActionBarActivity
 															// list of groups
 		intent.putExtra("mod", "true");// gives user ability admin in the
 										// current groups screen
-		intent.putExtra("up", "false");
 		//intent.putExtra("Name", global.getName()); //PANDA
-		global.addToParentStack(groups, parentIntent);
 		System.out.println("Adding parent intent to stack");
 		startActivity(intent);
 	}

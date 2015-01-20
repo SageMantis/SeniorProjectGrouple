@@ -206,9 +206,6 @@ public class GroupProfileActivity extends ActionBarActivity
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("ParentClassName", "GroupProfileActivity");
-			intent.putExtra("up", "false");
-			// add to stack
-			global.addToParentStack(groupProfile, intent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -219,9 +216,6 @@ public class GroupProfileActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, HomeActivity.class);
 		intent.putExtra("ParentClassName", "GroupProfileActivity");
-		intent.putExtra("up", "false");
-		Global global = ((Global) getApplicationContext());
-		global.addToParentStack(groupProfile, parentIntent);
 		startActivity(intent);
 		bmp = null;
 		iv = null;
@@ -231,9 +225,6 @@ public class GroupProfileActivity extends ActionBarActivity
 	public void startEditProfileActivity(View view)
 	{
 		Intent intent = new Intent(this, ProfileEditActivity.class);
-		intent.putExtra("up", "false");// test
-		Global global = ((Global) getApplicationContext());
-		global.addToParentStack(groupProfile, parentIntent);
 		intent.putExtra("ParentClassName", "GroupProfileActivity");
 		startActivity(intent);
 		bmp = null;

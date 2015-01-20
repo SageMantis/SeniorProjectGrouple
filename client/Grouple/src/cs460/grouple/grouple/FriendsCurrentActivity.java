@@ -67,7 +67,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 	/* loading actionbar */
 	public void initActionBar()
 	{
-		Bundle extras = parentIntent.getExtras();
+		//Bundle extras = parentIntent.getExtras();
 		Global global = ((Global) getApplicationContext());
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -108,41 +108,10 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		//grabbing the user with the given email in the extras
 		user = global.loadUser(extras.getString("email"));
 		
-		//would probably need to populate those friends things now, or in profile
-		
-		// do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			// pull a new intent from the stack
-			// load in everything from that intent
-			System.out
-					.println("Should be fetching off stack for current friends");
-			parentIntent = global.getNextParentIntent(view);
-		} else
-		{
-			// add to stack
-			parentIntent = intent;
-			// trying to add to stack whenever the page is actually left
-		}
-		// Get the parent class's name and the email address associated with it.
-		// The email is usually the current users.
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
-		String email = parentExtras.getString("email");
-		//global.fetchName(email); PANDA
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
 
 		// Pass the current users email and execute the get friends php.
 		populateFriendsCurrent();
+		
 		// Start the action bar and kill switch.
 		initActionBar();
 		initKillswitchListener();
@@ -186,9 +155,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		{
 			Intent intent = new Intent(this, HomeActivity.class);
 
-			intent.putExtra("up", "false");
 			intent.putExtra("ParentClassName", "FriendsCurrentActivity");
-			global.addToParentStack(friendsCurrent, parentIntent);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
@@ -208,7 +175,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		if (!friends.isEmpty())
 		{
 			LinearLayout friendsCurrentRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
-			Bundle extras = parentIntent.getExtras();
+			//Bundle extras = intent.getExtras();
 			// looping thru json and adding to an array
 			 Iterator it = friends.entrySet().iterator();
 			 int index = 0;
@@ -219,7 +186,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 				 friendsEmailList.add(index, email);
 				 String pri = "index: " + index + ": " + email;
 				 Log.d("friendscurrent set friend", pri);
-				 global.loadUser(email);//preloading user
+				 //global.loadUser(email);//preloading user, this will slow it down a lot, without array it is useless
 				 GridLayout rowView;
 
 				 /*
@@ -230,6 +197,8 @@ public class FriendsCurrentActivity extends ActionBarActivity
 				 * not these or your friends. You don't want the
 				 * option to delete a friend's friend.
 				 */
+				 
+				 Bundle extras = getIntent().getExtras();
 				 if (extras.getString("mod").equals("true"))
 				 {
 					 rowView = (GridLayout) li.inflate(
@@ -374,18 +343,16 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		int id = view.getId();
 		// got the id, now we need to grab the users email and somehow pass it
 		// to the activity
-		Bundle extras = parentIntent.getExtras();
+
 		String friendEmail = friendsEmailList.get(id);
 		Intent intent = new Intent(this, UserProfileActivity.class);
 		intent.putExtra("ParentClassName", "FriendsCurrentActivity");
-		Global global = ((Global) getApplicationContext());
-		global.addToParentStack(friendsCurrent, parentIntent);
+
 		//global.fetchNumFriends(friendEmail); PANDA
 		//global.fetchNumGroups(friendEmail);
 		// Another sleep that way the php has time to execute. We need to start
 		// the activity when the PHP returns..
 		intent.putExtra("email", friendEmail);
-		intent.putExtra("up", "false");
 		startActivity(intent);
 	}
 

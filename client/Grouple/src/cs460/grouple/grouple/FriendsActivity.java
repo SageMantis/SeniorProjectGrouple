@@ -94,33 +94,8 @@ public class FriendsActivity extends ActionBarActivity
 		// current page (email, ...)
 		// if check that friends
 		String email;
-		// do a check that it is not from a back push
-		if (extras.getString("up").equals("true"))
-		{
-			// pull a new intent from the stack
-			// load in everything from that intent
-			parentIntent = global.getNextParentIntent(view);
-			System.out.println("Up was true, fetching parent intent...");
 
-			System.out.println("ParentName = "
-					+ parentIntent.getExtras().getString("ParentClassName"));
-		} else
-		{
-			System.out.println("Up was false... not fetching parent");
-			parentIntent = intent;
-		}
 
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
-		try
-		{
-			upIntent = new Intent(this, Class.forName("cs460.grouple.grouple."
-					+ className));
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		//global.fetchNumFriendRequests(global.getCurrentUser()); PANDA
 		//global.fetchNumFriends(global.getCurrentUser());
 		//global.setNotifications(friends);
@@ -208,9 +183,8 @@ public class FriendsActivity extends ActionBarActivity
 		Global global = ((Global) getApplicationContext());
 		Intent intent = new Intent(this, FriendAddActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
-		intent.putExtra("up", "false");
 		intent.putExtra("email", user.getEmail());
-		global.addToParentStack(friends, parentIntent);
+
 		startActivity(intent);
 	}
 
@@ -218,12 +192,9 @@ public class FriendsActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(this, FriendsCurrentActivity.class);
 		intent.putExtra("ParentClassName", "FriendsActivity");
-		Global global = ((Global) getApplicationContext());
 		intent.putExtra("email", user.getEmail());
 		intent.putExtra("ParentEmail", user.getEmail());
 		intent.putExtra("mod", "true");
-		intent.putExtra("up", "false");
-		global.addToParentStack(friends, parentIntent);
 		startActivity(intent);
 	}
 
@@ -233,8 +204,6 @@ public class FriendsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, FriendRequestsActivity.class);
 		//intent.putExtra("email", global.getCurrentUser()); PANDA getEmail()
 		intent.putExtra("ParentClassName", "FriendsActivity");
-		global.addToParentStack(friends, parentIntent);
-		intent.putExtra("up", "false");
 		intent.putExtra("email", user.getEmail());
 		// intent.putExtra("mod", "true");
 		startActivity(intent);
