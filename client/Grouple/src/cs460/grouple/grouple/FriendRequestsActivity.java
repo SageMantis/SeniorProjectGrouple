@@ -46,7 +46,8 @@ public class FriendRequestsActivity extends ActionBarActivity
 	Intent upIntent;
 	Intent parentIntent;
 	User user; //current user
-
+	String acceptEmail;
+	String declineEmail;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -201,16 +202,16 @@ public class FriendRequestsActivity extends ActionBarActivity
 
 			TextView declineEmailTextView = (TextView) parent
 					.findViewById(R.id.emailTextViewFRLI);
-			String declineEmail = declineEmailTextView.getText().toString(); //PANDA
+			declineEmail = declineEmailTextView.getText().toString(); //PANDA
 			new getDeclineFriendTask()
-					.execute("http://98.213.107.172/android_connect/decline_friend_request.php", declineEmail);
+					.execute("http://68.59.162.183/android_connect/decline_friend_request.php");
 			break;
 		case R.id.acceptFriendRequestButtonFRLI:
 			TextView acceptEmailTextView = (TextView) parent
 					.findViewById(R.id.emailTextViewFRLI);
-			String acceptEmail = acceptEmailTextView.getText().toString();
+			acceptEmail = acceptEmailTextView.getText().toString();
 			new getAcceptFriendTask()
-					.execute("http://98.213.107.172/android_connect/accept_friend_request.php", acceptEmail);
+					.execute("http://68.59.162.183/android_connect/accept_friend_request.php");
 			break;
 		}
 	}
@@ -225,10 +226,10 @@ public class FriendRequestsActivity extends ActionBarActivity
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-			String sender = urls[1]; 
+
 			String receiver = user.getEmail();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			nameValuePairs.add(new BasicNameValuePair("sender", declineEmail));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
@@ -244,7 +245,9 @@ public class FriendRequestsActivity extends ActionBarActivity
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
 					//do something probably
+					user.removeFriendRequest(declineEmail);
 					System.out.println("success in decline!");
+					declineEmail = null;
 					startFriendRequestsActivity();
 
 				} else
@@ -263,26 +266,22 @@ public class FriendRequestsActivity extends ActionBarActivity
 		}
 	}
 
-	
-
 	/*
 	 * Code for accepting a friend request. On success, we remove the friend
 	 * request and refresh the friend requests activity. We also confirm the
 	 * friendship in the database.
 	 */
-
 	private class getAcceptFriendTask extends AsyncTask<String, Void, String>
 	{
 		@Override
 		protected String doInBackground(String... urls)
 		{
 			Global global = ((Global) getApplicationContext());
-
-			String sender = urls[1];
+			
 			String receiver = user.getEmail();
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("sender", sender));
+			nameValuePairs.add(new BasicNameValuePair("sender", acceptEmail));
 			nameValuePairs.add(new BasicNameValuePair("receiver", receiver));
 			return global.readJSONFeed(urls[0], nameValuePairs);
 		}
@@ -299,11 +298,14 @@ public class FriendRequestsActivity extends ActionBarActivity
 				{
 					// successful
 					System.out.println("success!");
+					user.removeFriendRequest(acceptEmail);
+					
 					View friends = (View) findViewById(
 							R.id.friendRequestsLayout).getParent();
 					View home = (View) friends.getParent();
 					//global.setNotifications(friends); PANDA
 					//global.setNotifications(home);
+					acceptEmail = null; //reset
 					startFriendRequestsActivity();
 
 				} else
@@ -316,17 +318,6 @@ public class FriendRequestsActivity extends ActionBarActivity
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
 	}
 
 	public void startParentActivity(View view)

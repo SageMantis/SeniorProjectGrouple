@@ -61,16 +61,6 @@ public class MessagesActivity extends ActionBarActivity
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startParentActivity(null);
-		}
-		return false;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		// Handle action bar item clicks here. The action bar will

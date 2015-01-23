@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class GroupsActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 	Intent parentIntent;
 	View groups;
+	User user;
 	Intent upIntent;
 
 	@Override
@@ -64,30 +66,37 @@ public class GroupsActivity extends ActionBarActivity
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
-		// Action bar setup
-		// ActionBar ab = getActionBar();
-		// backstack of intents
-		// each class has a stack of intents lifo method used to execute them at
-		// start of activity
-		// intents need to include everything like ParentClassName, things for
-		// current page (email, ...)
-		// if check that friends
-		String email;
+		user = global.loadUser(global.getCurrentUser().getEmail());
+		
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		
-
+		setNotifications();
 		
 		String className = extras.getString("ParentClassName");
 
-		//global.fetchNumGroupInvites(global.getCurrentUser()); PANDA
-		//global.setNotifications(view);
 
 		initActionBar();
 		initKillswitchListener();
 
 	}
 
+	private void setNotifications()
+	{
+		// Groups activity
+		if (findViewById(R.id.pendingGroupsButton) != null)
+		{
+			System.out.println("Pending groups setting text to what it is");
+			((Button) findViewById(R.id.pendingGroupsButton))
+					.setText("Group Invites (" + user.getNumGroupInvites() + ")");
+		}
+		if (findViewById(R.id.yourGroupsButton) != null)
+		{
+			((Button) findViewById(R.id.yourGroupsButton))
+					.setText("My Groups (" + user.getNumGroups() + ")");
+		}
+	}
+	
 	@Override
 	protected void onDestroy()
 	{
@@ -130,18 +139,6 @@ public class GroupsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			upIntent.putExtra("up", "true");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
-
 	/* Start activity methods for group sub-activities */
 	public void startGroupCreateActivity(View view)
 	{
@@ -167,7 +164,8 @@ public class GroupsActivity extends ActionBarActivity
 		Intent intent = new Intent(this, GroupsCurrentActivity.class);
 		Global global = ((Global) getApplicationContext());
 		intent.putExtra("ParentClassName", "GroupsActivity");
-		//intent.putExtra("email", global.getCurrentUser());// specifies which
+		System.out.println("ADDING EXTRA EMAIL AS " + user.getEmail());
+		intent.putExtra("email", user.getEmail());// specifies which
 															// email for the
 															// list of groups
 		intent.putExtra("mod", "true");// gives user ability admin in the

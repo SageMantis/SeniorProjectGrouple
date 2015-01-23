@@ -1,46 +1,65 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-   	android:id="@+id/eventsLayout"
+   	android:id="@+id/eventsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp" >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:textSize="16sp"
-        android:text="Sorry, this feature has not yet been implemented. \n:(" />
-    <Button
-        android:id="@+id/pastEventsButton"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/upcomingEventsButton"
-        android:text="@string/pastEventsButton" />
+    android:padding="5dp"
+	android:background="@color/background_color" >
 
-    <Button
-        android:id="@+id/upcomingEventsButton"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/unconfirmedEventsButton"
-        android:text="@string/upcomingEventsButton" />
+	<Button
+	    android:id="@+id/eventsUpcomingButtonEA"
+	    android:layout_width="match_parent"
+	    android:layout_height="80dp"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/eventCreateButtonEA"
+	    android:layout_marginTop="14dp"
+	    android:background="@drawable/button_border"
+	    android:fontFamily="sans-serif-condensed"
+	    android:onClick="startEventsUpcomingActivity"
+	    android:text="Upcoming Events"
+	    android:textColor="@color/button_text_color"
+	    android:textSize="20sp" />
+	
+		<Button
+	    android:id="@+id/eventsPendingButtonEA"
+	    android:layout_width="match_parent"
+	    android:layout_height="80dp"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/eventsUpcomingButtonEA"
+	    android:layout_marginTop="16dp"
+	    android:background="@drawable/button_border"
+	    android:fontFamily="sans-serif-condensed"
+	    android:onClick="startEventInvitesActivity"
+	    android:text="Event Invites"
+	    android:textColor="@color/button_text_color"
+	    android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/unconfirmedEventsButton"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/createEventButton"
-        android:text="@string/unconfirmedEventsButton" />
+	<Button
+	    android:id="@+id/eventInvitesButtonEA"
+	    android:layout_width="match_parent"
+	    android:layout_height="80dp"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/eventsPendingButtonEA"
+	    android:layout_marginTop="16dp"
+	    android:background="@drawable/button_border"
+	    android:fontFamily="sans-serif-condensed"
+	    android:onClick="startEventInvitesActivity"
+	    android:text="Event Invites"
+	    android:textColor="@color/button_text_color"
+	    android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/createEventButton"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="46dp"
-        android:text="@string/createEventButton" />
+	<Button
+	    android:id="@+id/eventCreateButtonEA"
+	    android:layout_width="match_parent"
+	    android:layout_height="80dp"
+	    android:layout_alignLeft="@+id/eventsUpcomingButtonEA"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="41dp"
+	    android:background="@drawable/button_border"
+	    android:fontFamily="sans-serif-condensed"
+	    android:onClick="startEventsCreateActivity"
+	    android:text="Create Event"
+	    android:textColor="@color/button_text_color"
+	    android:textSize="20sp" />
 
 </RelativeLayout>

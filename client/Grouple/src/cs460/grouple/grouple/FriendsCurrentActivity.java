@@ -81,7 +81,6 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		// On click listener for the action bar's back button.
 		upButton.setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View view)
 			{
@@ -172,7 +171,7 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		 * friends container.
 		 */
 		Map<String, String> friends = user.getFriends();
-		if (!friends.isEmpty())
+		if (friends != null && !friends.isEmpty())
 		{
 			LinearLayout friendsCurrentRL = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 			//Bundle extras = intent.getExtras();
@@ -183,12 +182,11 @@ public class FriendsCurrentActivity extends ActionBarActivity
 				 Map.Entry pair = (Map.Entry)it.next();
 				 String email = (String) pair.getKey();
 				 String fullName = (String) pair.getValue();
-				 friendsEmailList.add(index, email);
 				 String pri = "index: " + index + ": " + email;
 				 Log.d("friendscurrent set friend", pri);
 				 //global.loadUser(email);//preloading user, this will slow it down a lot, without array it is useless
 				 GridLayout rowView;
-
+				 friendsEmailList.add(index, email);
 				 /*
 				 * If you are the mod, add the friend button and the
 				 * remove button. If you aren't the mod, then add
@@ -242,19 +240,6 @@ public class FriendsCurrentActivity extends ActionBarActivity
 		}
 	}
 
-	@Override
-	// Sets the back button code.
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			upIntent.putExtra("up", "true");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
-
 	// Handles removing a friend when the remove friend button is pushed.
 	public void removeFriendButton(View view)
 	{
@@ -278,8 +263,9 @@ public class FriendsCurrentActivity extends ActionBarActivity
 
 						new deleteFriendTask()
 								.execute(
-										"http://98.213.107.172/android_connect/delete_friend.php",
+										"http://68.59.162.183/android_connect/delete_friend.php",
 										email, friendEmail);
+						user.removeFriend(friendEmail);
 						// removing all of the views
 						LinearLayout friendsCurrentLayout = (LinearLayout) findViewById(R.id.currentFriendsLayout);
 						friendsCurrentLayout.removeAllViews();

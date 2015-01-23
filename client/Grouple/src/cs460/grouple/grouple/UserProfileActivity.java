@@ -42,24 +42,29 @@ public class UserProfileActivity extends ActionBarActivity
 	BroadcastReceiver broadcastReceiver;
 	Intent parentIntent;
 	Intent upIntent;
-	View view;
 	User user; //user who's profile this is
+	
+	@Override
+	protected void onStart()
+	{
+		super.onResume();
+		setNotifications();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_user_profile);
 		//Can we do our user load in the profile to save loading time from earlier or will the sync be off?
-		
-		view = findViewById(R.id.userProfileContainer);
-		load(view);
+		load();
+
 	}
 
 	public void initActionBar()
 	{
-		Global global = ((Global) getApplicationContext());
+
 		/* Action bar */
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -80,7 +85,7 @@ public class UserProfileActivity extends ActionBarActivity
 		actionbarTitle.setText(user.getFullName() + "'s Profile"); //PANDA
 	}
 
-	public void load(View view)
+	public void load()
 	{
 		Global global = ((Global) getApplicationContext());
 		Intent intent = getIntent();
@@ -88,29 +93,15 @@ public class UserProfileActivity extends ActionBarActivity
 
 		//grabbing the user with the given email in the extras
 		user = global.loadUser(extras.getString("email"));
-		//thinking of loading in the friends names / emails and group names / ids at this time.
-		//user.loadFriends();
-		//user.loadGroups();
+		//need to make sure this loads first
+		
 		
 		String className = extras.getString("ParentClassName");
 
 
-		/* Notifications */
-		//global.fetchNumFriends(global.getCurrentUser());
-		//global.fetchNumGroups(global.getCurrentUser());
-		// User Profile Buttons
-		Log.d("userprofileload", "friendsbuttonupa below");
-		((Button) view.findViewById(R.id.friendsButtonUPA)).setText("Friends\n(" + user.getNumFriends() + ")");
-		//((Button) view.findViewById(R.id.groupsButtonUPA))
-			//	.setText("Groups\n(" + numGroups + ")");
-		// set numfriends, numgroups, and numevents
 		
-		
-		//View user = findViewById(R.id.userContainer);
 
-		//global.setNotifications(user); PANDA
 
-		// execute php script, using the current users email address to populate
 		// the textviews
 		initProfile();
 
@@ -119,6 +110,21 @@ public class UserProfileActivity extends ActionBarActivity
 		initKillswitchListener();
 	}
 
+	private void setNotifications()
+	{
+		Global global = ((Global) getApplicationContext());
+		((Button) findViewById(R.id.friendsButtonUPA)).setText("Friends\n(" + user.getNumFriends() + ")");
+		
+		((Button) findViewById(R.id.groupsButtonUPA)).setText("Groups\n(" + user.getNumGroups() + ")");
+		// set numfriends, numgroups, and numevents
+		
+		//if (user.getEmail().compareTo(global.getCurrentUser().getEmail()) != 0)
+		//{
+		//	((Button) findViewById(R.id.editProfileButton)).setVisibility(1);
+		//}
+		
+	}
+	
 	@Override
 	protected void onDestroy()
 	{
@@ -169,17 +175,6 @@ public class UserProfileActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			upIntent.putExtra("up", "false");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
 
 	public void startEditProfileActivity(View view)
 	{
@@ -201,7 +196,7 @@ public class UserProfileActivity extends ActionBarActivity
 		String bio = user.getBio();
 		//String age = jsonProfileArray.getString(2);
 		String location = user.getLocation();
-		String img = null;//jsonProfileArray.getString(5);
+		Bitmap img = user.getImage();//jsonProfileArray.getString(5);
 
 		// decode image back to android bitmap format
 		/*byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
@@ -212,20 +207,20 @@ public class UserProfileActivity extends ActionBarActivity
 		}
 		// set the image
 		if (bmp != null)
+		*/
+		if (iv == null)
 		{
-			if (iv == null)
-			{
-				iv = (ImageView) findViewById(R.id.profilePhoto);
-
-			}
-			iv.setImageBitmap(bmp);
-			img = null;
-			decodedString = null;
+			iv = (ImageView) findViewById(R.id.profilePhoto);
 		}
-*/
+		iv.setImageBitmap(img);
+		img = null;
+		
+		
+		 
 		// TextView nameTextView = (TextView)
 		// findViewById(R.id.nameEditTextEPA);
 		TextView ageTextView = (TextView) findViewById(R.id.ageTextView);
+		ageTextView.setText(user.getAge() + "yrs old");
 		TextView locationTextView = (TextView) findViewById(R.id.locationTextView);
 		TextView bioTextView = (TextView) findViewById(R.id.bioTextView);
 		// JSONObject bioJson = jsonProfileArray.getJSONObject(0);

@@ -95,16 +95,6 @@ public class GroupProfileActivity extends ActionBarActivity
 		});
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startActivity(upIntent);
-		}
-		return false;
-	}
-
 	public void load(View view)
 	{
 		Log.d("message", "00000000000000001");

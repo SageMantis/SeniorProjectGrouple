@@ -60,15 +60,6 @@ public class RegisterActivity extends ActionBarActivity
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startParentActivity(null);
-		}
-		return false;
-	}
 
 	public void startParentActivity(View view)
 	{

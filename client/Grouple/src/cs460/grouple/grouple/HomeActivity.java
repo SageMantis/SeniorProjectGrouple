@@ -41,8 +41,31 @@ public class HomeActivity extends ActionBarActivity
 		//grabbing extras from intent
 		Bundle extras = getIntent().getExtras(); 
 		//grabbing the user with the given email in the extras
-		user = global.loadUser(extras.getString("email"));
+		user = global.loadUser(global.getCurrentUser().getEmail());
 		
+		//set notifications
+		setNotifications();
+
+
+		//initializing action bar and killswitch listener
+		initActionBar();
+		initKillswitchListener();
+	}
+
+	public void initActionBar()
+	{
+		// Actionbar settings
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		ab.setCustomView(R.layout.actionbar);
+		// ab.setDisplayHomeAsUpEnabled(true);
+		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
+		//Global global = ((Global) getApplicationContext());
+		actionbarTitle.setText("Welcome, " + user.getFullName() + "!"); //PANDA
+	}
+
+	public void setNotifications()
+	{
 		// Home Activity
 		int numFriendRequests = user.getNumFriendRequests();
 		if (numFriendRequests > 0)
@@ -62,24 +85,25 @@ public class HomeActivity extends ActionBarActivity
 		{
 			((Button) findViewById(R.id.friendsButtonHA)).setText("Friends");
 		}
-
-		//initializing action bar and killswitch listener
-		initActionBar();
-		initKillswitchListener();
+		int numGroupInvites = user.getNumGroupInvites();
+		if (numGroupInvites > 0)
+		{
+			if (numGroupInvites == 1)
+			{
+				((Button) findViewById(R.id.groupsButtonHA)).setText("Groups \n(" + numGroupInvites
+								+ " invite)");
+			} 
+			else
+			{
+				((Button) findViewById(R.id.groupsButtonHA)).setText("Groups \n(" + numGroupInvites
+								+ " invites)");
+			}
+		} 
+		else if (numFriendRequests == 0)
+		{
+			((Button) findViewById(R.id.groupsButtonHA)).setText("Groups");
+		}
 	}
-
-	public void initActionBar()
-	{
-		// Actionbar settings
-		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		ab.setCustomView(R.layout.actionbar);
-		// ab.setDisplayHomeAsUpEnabled(true);
-		TextView actionbarTitle = (TextView) findViewById(R.id.actionbarTitleTextView);
-		//Global global = ((Global) getApplicationContext());
-		actionbarTitle.setText("Welcome, " + user.getFullName() + "!"); //PANDA
-	}
-
 	@Override
 	protected void onDestroy()
 	{

@@ -58,7 +58,7 @@
         android:id="@+id/createIntroMessage"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="left"
         android:text="@string/introMessage"
         android:background="@color/black"
         android:textColor="@color/white" />

@@ -153,7 +153,7 @@ public class FriendAddActivity extends ActionBarActivity
 		// Execute the add friend php
 		//need to sync this PANDA
 		new getAddFriendTask()
-				.execute("http://98.213.107.172/android_connect/add_friend.php");
+				.execute("http://68.59.162.183/android_connect/add_friend.php");
 	}
 
 	// This task sends a friend request to the given user.
@@ -211,18 +211,6 @@ public class FriendAddActivity extends ActionBarActivity
 				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 		}
-	}
-
-	@Override
-	// If the user hits the back button (not the one in the action bar, then go
-	// back to the parent activity.
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startParentActivity(null);
-		}
-		return false;
 	}
 
 	public void initKillswitchListener()

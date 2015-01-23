@@ -31,11 +31,7 @@ import android.widget.Button;
  */
 public class Global extends Application
 {
-	private String acceptEmail;
-	private String declineEmail;
-
 	private User currentUser; //contains the current user, is updated on every pertinent activity call
-	private ArrayList<Group> groups; //same but for groups
 
 	/*
 	 * Adds a user to the users arraylist
@@ -45,6 +41,10 @@ public class Global extends Application
 		currentUser = u;
 	}
 	
+	public User getCurrentUser()
+	{
+		return currentUser;
+	}
 	
 	//using the email of user, load them in
 	public User loadUser(String email)
@@ -52,6 +52,9 @@ public class Global extends Application
 		User user;
 		int success = 0;
 		//instantiate a new user
+		
+		//this is if the current user has already been loaded and the required user is this user
+		//this will update the friend requests / group invites
 		if (currentUser != null && currentUser.getEmail().equals(email))
 		{
 			user = currentUser;
@@ -59,9 +62,34 @@ public class Global extends Application
 			//since this is currentUser we can do update on the group invites / friend requests
 			
 			//json call to populate users friendRequestKeys / names
+	
 			try
 			{
 				success = user.fetchFriendRequests();
+			} catch (InterruptedException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ExecutionException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (TimeoutException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
+			//was successful in fetching friend requests
+			if (success == 1)
+				Log.d("loadUser","success after fetchFriendRequests()");
+			
+			
+			success = 0;
+			//fetchGroupInvites
+			try
+			{
+				success = user.fetchGroupInvites();
 			} catch (InterruptedException e)
 			{
 				// TODO Auto-generated catch block
@@ -75,11 +103,11 @@ public class Global extends Application
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//was successful in fetching groups
+		
+			//was successful in fetching group invites
 			if (success == 1)
-				Log.d("loadUser","success after fetchFriendRequests()");
+				Log.d("loadUser","success after fetchGroupInvites()");
 			
-			//fetchGroupInvites
 		}
 		else
 		{
@@ -135,7 +163,7 @@ public class Global extends Application
 		if (success == 1)
 			Log.d("loadUser","success after fetchFriends()");
 		
-	/*
+	
 		//reset success
 		success = 0;
 		//json call to populate users groupKeys / groupNames
@@ -161,11 +189,13 @@ public class Global extends Application
 		//was successful in fetching groups
 		if (success == 1)
 			Log.d("loadUser","success after fetchGroups()");
-		*/
+		
 		
 		
 		
 		//check that currentUser has been initialized
+		//little redundancy from earlier if statement, when current user was not null
+		//could for sure tweak up
 		if (currentUser == null)
 		{
 			//if null, then this is our current user
@@ -194,6 +224,22 @@ public class Global extends Application
 				Log.d("loadUser","success after fetchFriendRequests()");
 			
 			//fetchGroupInvites
+			try
+			{
+				success = user.fetchGroupInvites();
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TimeoutException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			setCurrentUser(user);//set the user to current user
 		}	
