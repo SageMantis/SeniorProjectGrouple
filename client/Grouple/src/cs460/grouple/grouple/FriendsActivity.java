@@ -126,19 +126,6 @@ public class FriendsActivity extends ActionBarActivity
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			Global global = ((Global) getApplicationContext());
-			upIntent.putExtra("up", "true");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 

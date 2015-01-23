@@ -42,6 +42,7 @@ public class GroupsCurrentActivity extends ActionBarActivity
 
 	Intent parentIntent;
 	Intent upIntent;
+	int clickedRemoveID;
 	BroadcastReceiver broadcastReceiver;
 	User user; //user whose current groups displayed
 	View groupsCurrent;
@@ -84,41 +85,20 @@ public class GroupsCurrentActivity extends ActionBarActivity
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
-		// backstack of intents
-		// each class has a stack of intents lifo method used to execute them at
-		// start of activity
-		// intents need to include everything like ParentClassName, things for
-		// current page (email, ...)
-		// if check that friends
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		
 		//grabbing the user with the given email in the extras
-		user = global.loadUser(extras.getString("email"));
-		
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
+		user = global.loadUser(extras.getString("email"));	
 
-		
+		String className = extras.getString("ParentClassName");
+
 		populateGroupsCurrent();
 
 		initActionBar();
 		initKillswitchListener();
 	}
 
-
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			upIntent.putExtra("up", "true");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
 
 	@Override
 	protected void onDestroy()
@@ -171,46 +151,39 @@ public class GroupsCurrentActivity extends ActionBarActivity
 	{
 		Global global = ((Global) getApplicationContext());
 		LayoutInflater li = getLayoutInflater();
-
+		LinearLayout groupsLayout = ((LinearLayout)findViewById(R.id.groupsCurrentLayout));
 		//grabbing the users groups
-		ArrayList<Integer> groups = user.getGroups();
-		
-		if (groups.size() > 0)
+		Map<Integer, String> groups = user.getGroups();
+		System.out.println("USER HAS A NAME OF" + user.getFullName());
+		if (groups != null && groups.size() > 0)
 		{
 			int i = 0;
-			for (int id : groups) {
-				Group g = global.loadGroup(id);
 			
+			for (Map.Entry<Integer, String> entry : groups.entrySet()) {
+				//Group group = global.loadGroup(id);
 				GridLayout rowView;
-				Bundle parentExtras = parentIntent.getExtras();
-				if (parentExtras.getString("mod").equals("true"))
-				{
-					rowView = (GridLayout) li.inflate(
-							R.layout.listitem_group, null);
-					// Button removeFriendButton = (Button) rowView
-					// .findViewById(R.id.removeFriendButton);
-					// removeFriendButton.setId(i);
-				} else
-				{
-					rowView = (GridLayout) li.inflate(
-							R.layout.listitem_group, null);
+				
+				//if mod true this, if not someting else
+				rowView = (GridLayout) li.inflate(
+						R.layout.listitem_group, null);
 
-				}
+				
 				// Grab the buttons and set their IDs. Their IDs
 				// will fall inline with the array 'groupsNameList'.
 				Button groupNameButton = (Button) rowView
 						.findViewById(R.id.groupNameButton);
 				Button removeButton = (Button) rowView
 						.findViewById(R.id.removeGroupButton);
-				groupNameButton.setText(g.getName());
+				groupNameButton.setText(entry.getValue() + " " + entry.getKey());
 				
 				//setting ids to the id of the group for button functionality
-				removeButton.setId(g.getID());
-				groupNameButton.setId(g.getID());
-				rowView.setId(g.getID());
+				removeButton.setId(entry.getKey());
+				groupNameButton.setId(entry.getKey());
+				rowView.setId(entry.getKey());
 				
 				//adding row to view
-				((LinearLayout) groupsCurrent).addView(rowView);
+				
+				groupsLayout.addView(rowView);
 
 				i++;
 			}
@@ -218,15 +191,18 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		else
 		{
 		
-			//LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
+			// user has no groups
+			// thinking of putting global func: View row = global.getSadGuy("Text to display");
 
-			View row = li.inflate(R.layout.listitem_group, null);
+	
+			// The user has no groups so display the sad guy image.
+			View row = li.inflate(R.layout.listitem_sadguy, null);
+			((TextView) row.findViewById(R.id.sadGuyTextView))
+				.setText("You do not have any groups.");
 
-			String message = "No friends to display.";//jsonObject.getString("message").toString();
-			((Button) row.findViewById(R.id.groupNameButton))
-					.setText(message);
-			row.findViewById(R.id.removeGroupButton).setVisibility(1);
-			((LinearLayout) groupsCurrent).addView(row);
+
+			
+			groupsLayout.addView(row);
 		}	
 	}
 	
@@ -255,16 +231,15 @@ public class GroupsCurrentActivity extends ActionBarActivity
 		// End Kill switch listener
 	}
 
-	private class deleteGroupTask extends AsyncTask<String, Void, String>
+	private class leaveGroupTask extends AsyncTask<String, Void, String>
 	{
 		@Override
 		protected String doInBackground(String... urls)
 		{
 			// urls 1, 2 are the emails
 			Global global = ((Global) getApplicationContext());
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("gname", urls[1]));
-			return global.readJSONFeed(urls[0], nameValuePairs);
+
+			return global.readJSONFeed(urls[0], null);
 		}
 
 		@Override
@@ -279,8 +254,8 @@ public class GroupsCurrentActivity extends ActionBarActivity
 					// success: group has been deleted
 					//reload this activity
 					// removing all of the views
-					LinearLayout currentGroupsLayout = (LinearLayout) findViewById(R.id.currentGroupsLayout);
-					currentGroupsLayout.removeAllViews();
+					LinearLayout groupsLayout = (LinearLayout) findViewById(R.id.groupsCurrentLayout);
+					groupsLayout.removeAllViews();
 					// Refresh the page to show the removal of the group.
 					populateGroupsCurrent();
 					Log.d("dbmsg", jsonObject.getString("message"));
@@ -308,21 +283,22 @@ public class GroupsCurrentActivity extends ActionBarActivity
 	public void removeGroupButton(View view) throws InterruptedException
 	{
 		//Get the id.
-		int id = view.getId();
+		clickedRemoveID = view.getId();
 
 		new AlertDialog.Builder(this)
-				.setMessage("Are you sure you want to delete this group?")
+				.setMessage("Are you sure you want to leave this group?")
 				.setCancelable(true)
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(DialogInterface dialog, int id)
 					{
-						new deleteGroupTask()
+						System.out.println("Leave grp email / id: " + user.getEmail() + " " + clickedRemoveID);
+						new leaveGroupTask()
 								.execute(
-										"http://68.59.162.183/android_connect/leave_group.php?email=" + user.getEmail() + "?gid=" + id);
-	
-
+										"http://68.59.162.183/android_connect/leave_group.php?email=" + user.getEmail() + "&gid=" + clickedRemoveID);
+						user.removeGroup(clickedRemoveID);
+						clickedRemoveID = -1; //reset
 					}
 				}).setNegativeButton("Cancel", null).show();
 	}

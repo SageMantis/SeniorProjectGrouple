@@ -112,16 +112,6 @@ public class EventsActivity extends ActionBarActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startParentActivity(null);
-		}
-		return false;
-	}
-
 	/* Start activity functions for going back and logging out */
 	public void startHomeActivity(View view)
 	{

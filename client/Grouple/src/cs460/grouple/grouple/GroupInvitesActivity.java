@@ -2,6 +2,8 @@ package cs460.grouple.grouple;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -38,6 +40,7 @@ public class GroupInvitesActivity extends ActionBarActivity
 	Intent parentIntent;
 	Intent upIntent;
 	BroadcastReceiver broadcastReceiver;
+	User user;//our current user
 	private String receiver;
 	View groupInvites;
 
@@ -77,32 +80,18 @@ public class GroupInvitesActivity extends ActionBarActivity
 		// global.fetchNumFriends(email)
 		//actionbarTitle.setText(global.getName() + "'s Group Invites"); //PANDA
 	}
-
+	//Loads the page. As well as populates the user.
 	public void load(View view)
 	{
 		Global global = ((Global) getApplicationContext());
-
-		// backstack of intents
-		// each class has a stack of intents lifo method used to execute them at
-		// start of activity
-		// intents need to include everything like ParentClassName, things for
-		// current page (email, ...)
-		// if check that friends
-		Intent intent = getIntent();
-		Bundle extras = intent.getExtras();
 		
-		Bundle parentExtras = parentIntent.getExtras();
-		String className = parentExtras.getString("ParentClassName");
-
-	
-		// Get the current users email address
-		//receiver = global.getCurrentUser(); user.getEmail() PANDA
-		// Execute the php to get the the number of group invites.
-		//gonna try to load these from the user instead
-		//populateGroupInvites();
-		new getGroupInvitesTask()
-				.execute("http://98.213.107.172/android_connect/get_groups_requests.php?email="
-						+ receiver);
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();	
+		String className = extras.getString("ParentClassName");
+		
+		//String email = extras.getString("email");
+		user = global.loadUser(global.getCurrentUser().getEmail());
+		populateGroupInvites();
 
 		initActionBar();
 		initKillswitchListener();
@@ -173,101 +162,41 @@ public class GroupInvitesActivity extends ActionBarActivity
 		// End Kill switch listener
 	}
 
-	private class getGroupInvitesTask extends AsyncTask<String, Void, String>
+	//
+	private void populateGroupInvites()
 	{
-		@Override
-		protected String doInBackground(String... urls)
+		//Get current layout.
+		LinearLayout groupInvitesLayout = (LinearLayout) findViewById(R.id.groupInvitesLayout);
+		//Get Global. We use it for global stuff.
+		Global global = ((Global) getApplicationContext());
+		LayoutInflater li = getLayoutInflater();
+		int numInvite = user.getNumGroupInvites();
+		//array list needs to have group names, maybe the sender names and needs to have group ids	
+		if(numInvite > 0 )
 		{
-			// ?
-			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-			LinearLayout groupInvitesLayout = (LinearLayout) findViewById(R.id.groupInvitesLayout);
-			Global global = ((Global) getApplicationContext());
-			LayoutInflater li = getLayoutInflater();
-			try
+			//Calls user getGroups(). 
+			Map<Integer, String> groupInvites = user.getGroupInvites();
+			// looping thru the map
+			for (Map.Entry<Integer, String> entry : groupInvites.entrySet())
 			{
-				JSONObject jsonObject = new JSONObject(result);
-				if (jsonObject.getString("success").toString().equals("1"))
-				{
-					System.out.println("We are in the success");
-					ArrayList<String> senders = new ArrayList<String>();
-					ArrayList<String> groups = new ArrayList<String>();
-					JSONArray jsonGroupInvites = jsonObject
-							.getJSONArray("requests");
+				GridLayout row = (GridLayout) li.inflate(R.layout.listitem_group_request, null);
 
-					if (jsonGroupInvites != null)
-					{
-						View groupInvites = findViewById(R.id.groupInvitesContainer);
-						//global.setNumGroupInvites(jsonGroupInvites.length()); PANDA NOT HERE
-					//	global.setNotifications(groupInvites); PANDA
-						System.out.println(jsonGroupInvites.toString() + "\n"
-								+ jsonGroupInvites.length());
-
-						// looping thru json and adding to an array
-						for (int i = 0; i < jsonGroupInvites.length(); i++)
-						{
-							JSONObject object = jsonGroupInvites
-									.getJSONObject(i);
-							String raw = object.getString("sender");
-							senders.add(raw);
-							raw = object.getString("g_name");
-							groups.add(raw);
-							System.out.println("Row: " + raw + "\nCount: " + i);
-						}
-
-						// looping thru array and inflating listitems to the
-						// GROUP REQUEST NAMES. CAN EASILY ADD SENDERS.
-						for (int i = 0; i < groups.size(); i++)
-						{
-							GridLayout row = (GridLayout) li.inflate(
-									R.layout.listitem_group_request, null);
-							// Setting text of each friend request to the email
-							// of the sender
-							((TextView) row
-									.findViewById(R.id.emailTextViewGRLI))
-									.setText(groups.get(i));
-							groupInvitesLayout.addView(row);
-						}
-					} else
-					// no friend requests
-					{
-						//global.setNumGroupInvites(0);
-						//PANDA
-						GridLayout row = (GridLayout) li.inflate(
-								R.id.sadGuyGridLayout, null);
-						// Setting text of each friend request to the email
-						// of the sender
-
-						((TextView) row.findViewById(R.id.sadGuyTextView))
-								.setText("You do not have any group invites.");
-						groupInvitesLayout.addView(row);
-					}
-				} else
-				{
-					System.out.println("No groups found");
-					//global.setNumGroupInvites(0); PANDA
-
-					GridLayout row = (GridLayout) li.inflate(
-							R.layout.listitem_sadguy, null);
-					// Setting text of each friend request to the email
-					// of the sender
-
-					((TextView) row.findViewById(R.id.sadGuyTextView))
-							.setText("You do not have any group invites.");
-					groupInvitesLayout.addView(row);
-				}
-			} catch (Exception e)
-			{
-				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				((TextView) row.findViewById(R.id.emailTextViewGRLI)).setText(entry.getValue());
+				groupInvitesLayout.addView(row);
 			}
 		}
+		else
+		{
+			//no group requests were found
+			GridLayout sadGuy = (GridLayout) li.inflate(R.layout.listitem_sadguy, null);
+			TextView sadTextView = (TextView) sadGuy.findViewById(R.id.sadGuyTextView);
+			//Set the sad guy text.
+			sadTextView.setText("You do not have any group invites.");
+			groupInvitesLayout.addView(sadGuy);
+		}
 	}
-
+			
+	
 	public void onClick(View view)
 	{
 		Global global = ((Global) getApplicationContext());
@@ -379,18 +308,6 @@ public class GroupInvitesActivity extends ActionBarActivity
 		}
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			upIntent.putExtra("up", "true");
-			startActivity(upIntent);
-			finish();
-		}
-		return false;
-	}
-
 	/*
 	 * Start activity functions for refreshing friend requests, going back and
 	 * logging out
@@ -405,3 +322,4 @@ public class GroupInvitesActivity extends ActionBarActivity
 	}
 
 }
+

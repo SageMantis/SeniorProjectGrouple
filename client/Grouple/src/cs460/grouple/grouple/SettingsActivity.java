@@ -50,17 +50,7 @@ public class SettingsActivity extends ActionBarActivity
 
 		actionbarTitle.setText("Settings");
 	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			startParentActivity(null);
-		}
-		return false;
-	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

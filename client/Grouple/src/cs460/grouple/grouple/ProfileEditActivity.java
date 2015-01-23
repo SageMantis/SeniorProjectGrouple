@@ -91,7 +91,7 @@ public class ProfileEditActivity extends ActionBarActivity implements
 		// the textviews for editing.
 		// We NEED to execute this before displaying the activity.
 		new getProfileTask()
-				.execute("http://98.213.107.172/android_connect/get_profile.php");
+				.execute("http://68.59.162.183/android_connect/get_profile.php");
 
 	}
 
@@ -275,7 +275,7 @@ public class ProfileEditActivity extends ActionBarActivity implements
 		} else
 		{
 			new setProfileTask()
-					.execute("http://98.213.107.172/android_connect/update_profile.php");
+					.execute("http://68.59.162.183/android_connect/update_profile.php");
 			Intent intent = new Intent(this, UserProfileActivity.class);
 			intent.putExtra("up", "true");
 			startActivity(intent);

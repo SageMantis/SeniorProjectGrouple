@@ -21,6 +21,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONObject;
@@ -30,9 +31,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
@@ -57,10 +61,11 @@ public class User extends Activity
 	private String bio;
 	private String location;
 	private int age;
+	Bitmap profileImg;
 	private Map <String, String> friends; //friends emails(key) -> friends names(value)
-	private ArrayList<Integer> groups; 
+	private Map<Integer, String> groups; 
 	private ArrayList<String> friendRequests; //friendRequest emails->names
-	private ArrayList<Integer> groupInvites; //group invite ids
+	private Map <Integer, String> groupInvites; //group invite ids
 	private boolean isCurrentUser;
 	
 	/*
@@ -74,6 +79,24 @@ public class User extends Activity
 		this.isCurrentUser = false;
 		System.out.println("Initializing new user.");
 	}
+	
+	//testing
+	public void removeGroup(int gid)
+	{
+		if (groups.containsKey(gid))
+			groups.remove(gid);
+	}
+	public void removeFriend(String fEmail)
+	{
+		if (friends.containsKey(fEmail))
+			friends.remove(fEmail);
+	}
+	public void removeFriendRequest(String email)
+	{
+		if (friendRequests.contains(email))
+			friendRequests.remove(email);
+	}
+	
 	
 	/*
 	 * Setters for user class below
@@ -122,24 +145,28 @@ public class User extends Activity
 		{
 			friendRequests = new ArrayList<String>();
 		}
-		friendRequests.add(email);
+		if (!friendRequests.contains(email))
+			friendRequests.add(email);
 	}
 	public void addToGroups(String id, String name)
 	{
 		if (groups == null)
 		{
-			groups = new ArrayList<Integer>();
+			groups = new HashMap<Integer, String>();
 		}
 		int idNum = Integer.parseInt(id);
-		groups.add(idNum);
+		groups.put(idNum, name);
 	}
 	public void addToGroupInvites(String id, String name, String sender)
 	{
 		if (groupInvites == null)
 		{
-			groupInvites = new ArrayList<Integer>();
+			groupInvites = new HashMap<Integer, String>();
 		}
 		int idNum = Integer.parseInt(id);
+		
+		groupInvites.put(idNum, name);
+		
 		//create a new group and throw it in global
 		//Global global = ((Global) getApplicationContext());
 		//groupInvites.put((idNum, name), sender);
@@ -175,6 +202,10 @@ public class User extends Activity
 	public int getAge()
 	{
 		return age;
+	}
+	public Bitmap getImage()
+	{
+		return profileImg;
 	}
 	public boolean isCurrentUser()
 	{
@@ -216,12 +247,47 @@ public class User extends Activity
 	{
 		return friendRequests;
 	}
-	public ArrayList<Integer> getGroups()
+	public Map<Integer, String> getGroups()
 	{
 		return groups;
 	}
+	public Map<Integer, String> getGroupInvites()
+	{
+		return groupInvites;
+	}
 	
-
+	//img is taken from json string
+	private void setImage(String img)
+	{
+		Bitmap bmp;
+		//jsonArray.getString("image");
+	
+		// decode image back to android bitmap format
+		byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+		if (decodedString != null)
+		{
+			bmp = BitmapFactory.decodeByteArray(decodedString, 0,
+					decodedString.length);
+			//setting bmp;
+			this.profileImg = bmp;
+		}
+		else
+		{
+			profileImg = null;
+		}
+			// set the image
+		/*if (bmp != null)
+		{
+			if (iv == null)
+			{
+				iv = (ImageView) findViewById(R.id.profilePhoto);
+	
+			}
+			iv.setImageBitmap(bmp);
+			img = null;
+			decodedString = null;
+		}*/
+	}
 	/*
 	 * To delete the user out of memory and clear all arrays
 	 */
@@ -249,8 +315,7 @@ public class User extends Activity
 	{
 		
        AsyncTask<String, Void, String> task = new getUserInfoTask()
-		.execute("http://68.59.162.183/android_connect/get_user_info.php?email="
-				+ getEmail());
+		.execute("http://68.59.162.183/android_connect/get_profile.php");
         
        task.get(10000, TimeUnit.MILLISECONDS);
 	
@@ -264,7 +329,9 @@ public class User extends Activity
 		protected String doInBackground(String... urls)
 		{
 			//Global global = ((Global) getApplicationContext());
-			return readJSONFeed(urls[0], null);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+			nameValuePairs.add(new BasicNameValuePair("email", getEmail()));
+			return readJSONFeed(urls[0], nameValuePairs);
 		}
 
 		@Override
@@ -275,54 +342,59 @@ public class User extends Activity
 				//getting json object from the result string
 				JSONObject jsonObject = new JSONObject(result);
 				//gotta make a json array
-				JSONArray jsonArray = jsonObject.getJSONArray("userInfo");
+				//JSONArray jsonArray = jsonObject.getJSONArray("userInfo");
 				
 				
 				//json fetch was successful
 				if (jsonObject.getString("success").toString().equals("1"))
 				{
+					JSONArray jsonArray = jsonObject.getJSONArray("profile");
 					Log.d("getUserInfoOnPost", "success1");
 
 					//at each iteration set to hashmap friendEmail -> 'first last'
-					JSONObject o = (JSONObject) jsonArray.get(0);
+					String fName = (String) jsonArray.get(0);
 
 					//set first name
-					String fName = o.getString("first");
+					// fName = o.);
 					Log.d("getUserInfoOnPost", "after sgrabbinging fname to: " + fName);
 					setFirstName(fName);
 					Log.d("getUserInfoOnPost", "after set first name");
 					
 					//set last name
-					String lName = o.getString("last");
+					String lName = (String) jsonArray.get(1);
 					setLastName(lName);
 					
 					//set bio
-					String bio = o.getString("bio");
+					String bio = (String) jsonArray.get(3);
 					setBio(bio);
 					
 					//set location
-					String location = o.getString("location");
+					String location = (String) jsonArray.get(4);
 					setLocation(location);
 					
 					//set birthday (not yet implemented)
 					//for now do age
-				//	int age = Integer.parseInt(o.getString("age"));
-					//setAge(age);
-					//Log.d("getUserInfoOnPost", "after set age");
+					int age = (Integer) jsonArray.get(2);
+					setAge(age);//panda
+					Log.d("getUserInfoOnPost", "after set age");
 					//String fName = jsonObject.getString("fName").toString();
 					//setBirthday(fName); 
 					
+					//get that image niggi
+					String image = (String) jsonArray.get(5);
+					setImage(image);
 				} 
 				//unsuccessful
 				else
 				{
 					// failed
+					Log.d("UserFetchInfoOnPost", "FAILED");
 				}
 			} 
 			catch (Exception e)
 			{
 				Log.d("atherjsoninuserpost", "here");
-				//Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
+				Log.d("ReadatherJSONFeedTask", e.getLocalizedMessage());
 			}
 			//do next thing here
 		}
@@ -427,7 +499,8 @@ public class User extends Activity
 					{
 						//at each iteration set to hashmap friendEmail -> 'first last'
 						JSONObject o = (JSONObject) jsonArray.get(i);
-						//function adds friend to the friends map
+						//function adds friend to the friends map=
+						Log.d("fetchFriendRequestsPost", "array length: " + jsonArray.length() + ", email: " + o.getString("email"));
 						addToFriendRequests(o.getString("email"));
 					}
 				}
@@ -464,8 +537,7 @@ public class User extends Activity
 		@Override
 		protected String doInBackground(String... urls)
 		{
-			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
+			return readJSONFeed(urls[0], null);
 		}
 
 		@Override
@@ -482,12 +554,22 @@ public class User extends Activity
 					//gotta make a json array
 					JSONArray jsonArray = jsonObject.getJSONArray("groups");
 					
+					
+					//clearing old groups
+					if (groups != null)
+					{
+						System.out.println("Clearing groups of user.");
+						groups.clear();
+					}
+					
+					
 					//looping thru array
 					for (int i = 0; i < jsonArray.length(); i++)
 					{
 						//at each iteration set to hashmap friendEmail -> 'first last'
 						JSONObject o = (JSONObject) jsonArray.get(i);
 						//function adds friend to the friends map
+						System.out.println("HERE WE ARE ABOUT TO ADD A GROUP TO THE GROUPS TABLE");
 						addToGroups(o.getString("gid"), o.getString("gname"));
 					}
 
@@ -511,11 +593,12 @@ public class User extends Activity
 	 * 
 	 */
 	// Get numFriends, TODO: work on returning the integer
-	public int fetchGroupInvites(String email)
+	public int fetchGroupInvites() throws InterruptedException, ExecutionException, TimeoutException
 	{
-		new getGroupInvitesTask()
+		AsyncTask<String, Void, String> task = new getGroupInvitesTask()
 				.execute("http://68.59.162.183/android_connect/get_group_invites.php?email="
 						+ getEmail());
+		task.get(20000, TimeUnit.MILLISECONDS);
 		return 1;
 	}
 
@@ -524,8 +607,7 @@ public class User extends Activity
 		@Override
 		protected String doInBackground(String... urls)
 		{
-			Global global = ((Global) getApplicationContext());
-			return global.readJSONFeed(urls[0], null);
+			return readJSONFeed(urls[0], null);
 		}
 
 		@Override
@@ -602,7 +684,6 @@ public class User extends Activity
 
 		else
 		{
-
 			HttpPost httpPost = new HttpPost(URL);
 			try
 			{
